@@ -2,14 +2,15 @@ import uvloop
 
 uvloop.install()
 
-from pyrogram import Client, errors
+from pyrogram import Client as PyrogramClient, errors
 from pyrogram.enums import ChatMemberStatus, ParseMode
+from telethon import TelegramClient
 
 import config
 from ..logging import LOGGER
 
 
-class Aviax(Client):
+class Aviax(PyrogramClient):
     def __init__(self):
         LOGGER(__name__).info(f"Starting Bot...")
         super().__init__(
@@ -24,6 +25,7 @@ class Aviax(Client):
 
     async def start(self):
         await super().start()
+        
         self.id = self.me.id
         self.name = self.me.first_name + " " + (self.me.last_name or "")
         self.username = self.me.username
@@ -52,6 +54,39 @@ class Aviax(Client):
             )
             exit()
         LOGGER(__name__).info(f"Music Bot Started as {self.name}")
+
+    async def stop(self):
+        await super().stop()
+
+
+class Bad(TelegramClient):
+    def __init__(self):
+        LOGGER(__name__).info(f"Starting Telethon Bot...")
+        super().__init__(
+            'telethon_session',
+            api_id=config.API_ID,
+            api_hash=config.API_HASH
+        )
+
+    async def start(self):
+        await super().start(bot_token=config.BOT_TOKEN)
+        me = await self.get_me()
+        self.id = me.id
+        self.name = me.first_name + " " + (me.last_name or "")
+        self.username = me.username
+        self.mention = f"@{self.username}"
+
+        try:
+            await self.send_message(
+                config.LOG_GROUP_ID,
+                f"<u><b>» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ :</b><u>\n\nɪᴅ : <code>{self.id}</code>\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}"
+            )
+        except Exception as ex:
+            LOGGER(__name__).error(
+                f"Telethon Bot has failed to access the log group/channel.\n  Reason : {type(ex).__name__}."
+            )
+            exit()
+        LOGGER(__name__).info(f"Telethon Bot Started as {self.name}")
 
     async def stop(self):
         await super().stop()
