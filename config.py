@@ -207,7 +207,7 @@ API_HASH = getenv("API_HASH", "d927c13beaaf5110f25c505b7c071273")
 
 # ________________________________________________________________________________#
 ## Get it from @Botfather in Telegram.
-BOT_TOKEN = getenv("BOT_TOKEN", "7436017266:AAHe8VapxodcaJ79aqRCR85plK6GlySjXxk")
+BOT_TOKEN = getenv("BOT_TOKEN", "7436017266:AAG_AeXHXYKSn5XgQjQlJH0p39taHjNPt-A")
 
 # ________________________________________________________________________________#
 
@@ -237,7 +237,7 @@ SONG_DOWNLOAD_DURATION = int(
 
 # ________________________________________________________________________________#
 # You'll need a Private Group ID for this.
-LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", "-1002356967761"))
+LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", "-1002056907061"))
 
 SONG_DOWNLOAD_DURATION_LIMIT = int(
     getenv("SONG_DOWNLOAD_DURATION_LIMIT", "500")
