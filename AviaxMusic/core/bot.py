@@ -82,7 +82,7 @@ class Bad(TelegramClient):
             LOGGER(__name__).info(f"Attempting to send message to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
             await self.send_message(
                 config.LOG_GROUP_ID,
-                f"<u><b>» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ2 :\n\nɪᴅ : {self.id}\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}"
+                f"» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ2 :\n\nɪᴅ : {self.id}\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}"
             )
             LOGGER(__name__).info(f"Message sent successfully to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
         except Exception as ex:
