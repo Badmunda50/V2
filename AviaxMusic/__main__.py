@@ -52,7 +52,7 @@ async def init():
         pass
     await Aviax.decorators()
     LOGGER("AviaxMusic").info(
-        "7009601543")
+        "bot start")
     await idle()
     await app.stop()
     await userbot.stop()
