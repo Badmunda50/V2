@@ -266,18 +266,16 @@ HEROKU_APP_NAME = getenv("HEROKU_APP_NAME")
 
 # ________________________________________________________________________________#
 # For customized or modified Repository
+
 UPSTREAM_REPO = getenv(
     "UPSTREAM_REPO",
     "https://github.com/Badmunda50/V2",
 )
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "master")
 
-# GIT TOKEN ( if your edited repo is private)
 GIT_TOKEN = getenv(
-    "GIT_TOKEN",
-    "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",
-)
-
+    "GIT_TOKEN", None
+)  # Fill this variable if your upstream repository is private
 
 # ________________________________________________________________________________#
 # Only  Links formats are  accepted for this Var value.
