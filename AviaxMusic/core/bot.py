@@ -68,11 +68,12 @@ class Bad(TelegramClient):
         super().__init__(
             'telethon_session',
             api_id=config.API_ID,
-            api_hash=config.API_HASH
+            api_hash=config.API_HASH,
+            bot_token=config.BOT_TOKEN,
         )
 
     async def start(self):
-        await super().start(bot_token=config.BOT_TOKEN)
+        await super().start()
         me = await self.get_me()
         self.id = me.id
         self.name = me.first_name + " " + (me.last_name or "")
