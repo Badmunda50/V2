@@ -40,7 +40,7 @@ async def init():
     LOGGER("AviaxMusic.plugins").info("Successfully Imported Modules...")
     await userbot.start()
     await Aviax.start()
-    await Bad.start(bot_token=config.BOT_TOKEN)
+    await Bad.start()
     try:
         await Aviax.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
     except NoActiveGroupCall:
