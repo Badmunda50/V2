@@ -10,6 +10,26 @@ import config
 from ..logging import LOGGER
 
 
+async def send_start_message(client_name, client_id, client_mention, client_username, client_name_full):
+    try:
+        LOGGER(__name__).info(f"Attempting to send message to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
+        await client_name.send_message(
+            chat_id=config.LOG_GROUP_ID,
+            text=f"<u><b>» {client_mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ :</b><u>\n\nɪᴅ : <code>{client_id}</code>\nɴᴀᴍᴇ : {client_name_full}\nᴜsᴇʀɴᴀᴍᴇ : @{client_username}",
+        )
+        LOGGER(__name__).info(f"Message sent successfully to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
+    except (errors.ChannelInvalid, errors.PeerIdInvalid):
+        LOGGER(__name__).error(
+            "Bot has failed to access the log group/channel. Make sure that you have added your bot to your log group/channel."
+        )
+        exit()
+    except Exception as ex:
+        LOGGER(__name__).error(
+            f"Bot has failed to access the log group/channel.\n  Reason : {type(ex).__name__}.\nException: {ex}"
+        )
+        exit()
+
+
 class Aviax(PyrogramClient):
     def __init__(self):
         LOGGER(__name__).info(f"Starting Bot...")
@@ -30,23 +50,7 @@ class Aviax(PyrogramClient):
         self.username = self.me.username
         self.mention = self.me.mention
 
-        try:
-            LOGGER(__name__).info(f"Attempting to send message to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
-            await self.send_message(
-                chat_id=config.LOG_GROUP_ID,
-                text=f"<u><b>» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ :</b><u>\n\nɪᴅ : <code>{self.id}</code>\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}",
-            )
-            LOGGER(__name__).info(f"Message sent successfully to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
-        except (errors.ChannelInvalid, errors.PeerIdInvalid):
-            LOGGER(__name__).error(
-                "Bot has failed to access the log group/channel. Make sure that you have added your bot to your log group/channel."
-            )
-            exit()
-        except Exception as ex:
-            LOGGER(__name__).error(
-                f"Bot has failed to access the log group/channel.\n  Reason : {type(ex).__name__}.\nException: {ex}"
-            )
-            exit()
+        await send_start_message(self, self.id, self.mention, self.username, self.name)
 
         a = await self.get_chat_member(config.LOG_GROUP_ID, self.id)
         LOGGER(__name__).info(f"Bot member status in the group: {a.status}")
@@ -78,18 +82,8 @@ class Bad(TelegramClient):
         self.username = me.username
         self.mention = f"@{self.username}"
 
-        try:
-            LOGGER(__name__).info(f"Attempting to send message to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
-            await self.send_message(
-                config.LOG_GROUP_ID,
-                f"<u><b>» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ :</b><u>\n\nɪᴅ : <code>{self.id}</code>\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}"
-            )
-            LOGGER(__name__).info(f"Message sent successfully to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
-        except Exception as ex:
-            LOGGER(__name__).error(
-                f"Telethon Bot has failed to access the log group/channel.\n  Reason : {type(ex).__name__}.\nException: {ex}"
-            )
-            exit()
+        await send_start_message(self, self.id, self.mention, self.username, self.name)
+
         LOGGER(__name__).info(f"Telethon Bot Started as {self.name}")
 
     async def stop(self):
