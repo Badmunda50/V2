@@ -94,3 +94,14 @@ class Bad(TelegramClient):
 
     async def stop(self):
         await super().stop()
+
+
+async def main():
+    telethon_bot = Bad()
+    await telethon_bot.start()
+    
+    pyrogram_bot = Aviax()
+    await pyrogram_bot.start()
+
+import asyncio
+asyncio.run(main())
