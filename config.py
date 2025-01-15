@@ -365,7 +365,7 @@ EXTRA_PLUGINS = getenv(
 
 EXTRA_PLUGINS_REPO = getenv(
     "EXTRA_PLUGINS_REPO",
-    "https://github.com/",
+    "https://github.com/Badmunda50/extra",
 )
 # Fill here the external plugins repo where plugins that you want to load
 
