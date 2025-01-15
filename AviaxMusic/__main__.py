@@ -42,9 +42,9 @@ async def init():
             if hasattr(imported_module, "__HELP__") and imported_module.__HELP__:
                 HELPABLE[imported_module.__MODULE__.lower()] = imported_module
     LOGGER("AviaxMusic.plugins").info("Successfully Imported All Modules ")
-    await userbot.start()
-    await Bad.start()
     await Aviax.start()
+    await Bad.start()
+    await userbot.start()   
     try:
         await Aviax.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
     except NoActiveGroupCall:
@@ -59,8 +59,8 @@ async def init():
         "bot start")
     await idle()
     await app.stop()
-    await userbot.stop()
     await Bad.disconnect()
+    await userbot.stop()
     LOGGER("AviaxMusic").info("Stopping Aviax Music Bot...")
 
 if __name__ == "__main__":
