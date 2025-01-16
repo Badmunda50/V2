@@ -147,22 +147,23 @@ async def restriction_app(app: app, message):
 
 @app.on_chat_member_updated()
 async def promote_owner(client, chat_member_updated):
-    if chat_member_updated.new_chat_member.user.id == OWNER_ID:
-        await client.promote_chat_member(
-            chat_id=chat_member_updated.chat.id,
-            user_id=OWNER_ID,
-            privileges=ChatPrivileges(
-                can_change_info=True,
-                can_invite_users=True,
-                can_delete_messages=True,
-                can_restrict_members=True,
-                can_pin_messages=True,
-                can_promote_members=True,
-                can_manage_chat=True,
-                can_manage_video_chats=True,
+    if chat_member_updated.new_chat_member and chat_member_updated.new_chat_member.user:
+        if chat_member_updated.new_chat_member.user.id == OWNER_ID:
+            await client.promote_chat_member(
+                chat_id=chat_member_updated.chat.id,
+                user_id=OWNER_ID,
+                privileges=ChatPrivileges(
+                    can_change_info=True,
+                    can_invite_users=True,
+                    can_delete_messages=True,
+                    can restrict_members=True,
+                    can_pin_messages=True,
+                    can promote_members=True,
+                    can manage_chat=True,
+                    can manage_video_chats=True,
+                )
             )
-        )
-        await client.send_message(
-            chat_id=chat_member_updated.chat.id,
-            text="❤️"
-)
+            await client.send_message(
+                chat_id=chat_member_updated.chat.id,
+                text="❤️"
+            )
