@@ -7,10 +7,6 @@ from pyrogram.types import *
 from AviaxMusic.utils.bad_ban import admin_filter
 
 
-
-
-
-
 bad_text = [
 "hey please don't disturb me.",
 "who are you",    
