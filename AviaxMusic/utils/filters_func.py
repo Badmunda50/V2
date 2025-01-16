@@ -1,100 +1,98 @@
 from enum import Enum, auto
-from AviaxMusic import app
-from pyrogram.types import InlineKeyboardMarkup, Message
+from telethon import Button, events
+from AviaxMusic import Bad as app
 from AviaxMusic.utils.msg_types import button_markdown_parser
 from AviaxMusic.utils.notes_func import NoteFillings
 from emojis import decode
-from pyrogram.types import Message
 
 
-async def SendFilterMessage(message: Message, filter_name: str, content: str, text: str, data_type: int):
-
-    chat_id = message.chat.id
-    message_id = message.id
+async def SendFilterMessage(event, filter_name: str, content: str, text: str, data_type: int):
+    chat_id = event.chat_id
+    message_id = event.id
     text, buttons = button_markdown_parser(text)
 
-    text = NoteFillings(message, text)
+    text = await NoteFillings(event.message, text)
     reply_markup = None
     if len(buttons) > 0:
-        reply_markup = InlineKeyboardMarkup(buttons)
+        reply_markup = event.client.build_reply_markup(buttons)
     else:
         reply_markup = None
 
     if data_type == 1:
-        await app.send_message(
+        await event.client.send_message(
             chat_id=chat_id,
-            text=text,
-            reply_markup=reply_markup,
-            reply_to_message_id=message_id
+            message=text,
+            buttons=reply_markup,
+            reply_to=message_id
         )
 
     elif data_type == 2:
-        await app.send_sticker(
+        await event.client.send_file(
             chat_id=chat_id,
-            sticker=content,
-            reply_markup=reply_markup,
-            reply_to_message_id=message_id
+            file=content,
+            buttons=reply_markup,
+            reply_to=message_id
         )
 
-    elif data_type ==3:
-        await app.send_animation(
+    elif data_type == 3:
+        await event.client.send_file(
             chat_id=chat_id,
-            animation=content,
-            reply_markup=reply_markup,
-            reply_to_message_id=message_id
+            file=content,
+            buttons=reply_markup,
+            reply_to=message_id
         )
 
     elif data_type == 4:
-        await app.send_document(
+        await event.client.send_file(
             chat_id=chat_id,
-            document=content,
+            file=content,
             caption=text,
-            reply_markup=reply_markup,
-            reply_to_message_id=message_id
+            buttons=reply_markup,
+            reply_to=message_id
         )
 
     elif data_type == 5:
-        await app.send_photo(
+        await event.client.send_file(
             chat_id=chat_id,
-            photo=content,
+            file=content,
             caption=text,
-            reply_markup=reply_markup,
-            reply_to_message_id=message_id
+            buttons=reply_markup,
+            reply_to=message_id
         )
 
     elif data_type == 6:
-        await app.send_audio(
+        await event.client.send_file(
             chat_id=chat_id,
-            audio=content,
+            file=content,
             caption=text,
-            reply_markup=reply_markup,
-            reply_to_message_id=message_id
+            buttons=reply_markup,
+            reply_to=message_id
         )
 
     elif data_type == 7:
-        await app.send_voice(
+        await event.client.send_file(
             chat_id=chat_id,
-            voice=content,
+            file=content,
             caption=text,
-            reply_markup=reply_markup,
-            reply_to_message_id=message_id
+            buttons=reply_markup,
+            reply_to=message_id
         )
 
     elif data_type == 8:
-        await app.send_video(
+        await event.client.send_file(
             chat_id=chat_id,
-            video=content,
+            file=content,
             caption=text,
-            reply_markup=reply_markup,
-            reply_to_message_id=message_id
+            buttons=reply_markup,
+            reply_to=message_id
         )
 
     elif data_type == 9:
-        await app.send_video_note(
+        await event.client.send_file(
             chat_id=chat_id,
-            video_note=content,
-            reply_markup=reply_markup,
-            reply_to_message_id=message_id
+            file=content,
+            buttons=reply_markup,
+            reply_to=message_id
         )
 
 
@@ -109,92 +107,92 @@ class FilterMessageTypeMap(Enum):
     video = auto()
     video_note = auto()
 
-async def GetFIlterMessage(message):
+async def GetFIlterMessage(event):
     data_type = None
     content = None
     text = str()
 
-    raw_text = message.text or message.caption
+    raw_text = event.message.text or event.message.caption
     args = raw_text.split(None, 2)
 
-    if len(args) >= 3 and not message.reply_to_message:
-        text = message.text.markdown[len(message.command[0]) + len(message.command[1]) + 4 :]
+    if len(args) >= 3 and not event.message.is_reply:
+        text = event.message.text.markdown[len(event.message.command[0]) + len(event.message.command[1]) + 4 :]
         data_type = FilterMessageTypeMap.text.value
 
     if (
-        message.reply_to_message
-        and message.reply_to_message.text
+        event.message.is_reply
+        and event.message.reply_message.text
     ):
         if len(args) >= 2:
-            text = message.reply_to_message.text.markdown
+            text = event.message.reply_message.text.markdown
             data_type = FilterMessageTypeMap.text.value
 
     elif (
-        message.reply_to_message
-        and message.reply_to_message.sticker
+        event.message.is_reply
+        and event.message.reply_message.sticker
     ):
-        content = message.reply_to_message.sticker.file_id
+        content = event.message.reply_message.sticker.file_id
         data_type = FilterMessageTypeMap.sticker.value
 
     elif (
-        message.reply_to_message
-        and message.reply_to_message.animation
+        event.message.is_reply
+        and event.message.reply_message.animation
     ):
-        content = message.reply_to_message.animation.file_id
-        if message.reply_to_message.caption:
-            text = message.reply_to_message.caption.markdown
+        content = event.message.reply_message.animation.file_id
+        if event.message.reply_message.caption:
+            text = event.message.reply_message.caption.markdown
         data_type = FilterMessageTypeMap.animation.value
 
     elif (
-        message.reply_to_message
-        and message.reply_to_message.document
+        event.message.is_reply
+        and event.message.reply_message.document
     ):
-        content = message.reply_to_message.document.file_id
-        if message.reply_to_message.caption: 
-            text = message.reply_to_message.caption.markdown 
+        content = event.message.reply_message.document.file_id
+        if event.message.reply_message.caption: 
+            text = event.message.reply_message.caption.markdown 
         data_type = FilterMessageTypeMap.document.value
 
     elif (
-        message.reply_to_message
-        and message.reply_to_message.photo
+        event.message.is_reply
+        and event.message.reply_message.photo
     ):
-        content = message.reply_to_message.photo.file_id
-        if message.reply_to_message.caption:
-            text = message.reply_to_message.caption.markdown
+        content = event.message.reply_message.photo.file_id
+        if event.message.reply_message.caption:
+            text = event.message.reply_message.caption.markdown
         data_type = FilterMessageTypeMap.photo.value
 
     elif (
-        message.reply_to_message
-        and message.reply_to_message.audio
+        event.message.is_reply
+        and event.message.reply_message.audio
     ):
-        content = message.reply_to_message.audio.file_id
-        if message.reply_to_message.caption:
-            text = message.reply_to_message.caption.markdown 
+        content = event.message.reply_message.audio.file_id
+        if event.message.reply_message.caption:
+            text = event.message.reply_message.caption.markdown 
         data_type = FilterMessageTypeMap.audio.value
 
     elif (
-        message.reply_to_message
-        and message.reply_to_message.voice
+        event.message.is_reply
+        and event.message.reply_message.voice
     ):
-        content = message.reply_to_message.voice.file_id
-        if message.reply_to_message.caption:
-            text = message.reply_to_message.caption.markdown
+        content = event.message.reply_message.voice.file_id
+        if event.message.reply_message.caption:
+            text = event.message.reply_message.caption.markdown
         data_type = FilterMessageTypeMap.voice.value
 
     elif (
-        message.reply_to_message
-        and message.reply_to_message.video
+        event.message.is_reply
+        and event.message.reply_message.video
     ):
-        content = message.reply_to_message.video.file_id 
-        if message.reply_to_message.caption:
-            text = message.reply_to_message.caption.markdown 
+        content = event.message.reply_message.video.file_id 
+        if event.message.reply_message.caption:
+            text = event.message.reply_message.caption.markdown 
         data_type= FilterMessageTypeMap.video.value
 
     elif (
-        message.reply_to_message
-        and message.reply_to_message.video_note
+        event.message.is_reply
+        and event.message.reply_message.video_note
     ):
-        content = message.reply_to_message.video_note.file_id
+        content = event.message.reply_message.video_note.file_id
         text = None 
         data_type = FilterMessageTypeMap.video_note.value
 
@@ -204,16 +202,16 @@ async def GetFIlterMessage(message):
         data_type
     )
 
-def get_text_reason(message: Message) -> str:
+def get_text_reason(event) -> str:
     """This function returns text, and the reason of the user's arguments
 
     Args:
-        message (Message): Message
+        event (Message): Message
 
     Returns:
         [str]: text, reason
     """
-    text = decode(message.text)
+    text = decode(event.text)
     index_finder = [x for x in range(len(text)) if text[x] == '"']
     if len(index_finder) >= 2:
         text = text[index_finder[0]+1: index_finder[1]]
@@ -221,12 +219,12 @@ def get_text_reason(message: Message) -> str:
         if not reason:
             reason = None
     else:
-        text = message.command[1]
-        reason = ' '.join(message.command[2:])
+        text = event.command[1]
+        reason = ' '.join(event.command[2:])
         if not reason:
             reason = None
 
     return (
         text,
         reason
-  )
+    )
