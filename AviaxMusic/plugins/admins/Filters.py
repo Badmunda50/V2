@@ -57,9 +57,13 @@ async def FilterChecker(client, message):
         pattern = r"( |^|[^\w])" + re.escape(filter_) + r"( |$|[^\w])"
         
         if re.search(pattern, text, flags=re.IGNORECASE):
-            filter_name, content, text, data_type = await get_filter(chat_id, filter_)
-            await SendFilterMessage(message=message, filter_name=filter_, content=content, text=text, data_type=data_type)
-
+            filter_data = await get_filter(chat_id, filter_)
+            if filter_data:
+                filter_name, content, text, data_type = filter_data
+                await SendFilterMessage(message=message, filter_name=filter_, content=content, text=text, data_type=data_type)
+            else:
+                # Handle the case where the filter is not found
+                pass
 
 @app.on_message(filters.command('filters') & filters.group)
 async def _filters(client, message):
