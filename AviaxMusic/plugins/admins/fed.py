@@ -4,7 +4,7 @@ from AviaxMusic.utils.feds_db import *
 import os
 from AviaxMusic import app
 from AviaxMusic.misc import SUDOERS as SUDO
-from config LOG_GROUP_ID
+from config import LOG_GROUP_ID
 
 
 from pyrogram import filters
