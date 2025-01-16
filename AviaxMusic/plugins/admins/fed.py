@@ -13,7 +13,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from AviaxMusic.utils.fedfun import extract_user, extract_user_and_reason
 from pyrogram.errors import FloodWait, PeerIdInvalid
-from AviaxMusic.utils.errors import capture_err
+from AviaxMusic.utils.error import capture_err
 
 BOT_ID = "7436017266"
 SUPPORT_CHAT = "@PBX_CHAT"
