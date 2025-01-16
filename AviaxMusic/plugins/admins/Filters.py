@@ -1,79 +1,82 @@
 import re
-from AviaxMusic import Bad as app
+from AviaxMusic import app
 from Yukki import Owner
 from AviaxMusic.utils.database import *
 from AviaxMusic.utils.filters_func import GetFIlterMessage, get_text_reason, SendFilterMessage
-from telethon import events, Button
-from telethon.tl.types import ChatAdminRights, ChannelParticipantsAdmins
+from pyrogram import filters, enums
+from pyrogram.enums import ChatMemberStatus
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-@app.on(events.NewMessage(pattern='/filter'))
-async def _filter(event):
-    user = event.sender_id
-    chat_id = event.chat_id
-    chat = await event.get_chat()
-    
+@app.on_message(filters.command("filter"))
+async def _filter(client, message):
+    user = message.from_user.id
+    chat_id = message.chat.id 
+    chat = message.chat
     if user in Owner:
         pass
     else:
-        member = await event.client.get_participant(chat_id, user)
-        if member.admin_rights:
+        member = await chat.get_member(user)
+        if member.status in (enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.OWNER):
             pass
         else:
             msg_text = "ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴇɴᴏᴜɢʜ ʀɪɢʜᴛꜱ ᴛᴏ ᴘᴇʀꜰᴏʀᴍ ᴛʜɪꜱ ᴀᴄᴛɪᴏɴ ."
-            await event.reply(msg_text)
-            return
+            return await message.reply_text(msg_text)
     
-    if event.is_reply and not len(event.text.split()) == 2:
-        await event.reply("ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇꜱꜱᴀɢᴇ ᴀɴᴅ ɢɪᴠᴇ ꜰɪʟᴛᴇʀ ɴᴀᴍᴇ ᴀꜰᴛᴇʀ ᴄᴏᴍᴍᴀɴᴅ ᴛᴏ ꜱᴀᴠᴇ ɪᴛ")
+    if message.reply_to_message and not len(message.command) == 2:
+        await message.reply("ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇꜱꜱᴀɢᴇ ᴀɴᴅ ɢɪᴠᴇ ꜰɪʟᴛᴇʀ ɴᴀᴍᴇ ᴀꜰᴛᴇʀ ᴄᴏᴍᴍᴀɴᴅ ᴛᴏ ꜱᴀᴠᴇ ɪᴛ")  
+        return 
+
+    filter_name, filter_reason = get_text_reason(message)
+    
+    if message.reply_to_message and not len(message.command) >= 2:
+        await message.reply("ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇꜱꜱᴀɢᴇ ᴀɴᴅ ɢɪᴠᴇ ꜰɪʟᴛᴇʀ ɴᴀᴍᴇ ᴀꜰᴛᴇʀ ᴄᴏᴍᴍᴀɴᴅ ᴛᴏ ꜱᴀᴠᴇ ɪᴛ!")
         return
 
-    filter_name, filter_reason = get_text_reason(event.message)
-    
-    if event.is_reply and not len(event.text.split()) >= 2:
-        await event.reply("ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇꜱꜱᴀɢᴇ ᴀɴᴅ ɢɪᴠᴇ ꜰɪʟᴛᴇʀ ɴᴀᴍᴇ ᴀꜰᴛᴇʀ ᴄᴏᴍᴍᴀɴᴅ ᴛᴏ ꜱᴀᴠᴇ ɪᴛ!")
-        return
-
-    content, text, data_type = await GetFIlterMessage(event.message)
+    content, text, data_type = await GetFIlterMessage(message)
     await add_filter_db(chat_id, filter_name=filter_name, content=content, text=text, data_type=data_type)
-    await event.reply(f"ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴀᴠᴇᴅ ꜰɪʟᴛᴇʀ ɪɴ {chat.title} \n\nꜰɪʟᴛᴇʀ ɴᴀᴍᴇ - '{filter_name}'.")
+    await message.reply(f"ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴀᴠᴇᴅ ꜰɪʟᴛᴇʀ ɪɴ {message.chat.title} \n\nꜰɪʟᴛᴇʀ ɴᴀᴍᴇ - '{filter_name}'.")
 
 
-@app.on(events.NewMessage(pattern='^(?!/).+'))
-async def FilterChecker(event):
-    if not event.message.text:
+@app.on_message(~filters.bot & filters.group, group=4)
+async def FilterChecker(client, message):
+    if not message.text:
         return
     
-    text = event.message.text
-    chat_id = event.chat_id
+    text = message.text
+    chat_id = message.chat.id
     
+    if len(await get_filters_list(chat_id)) == 0:
+        return
+
     ALL_FILTERS = await get_filters_list(chat_id)
-    if len(ALL_FILTERS) == 0:
-        return
-
+    
     for filter_ in ALL_FILTERS:
+        if message.command and message.command[0] == 'filter' and len(message.command) >= 2 and message.command[1] == filter_:
+            return
+
         pattern = r"( |^|[^\w])" + re.escape(filter_) + r"( |$|[^\w])"
+        
         if re.search(pattern, text, flags=re.IGNORECASE):
             filter_data = await get_filter(chat_id, filter_)
             if filter_data:
                 filter_name, content, text, data_type = filter_data
-                await SendFilterMessage(message=event.message, filter_name=filter_name, content=content, text=text, data_type=data_type)
-                return  # Ensure only one filter is applied per message
+                await SendFilterMessage(message=message, filter_name=filter_, content=content, text=text, data_type=data_type)
             else:
+                # Handle the case where the filter is not found
                 pass
 
-
-@app.on(events.NewMessage(pattern='/filters'))
-async def _filters(event):
-    chat_id = event.chat_id
-    chat_title = (await event.get_chat()).title
+@app.on_message(filters.command('filters') & filters.group)
+async def _filters(client, message):
+    chat_id = message.chat.id
+    chat_title = message.chat.title 
     
-    if event.is_private:
+    if message.chat.type == 'private':
         chat_title = 'local'
     
     FILTERS = await get_filters_list(chat_id)
 
     if len(FILTERS) == 0:
-        await event.reply(f'ɴᴏ ꜰɪʟᴛᴇʀꜱ ꜰᴏᴜɴᴅ ɪɴ {chat_title}.')
+        await message.reply(f'ɴᴏ ꜰɪʟᴛᴇʀꜱ ꜰᴏᴜɴᴅ ɪɴ {chat_title}.')
         return
 
     filters_list = f'ʜᴇʀᴇ ɪꜱ ᴛʜᴇ ʟɪꜱᴛ ᴏꜰ ᴀʟʟ ꜰɪʟᴛᴇʀꜱ ɪɴ  {chat_title}:\n'
@@ -81,84 +84,83 @@ async def _filters(event):
     for filter_ in FILTERS:
         filters_list += f'- `{filter_}`\n'
 
-    await event.reply(filters_list)
+    await message.reply(filters_list)
 
 
-@app.on(events.NewMessage(pattern='/stopall'))
-async def stopall(event):
-    chat_id = event.chat_id
-    chat_title = (await event.get_chat()).title
-    user_id = event.sender_id
-    user = await event.client.get_participant(chat_id, user_id)
+@app.on_message(filters.command('stopall'))
+async def stopall(client, message):
+    chat_id = message.chat.id
+    chat_title = message.chat.title 
+    user_id = message.from_user.id
+    user = await client.get_chat_member(chat_id, message.from_user.id)
     
     if user_id in Owner:
         pass
     else:
-        if user.admin_rights:
+        member = await message.chat.get_member(user_id)
+        if member.status == enums.ChatMemberStatus.OWNER:
             pass
         else:
             msg_text = "ᴏɴʟʏ ɢʀᴏᴜᴘ ᴏᴡɴᴇʀ ᴄᴀɴ ᴅᴏ ᴛʜɪꜱ"
-            await event.reply(msg_text)
-            return
+            return await message.reply_text(msg_text)
     
-    KEYBOARD = [
-        [Button.inline('ᴅᴇʟᴇᴛᴇ ᴀʟʟ ꜰɪʟᴛᴇʀꜱ ❗', b'custfilters_stopall')],
-        [Button.inline("ʟᴇᴛ'ꜱ ᴄᴀɴᴄᴇʟ ɪᴛ 🐬", b'custfilters_cancel')]
-    ]
+    KEYBOARD = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(text='ᴅᴇʟᴇᴛᴇ ᴀʟʟ ꜰɪʟᴛᴇʀꜱ ❗', callback_data='custfilters_stopall')],
+        [InlineKeyboardButton(text="ʟᴇᴛ'ꜱ ᴄᴀɴᴄᴇʟ ɪᴛ 🐬", callback_data='custfilters_cancel')]]
+    )
 
-    await event.reply(
-        text=f"ᴀʀᴇ ʏᴏᴜ ꜱᴜʀᴇ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ꜱᴛᴏᴘ ᴀʟʟ ꜰɪʟᴛᴇʀꜱ ɪɴ {chat_title}?", buttons=KEYBOARD
+    await message.reply_text(
+        text=f"ᴀʀᴇ ʏᴏᴜ ꜱᴜʀᴇ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ꜱᴛᴏᴘ ᴀʟʟ ꜰɪʟᴛᴇʀꜱ ɪɴ {chat_title}?",reply_markup=KEYBOARD
     )
 
 
-@app.on(events.CallbackQuery(pattern=b'^custfilters_'))
-async def stopall_callback(event):
-    chat_id = event.chat_id
-    query_data = event.data.decode().split('_')[1]
-    user_id = event.sender_id
-    user = await event.client.get_participant(chat_id, user_id)
+@app.on_callback_query(filters.regex("^custfilters_"))
+async def stopall_callback(client, callback_query: CallbackQuery):  
+    chat_id = callback_query.message.chat.id 
+    query_data = callback_query.data.split('_')[1]  
+    user_id = callback_query.from_user.id
+    user = await client.get_chat_member(chat_id, user_id)
 
     if user_id in Owner:
         pass
     else:
-        if user.admin_rights:
+        if user.status == enums.ChatMemberStatus.OWNER:
             pass
         else:
             msg_text = "ꜱᴏʀʀʏ ᴛʜɪꜱ ɪꜱ ᴏɴʟʏ ꜰᴏʀ ɢʀᴏᴜᴘ ᴏᴡɴᴇʀ."
-            await event.answer(msg_text, alert=True)
-            return
+            return await callback_query.answer(msg_text, show_alert=True)
             
     if query_data == 'stopall':
         await stop_all_db(chat_id)
-        await event.edit("ɪ ᴅᴇʟᴇᴛᴇᴅ ᴀʟʟ ꜰɪʟᴛᴇʀꜱ .")
+        await callback_query.edit_message_text(text="ɪ ᴅᴇʟᴇᴛᴇᴅ ᴀʟʟ ꜰɪʟᴛᴇʀꜱ .")
+
     elif query_data == 'cancel':
-        await event.edit('ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴄᴀɴᴄᴇʟʟᴇᴅ')
+        await callback_query.edit_message_text(text='ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴄᴀɴᴄᴇʟʟᴇᴅ ')
 
 
-@app.on(events.NewMessage(pattern='/stopfilter'))
-async def stop(event):
-    chat_id = event.chat_id
-    uid = event.sender_id
+@app.on_message(filters.command('stopfilter'))
+async def stop(client, message):
+    chat_id = message.chat.id
+    uid = message.from_user.id
     
-    if not (len(event.text.split()) >= 2):
-        await event.reply('ꜱᴇᴇ ʜᴇʟᴘ ꜱᴇᴄᴛɪᴏɴ ᴛᴏ ᴋɴᴏᴡ ʜᴏᴡ ᴛᴏ ᴜꜱᴇ ᴛʜɪꜱ ')
+    if not (len(message.command) >= 2):
+        await message.reply('ꜱᴇᴇ ʜᴇʟᴘ ꜱᴇᴄᴛɪᴏɴ ᴛᴏ ᴋɴᴏᴡ ʜᴏᴡ ᴛᴏ ᴜꜱᴇ ᴛʜɪꜱ ')
         return
     
     if uid in Owner:
         pass
     else:
-        member = await event.client.get_participant(chat_id, uid)
-        if member.admin_rights:
+        member = await message.chat.get_member(uid)
+        if member.status in (enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.OWNER):
             pass
         else:
             msg_text = "ʏᴏᴜ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴇɴᴏᴜɢʜ ʀɪɢʜᴛꜱ ᴛᴏ ᴘᴇʀꜰᴏʀᴍ ᴛʜɪꜱ ᴀᴄᴛɪᴏɴ "
-            await event.reply(msg_text)
-            return
+            return await message.reply_text(msg_text)
     
-    filter_name = event.text.split()[1]
+    filter_name = message.command[1]
     if filter_name not in await get_filters_list(chat_id):
-        await event.reply("ɪ ᴅɪᴅɴ'ᴛ ꜰɪɴᴅ ᴛʜɪꜱ ɴᴀᴍᴇ ꜰɪʟᴛᴇʀ !")
+        await message.reply("ɪ ᴅɪᴅɴ'ᴛ ꜰɪɴᴅ ᴛʜɪꜱ ɴᴀᴍᴇ ꜰɪʟᴛᴇʀ !")
         return
 
     await stop_db(chat_id, filter_name)
-    await event.reply(f"ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴛᴏᴘᴘᴇᴅ  '{filter_name}'.")
+    await message.reply(f"ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴛᴏᴘᴘᴇᴅ  '{filter_name}'.")
