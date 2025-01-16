@@ -164,4 +164,3 @@ async def stop(client, message):
 
     await stop_db(chat_id, filter_name)
     await message.reply(f"ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ꜱᴛᴏᴘᴘᴇᴅ  '{filter_name}'.")
-
