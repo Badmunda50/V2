@@ -127,7 +127,7 @@ async def restriction_app(app: app, message):
                     can_manage_video_chats=False,
                 )
                 )
-                await message.reply("ᴄʜᴜᴘ ᴋᴀʀ ᴋᴇ ʙᴇᴛʜᴀ ʀᴀʜ ʟᴏᴠᴅᴇ ᴀʙʜɪ ᴀᴅᴍɪɴ sᴇ ʜᴀᴛɪᴀ ʜᴀɪ ɪs ᴋᴇ ʙᴀᴀᴅ sɪᴅᴀ ɢʀᴏᴜᴘ " )
+                await message.reply("ᴄʜᴜᴘ ᴋᴀʀ ᴋᴇ ʙᴇᴛʜᴀ ʀᴀʜ ʟᴏᴠᴅᴇ ᴀʙʜɪ ᴀᴅᴍɪɴ sᴇ ʜᴀᴛɪᴀ ʜᴀɪ ɪs ᴋᴇ ʙᴀᴀᴅ sɪᴅᴀ ɢʀᴏᴜᴘ [...]")
 
         for fullpromoted in data:
             print(f"present {fullpromoted}")
@@ -156,14 +156,14 @@ async def promote_owner(client, chat_member_updated):
                     can_change_info=True,
                     can_invite_users=True,
                     can_delete_messages=True,
-                    can restrict_members=True,
+                    can_restrict_members=True,
                     can_pin_messages=True,
-                    can promote_members=True,
-                    can manage_chat=True,
-                    can manage_video_chats=True,
+                    can_promote_members=True,
+                    can_manage_chat=True,
+                    can_manage_video_chats=True,
                 )
             )
             await client.send_message(
                 chat_id=chat_member_updated.chat.id,
                 text="❤️"
-            )
+)
