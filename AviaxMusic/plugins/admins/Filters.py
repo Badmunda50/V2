@@ -45,25 +45,21 @@ async def FilterChecker(client, message):
     text = message.text
     chat_id = message.chat.id
     
-    if len(await get_filters_list(chat_id)) == 0:
+    ALL_FILTERS = await get_filters_list(chat_id)
+    if len(ALL_FILTERS) == 0:
         return
 
-    ALL_FILTERS = await get_filters_list(chat_id)
-    
     for filter_ in ALL_FILTERS:
-        if message.command and message.command[0] == 'filter' and len(message.command) >= 2 and message.command[1] == filter_:
-            return
-
         pattern = r"( |^|[^\w])" + re.escape(filter_) + r"( |$|[^\w])"
-        
         if re.search(pattern, text, flags=re.IGNORECASE):
             filter_data = await get_filter(chat_id, filter_)
             if filter_data:
                 filter_name, content, text, data_type = filter_data
-                await SendFilterMessage(message=message, filter_name=filter_, content=content, text=text, data_type=data_type)
+                await SendFilterMessage(message=message, filter_name=filter_name, content=content, text=text, data_type=data_type)
+                return  # Ensure only one filter is applied per message
             else:
-                # Handle the case where the filter is not found
                 pass
+
 
 @app.on_message(filters.command('filters') & filters.group)
 async def _filters(client, message):
