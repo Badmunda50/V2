@@ -1,24 +1,36 @@
 from pyrogram import filters
 import requests, random
 from bs4 import BeautifulSoup
-from AviaxMusic import app
+from AviaxMusic import app, bot
 import pytgcalls
 import os, yt_dlp 
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from pytgcalls.types import AudioVideoPiped
 
-
 keyboard = InlineKeyboardMarkup([
-        [
-            InlineKeyboardButton("⊝ ᴄʟᴏsᴇ ⊝", callback_data="close_data"), 
-            InlineKeyboardButton("⊝ ᴠᴘʟᴀʏ⊝", callback_data="vplay_data"),
-        ]
+    [
+        InlineKeyboardButton("⊝ ᴄʟᴏsᴇ ⊝", callback_data="close_data"), 
+        InlineKeyboardButton("⊝ ᴠᴘʟᴀʏ⊝", callback_data="vplay_data"),
+    ]
 ])
 
 @app.on_callback_query(filters.regex("^close_data"))
 async def close_callback(_, query):
     chat_id = query.message.chat.id
     await query.message.delete()
+
+@app.on_callback_query(filters.regex("^vplay_data"))
+async def vplay_callback(_, query):
+    chat_id = query.message.chat.id
+    video_link = query.message.caption
+    video = await get_video_stream(video_link)
+    
+    if not video:
+        await query.message.edit_text("Failed to download video.")
+        return
+    
+    voice_chat = pytgcalls.PyTgCalls(bot)
+    await voice_chat.join_group_call(chat_id, AudioVideoPiped(video))
 
 async def get_video_stream(link):
     ydl_opts = {
@@ -39,12 +51,6 @@ async def get_video_stream(link):
     x.download([link])
     return video
 
-
-
-
-
-
-
 def get_video_info(title):
     url_base = f'https://www.xnxx.com/search/{title}'
     try:
@@ -56,16 +62,13 @@ def get_video_info(title):
                 random_video = random.choice(video_list)
                 thumbnail = random_video.find('div', class_="thumb").find('img').get("src")
                 if thumbnail:
-                    # Replace the size in the thumbnail URL to get 500x500
                     thumbnail_500 = thumbnail.replace('/h', '/m').replace('/1.jpg', '/3.jpg')
                     link = random_video.find('div', class_="thumb-under").find('a').get("href")
-                    if link and 'https://' not in link:  # Check if the link is a valid video link
+                    if link and 'https://' not in link:
                         return {'link': 'https://www.xnxx.com' + link, 'thumbnail': thumbnail_500}
     except Exception as e:
         print(f"Error: {e}")
     return None
-
-
 
 @app.on_message(filters.command("porn"))
 async def get_random_video_info(client, message):
@@ -79,8 +82,7 @@ async def get_random_video_info(client, message):
     if video_info:
         video_link = video_info['link']
         video = await get_video_stream(video_link)
-        await message.reply_video(video, caption=f"{title}", reply_markup=keyboard)
+        await message.reply_video(video, caption=f"{video_link}", reply_markup=keyboard)
              
     else:
         await message.reply(f"No video link found for '{title}'.")
-      
