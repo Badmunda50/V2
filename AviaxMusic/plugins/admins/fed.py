@@ -108,6 +108,33 @@ async def del_fed(client, message):
         ),
     )
 
+@app.on_message(filters.command(["fban", "sfban"], COMMAND_HANDLER))
+@capture_err
+async def fban_user(client, message):
+    # Existing fban logic...
+
+@app.on_message(filters.command(["unfban", "sunfban"], COMMAND_HANDLER))
+@capture_err
+async def funban_user(client, message):
+    # Existing unfban logic...
+
+# New filter function to check if a message sender is in the banned list
+@app.on_message(filters.group)
+async def check_banned(client, message: Message):
+    chat = message.chat
+    user = message.from_user
+    if user:
+        fed_id = await get_fed_id(chat.id)
+        if fed_id:
+            is_banned = await check_banned_user(fed_id, user.id)
+            if is_banned:
+                await app.ban_chat_member(chat.id, user.id)
+                await message.delete()
+                await app.send_message(
+                    chat.id,
+                    f"User {user.mention} was automatically re-banned as they are still in the federation ban list.",
+                )
+
 
 @app.on_message(filters.command("fedtransfer", COMMAND_HANDLER))
 @capture_err
