@@ -61,13 +61,13 @@ async def restriction_app(app: app, message):
                     await message.reply(random.choice(strict_txt))
                 else:
                     await app.ban_chat_member(chat_id, user_id)
-                    await message.reply("ᴏᴋ , ᴋᴀʀ ᴅɪᴀ ʙᴀɴ ᴍᴀᴅʀᴄʜᴏᴅ ᴋᴏ 😈")
+                    await message.reply("ᴏᴋ , ᴋᴀʀ ᴅɪᴀ ʙᴀɴ ᴍᴀᴅʀᴄʜᴏᴅ ᴋᴏ 😈 {message.from_user.first_name}")
 
         for unbanned in data:
             print(f"present {unbanned}")
             if unbanned in unban:
                 await app.unban_chat_member(chat_id, user_id)
-                await message.reply(f"ᴏᴋ , sɪʀ ᴋᴀʀ ᴅᴇᴛᴀ ʜᴜ ᴜɴʙᴀɴ 😏")
+                await message.reply(f"ᴏᴋ , sɪʀ ᴋᴀʀ ᴅᴇᴛᴀ ʜᴜ ᴜɴʙᴀɴ 😏 {message.from_user.first_name}")
 
         for kicked in data:
             print(f"present {kicked}")
@@ -77,7 +77,7 @@ async def restriction_app(app: app, message):
                 else:
                     await app.ban_chat_member(chat_id, user_id)
                     await app.unban_chat_member(chat_id, user_id)
-                    await message.reply("ɢᴇᴛ ʟᴏsᴛ , ɴɪᴋʟ ᴍᴀᴅʀᴄʜᴏᴅ 🥱")
+                    await message.reply("ɢᴇᴛ ʟᴏsᴛ , ɴɪᴋʟ ᴍᴀᴅʀᴄʜᴏᴅ 🥱 {message.from_user.first_name}")
 
         for muted in data:
             print(f"present {muted}")
@@ -87,14 +87,14 @@ async def restriction_app(app: app, message):
                 else:
                     permissions = ChatPermissions(can_send_messages=False)
                     await message.chat.restrict_member(user_id, permissions)
-                    await message.reply(f"ᴄʜᴜᴘ ᴋᴀʀ ʟᴏᴠᴅᴇ 😤")
+                    await message.reply(f"ᴄʜᴜᴘ ᴋᴀʀ ʟᴏᴠᴅᴇ 😤 {message.from_user.first_name}")
 
         for unmuted in data:
             print(f"present {unmuted}")
             if unmuted in unmute:
                 permissions = ChatPermissions(can_send_messages=True)
                 await message.chat.restrict_member(user_id, permissions)
-                await message.reply(f"ᴏʜ ! ᴏᴋᴀʏ sɪʀ ☺️")
+                await message.reply(f"ᴏʜ ! ᴏᴋᴀʏ sɪʀ ☺️ {message.from_user.first_name}")
 
         for promoted in data:
             print(f"present {promoted}")
@@ -110,7 +110,7 @@ async def restriction_app(app: app, message):
                     can_manage_video_chats=True,
                 )
                 )
-                await message.reply("ᴀᴅᴍɪɴ ʙɴᴀ ᴅɪᴀ ʜᴀɪ ᴘʟᴢ ᴍᴇᴍʙᴇʀ ᴀᴅ ᴋᴀʀ ᴅᴇɴᴀ ᴛʜᴀɴᴋᴜ ❤️")
+                await message.reply("ᴀᴅᴍɪɴ ʙɴᴀ ᴅɪᴀ ʜᴀɪ ᴘʟᴢ ᴍᴇᴍʙᴇʀ ᴀᴅ ᴋᴀʀ ᴅᴇɴᴀ ᴛʜᴀɴᴋᴜ ❤️ {message.from_user.first_name}")
 
         for demoted in data:
             print(f"present {demoted}")
@@ -126,7 +126,7 @@ async def restriction_app(app: app, message):
                     can_manage_video_chats=False,
                 )
                 )
-                await message.reply("ᴄʜᴜᴘ ᴋᴀʀ ᴋᴇ ʙᴇᴛʜᴀ ʀᴀʜ ʟᴏᴠᴅᴇ ᴀʙʜɪ ᴀᴅᴍɪɴ sᴇ ʜᴀᴛɪᴀ ʜᴀɪ ɪs ᴋᴇ ʙᴀᴀᴅ sɪᴅᴀ ɢʀᴏᴜᴘ ᴍᴇᴍʙᴇʀ ʙɴᴀ ʟᴏ")
+                await message.reply("ᴄʜᴜᴘ ᴋᴀʀ ᴋᴇ ʙᴇᴛʜᴀ ʀᴀʜ ʟᴏᴠᴅᴇ ᴀʙʜɪ ᴀᴅᴍɪɴ sᴇ ʜᴀᴛɪᴀ ʜᴀɪ ɪs ᴋᴇ ʙᴀᴀᴅ sɪᴅᴀ ɢʀᴏᴜᴘ ꜱᴇ {message.from_user.first_name}")
 
         for fullpromoted in data:
             print(f"present {fullpromoted}")
@@ -142,4 +142,4 @@ async def restriction_app(app: app, message):
                     can_manage_video_chats=True,
                 )
                 )
-                await message.reply("ғᴜʟʟ ᴀᴅᴍɪɴ ʙɴᴀ ᴅɪᴀ ʜᴀɪ ᴀʙ ᴀᴘɴᴀ ғʀɪᴇɴᴅ ʙᴀɴᴀ ʟᴇ ᴅᴏsᴛ ❤️")
+                await message.reply("ғᴜʟʟ ᴀᴅᴍɪɴ ʙɴᴀ ᴅɪᴀ ʜᴀɪ ᴀʙʙ ᴀᴘɴᴇ ꜰʀɪᴇɴᴅ ᴋᴏ ʙɪ ᴀᴅᴅ ᴋᴀʀᴅᴏ ❤️ {message.from_user.first_name}")
