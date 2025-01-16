@@ -1,7 +1,7 @@
 from pyrogram import filters
 import requests, random
 from bs4 import BeautifulSoup
-from AviaxMusic import app, bot
+from AviaxMusic import app
 import pytgcalls
 import os, yt_dlp 
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
@@ -29,7 +29,7 @@ async def vplay_callback(_, query):
         await query.message.edit_text("Failed to download video.")
         return
     
-    voice_chat = pytgcalls.PyTgCalls(bot)
+    voice_chat = pytgcalls.PyTgCalls(app)
     await voice_chat.join_group_call(chat_id, AudioVideoPiped(video))
 
 async def get_video_stream(link):
@@ -70,7 +70,7 @@ def get_video_info(title):
         print(f"Error: {e}")
     return None
 
-@app.on_message(filters.command("porn"))
+@app.on_message(filters.command("xnxx"))
 async def get_random_video_info(client, message):
     if len(message.command) == 1:
         await message.reply("Please provide a title to search.")
