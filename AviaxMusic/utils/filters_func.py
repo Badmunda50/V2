@@ -6,9 +6,7 @@ from AviaxMusic.utils.notes_func import NoteFillings
 from emojis import decode
 from pyrogram.types import Message
 
-
 async def SendFilterMessage(message: Message, filter_name: str, content: str, text: str, data_type: int):
-
     chat_id = message.chat.id
     message_id = message.id
     text, buttons = button_markdown_parser(text)
@@ -17,8 +15,6 @@ async def SendFilterMessage(message: Message, filter_name: str, content: str, te
     reply_markup = None
     if len(buttons) > 0:
         reply_markup = InlineKeyboardMarkup(buttons)
-    else:
-        reply_markup = None
 
     if data_type == 1:
         await app.send_message(
@@ -97,7 +93,6 @@ async def SendFilterMessage(message: Message, filter_name: str, content: str, te
             reply_to_message_id=message_id
         )
 
-
 class FilterMessageTypeMap(Enum):
     text = auto()
     sticker = auto()
@@ -118,7 +113,7 @@ async def GetFIlterMessage(message):
     args = raw_text.split(None, 2)
 
     if len(args) >= 3 and not message.reply_to_message:
-        text = message.text.markdown[len(message.command[0]) + len(message.command[1]) + 4 :]
+        text = message.text[len(message.command[0]) + len(message.command[1]) + 4 :]
         data_type = FilterMessageTypeMap.text.value
 
     if (
@@ -126,7 +121,7 @@ async def GetFIlterMessage(message):
         and message.reply_to_message.text
     ):
         if len(args) >= 2:
-            text = message.reply_to_message.text.markdown
+            text = message.reply_to_message.text
             data_type = FilterMessageTypeMap.text.value
 
     elif (
@@ -142,7 +137,7 @@ async def GetFIlterMessage(message):
     ):
         content = message.reply_to_message.animation.file_id
         if message.reply_to_message.caption:
-            text = message.reply_to_message.caption.markdown
+            text = message.reply_to_message.caption
         data_type = FilterMessageTypeMap.animation.value
 
     elif (
@@ -151,7 +146,7 @@ async def GetFIlterMessage(message):
     ):
         content = message.reply_to_message.document.file_id
         if message.reply_to_message.caption: 
-            text = message.reply_to_message.caption.markdown 
+            text = message.reply_to_message.caption 
         data_type = FilterMessageTypeMap.document.value
 
     elif (
@@ -160,7 +155,7 @@ async def GetFIlterMessage(message):
     ):
         content = message.reply_to_message.photo.file_id
         if message.reply_to_message.caption:
-            text = message.reply_to_message.caption.markdown
+            text = message.reply_to_message.caption
         data_type = FilterMessageTypeMap.photo.value
 
     elif (
@@ -169,7 +164,7 @@ async def GetFIlterMessage(message):
     ):
         content = message.reply_to_message.audio.file_id
         if message.reply_to_message.caption:
-            text = message.reply_to_message.caption.markdown 
+            text = message.reply_to_message.caption 
         data_type = FilterMessageTypeMap.audio.value
 
     elif (
@@ -178,7 +173,7 @@ async def GetFIlterMessage(message):
     ):
         content = message.reply_to_message.voice.file_id
         if message.reply_to_message.caption:
-            text = message.reply_to_message.caption.markdown
+            text = message.reply_to_message.caption
         data_type = FilterMessageTypeMap.voice.value
 
     elif (
@@ -187,7 +182,7 @@ async def GetFIlterMessage(message):
     ):
         content = message.reply_to_message.video.file_id 
         if message.reply_to_message.caption:
-            text = message.reply_to_message.caption.markdown 
+            text = message.reply_to_message.caption 
         data_type= FilterMessageTypeMap.video.value
 
     elif (
@@ -229,4 +224,4 @@ def get_text_reason(message: Message) -> str:
     return (
         text,
         reason
-    )
+            )
