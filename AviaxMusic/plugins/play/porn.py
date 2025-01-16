@@ -3,15 +3,16 @@ import requests, random
 from bs4 import BeautifulSoup
 from AviaxMusic import app
 import pytgcalls
-import os, yt_dlp
+import os, yt_dlp 
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pytgcalls.types import AudioVideoPiped
 
 
 keyboard = InlineKeyboardMarkup([
-    [
-        InlineKeyboardButton("⊝ ᴄʟᴏsᴇ ⊝", callback_data="close_data"),
-        InlineKeyboardButton("⊝ ᴠᴘʟᴀʏ⊝", callback_data="vplay_data"),
-    ]
+        [
+            InlineKeyboardButton("⊝ ᴄʟᴏsᴇ ⊝", callback_data="close_data"), 
+            InlineKeyboardButton("⊝ ᴠᴘʟᴀʏ⊝", callback_data="vplay_data"),
+        ]
 ])
 
 @app.on_callback_query(filters.regex("^close_data"))
@@ -38,6 +39,12 @@ async def get_video_stream(link):
     x.download([link])
     return video
 
+
+
+
+
+
+
 def get_video_info(title):
     url_base = f'https://www.xnxx.com/search/{title}'
     try:
@@ -49,36 +56,31 @@ def get_video_info(title):
                 random_video = random.choice(video_list)
                 thumbnail = random_video.find('div', class_="thumb").find('img').get("src")
                 if thumbnail:
+                    # Replace the size in the thumbnail URL to get 500x500
                     thumbnail_500 = thumbnail.replace('/h', '/m').replace('/1.jpg', '/3.jpg')
                     link = random_video.find('div', class_="thumb-under").find('a').get("href")
-                    if link and 'https://' not in link:
+                    if link and 'https://' not in link:  # Check if the link is a valid video link
                         return {'link': 'https://www.xnxx.com' + link, 'thumbnail': thumbnail_500}
     except Exception as e:
         print(f"Error: {e}")
     return None
 
+
+
 @app.on_message(filters.command("porn"))
-async def get_random_video_info(app, message):
-    bot_info = await app.get_me()  # Retrieve current bot's details
-    bot_id = bot_info.id  # Get the current bot's ID
-    user_id = message.from_user.id  # Get the user's ID
-
-    # Check if the user is authorized to use this bot
-    owner_id = await get_bot_owner(bot_id)
-    if owner_id != user_id:
-        await message.reply_text("❌ You're not authorized to use this bot.")
-        return
-
+async def get_random_video_info(client, message):
     if len(message.command) == 1:
         await message.reply("Please provide a title to search.")
         return
 
     title = ' '.join(message.command[1:])
     video_info = get_video_info(title)
-
+    
     if video_info:
         video_link = video_info['link']
         video = await get_video_stream(video_link)
         await message.reply_video(video, caption=f"{title}", reply_markup=keyboard)
+             
     else:
         await message.reply(f"No video link found for '{title}'.")
+      
