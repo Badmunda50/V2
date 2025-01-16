@@ -1,5 +1,5 @@
 import re
-from AviaxMusic import Bad
+from AviaxMusic import Bad as app
 from Yukki import Owner
 from AviaxMusic.utils.database import *
 from AviaxMusic.utils.filters_func import GetFIlterMessage, get_text_reason, SendFilterMessage
