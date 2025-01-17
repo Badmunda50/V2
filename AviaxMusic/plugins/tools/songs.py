@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import asyncio
 import math
 import io
@@ -7,6 +6,7 @@ import time
 import requests
 import wget
 import yt_dlp
+from AviaxMusic import app
 from urllib.parse import urlparse
 from pyrogram import filters
 from pyrogram.types import Message
@@ -14,8 +14,8 @@ from tswift import Song
 from yt_dlp import YoutubeDL
 from youtube_search import YoutubeSearch
 from youtubesearchpython import SearchVideos
-from AviaxMusic import app
 
+COOKIE_PATH = "/cookies/cookies.txt"
 
 @app.on_message(filters.command(["lyrics"]))
 async def lyrics_func(answers, text):
@@ -64,6 +64,7 @@ def download_youtube_audio(url: str):
             "format": "bestaudio",
             "writethumbnail": True,
             "quiet": True,
+            "cookiefile": COOKIE_PATH,
         }
     ) as ydl:
         info_dict = ydl.extract_info(url, download=False)
@@ -123,6 +124,7 @@ async def ytmusic(client, message: Message):
         "outtmpl": "%(id)s.mp4",
         "logtostderr": False,
         "quiet": True,
+        "cookiefile": COOKIE_PATH,
     }
     try:
         with YoutubeDL(opts) as ytdl:
@@ -199,6 +201,7 @@ async def ytmusic(client, message: Message):
         "outtmpl": "%(id)s.mp3",
         "quiet": True,
         "logtostderr": False,
+        "cookiefile": COOKIE_PATH,
     }
     try:
         with YoutubeDL(opts) as ytdl:
@@ -229,4 +232,3 @@ async def ytmusic(client, message: Message):
     for files in (sedlyf, file_stark):
         if files and os.path.exists(files):
             os.remove(files)
-  
