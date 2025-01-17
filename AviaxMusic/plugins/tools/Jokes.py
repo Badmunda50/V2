@@ -1,30 +1,37 @@
-import requests 
-import json
-from AviaxMusic import app 
-from pyrogram import client, filters 
+import requests
+from pyrogram import filters
+from pyrogram.enums import ParseMode
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+
+from AviaxMusic import app
+
+JOKE_API_ENDPOINT = (
+    "https://hindi-jokes-api.onrender.com/jokes?api_key=93eeccc9d663115eba73839b3cd9"
+)
 
 
-@app.on_message(filters.command(["jokes", "joke"]))
-async def jokes(client, message):
-    try:
-       X = requests.get("https://api.safone.dev/joke")
-       Xy = X.json()
-       Xyz = Xy.get("joke", "")
-       await message.reply_text(Xyz)
-    except Exception as e:
-         print(e)
-         await message.reply_text("ᴘʟᴇᴀꜱᴇ ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ ")
+@app.on_message(filters.command("joke"))
+async def get_joke(_, message):
+    response = requests.get(JOKE_API_ENDPOINT)
+    r = response.json()
+    joke_text = r["jokeContent"]
+    refresh_button = InlineKeyboardButton("ʀᴇғʀᴇsʜ", callback_data=f"refresh_joke")
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[[refresh_button]])
+    await message.reply_text(
+        joke_text, reply_markup=keyboard, parse_mode=ParseMode.HTML
+    )
 
 
-
-@app.on_message(filters.command(["meme", "memes"]))
-async def random_memes(client, message):
-    Url = "https://apis-awesome-tofu.koyeb.app/api/meme?type=random"
-    response = requests.get(api_url)
-    if response.status_code == 200:
-        data = response.json()
-        media_type = data['contentType'].split('/')[0]
-        media_url = data['media']
-        await (message.reply_photo if media_type == 'image' else message.reply_video)(media_url, True)
-    else:
-        return await message.reply_text("ᴘʟᴇᴀꜱᴇ ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ ...")
+@app.on_callback_query(filters.regex(r"refresh_joke"))
+async def refresh_joke(_, query):
+    await query.answer()
+    response = requests.get(JOKE_API_ENDPOINT)
+    r = response.json()
+    new_joke_text = r["jokeContent"]
+    await query.message.edit_text(
+        new_joke_text,
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("ʀᴇғʀᴇsʜ", callback_data=f"refresh_joke")]]
+        ),
+        parse_mode=ParseMode.HTML,
+    )
