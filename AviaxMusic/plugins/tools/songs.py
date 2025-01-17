@@ -3,7 +3,7 @@ import asyncio
 import yt_dlp
 from time import time
 from pyrogram import Client, filters
-from pyrogram.types import Message
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from youtube_search import YoutubeSearch
 import requests
 from AviaxMusic import app
@@ -19,7 +19,42 @@ SPAM_WINDOW_SECONDS = 5
 # Path to the cookies file (make sure you have the cookies.txt file in the same directory or provide the full path)
 COOKIES_FILE = 'cookies/example.txt'
 
-# Command to search and download song
+# Quality options for songs
+SONG_QUALITY_OPTIONS = {
+    'low': 'worstaudio',
+    'medium': 'bestaudio[ext=m4a]',
+    'high': 'bestaudio'
+}
+
+# Quality options for videos
+VIDEO_QUALITY_OPTIONS = {
+    '144p': '144',
+    '240p': '240',
+    '360p': '360',
+    '480p': '480',
+    '720p': '720',
+    '1080p': '1080',
+}
+
+async def send_quality_buttons(message: Message, query: str, type: str):
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton(f"Low Quality", callback_data=f"{type}_{query}_low"), 
+         InlineKeyboardButton(f"Medium Quality", callback_data=f"{type}_{query}_medium"), 
+         InlineKeyboardButton(f"High Quality", callback_data=f"{type}_{query}_high")]
+    ])
+    await message.reply("Select quality:", reply_markup=keyboard)
+
+async def send_video_quality_buttons(message: Message, query: str):
+    keyboard = InlineKeyboardMarkup([
+        [InlineKeyboardButton(f"144p", callback_data=f"video_{query}_144p"), 
+         InlineKeyboardButton(f"240p", callback_data=f"video_{query}_240p"),
+         InlineKeyboardButton(f"360p", callback_data=f"video_{query}_360p")],
+        [InlineKeyboardButton(f"480p", callback_data=f"video_{query}_480p"), 
+         InlineKeyboardButton(f"720p", callback_data=f"video_{query}_720p"),
+         InlineKeyboardButton(f"1080p", callback_data=f"video_{query}_1080p")]
+    ])
+    await message.reply("Select quality:", reply_markup=keyboard)
+
 @app.on_message(filters.command("song"))
 async def download_song(_, message: Message):
     user_id = message.from_user.id
@@ -45,65 +80,9 @@ async def download_song(_, message: Message):
         await message.reply("Please provide a song name or URL to search for.")
         return
 
-    # Searching for the song using YouTubeSearch
-    m = await message.reply("🔄 **Searching...**")
-    ydl_opts = {
-        "format": "bestaudio[ext=m4a]",  # Options to download audio in m4a format
-        "noplaylist": True,  # Don't download playlists
-        "quiet": True,
-        "logtostderr": False,
-        "cookiefile": COOKIES_FILE,  # Path to your cookies.txt file
-    }
+    # Sending quality selection buttons
+    await send_quality_buttons(message, query, 'song')
 
-    try:
-        # Search for the song
-        results = YoutubeSearch(query, max_results=1).to_dict()
-        if not results:
-            await m.edit("**⚠️ No results found. Please make sure you typed the correct song name.**")
-            return
-
-        link = f"https://youtube.com{results[0]['url_suffix']}"
-        title = results[0]["title"]
-        thumbnail = results[0]["thumbnails"][0]
-        thumb_name = f"{title}.jpg"
-        
-        # Download thumbnail
-        thumb = requests.get(thumbnail, allow_redirects=True)
-        open(thumb_name, "wb").write(thumb.content)
-        duration = results[0]["duration"]
-        views = results[0]["views"]
-        channel_name = results[0]["channel"]
-
-        # Now, download the audio using yt_dlp
-        await m.edit("📥 **Downloading...**")
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info_dict = ydl.extract_info(link, download=False)
-            audio_file = ydl.prepare_filename(info_dict)
-            ydl.download([link])
-
-        # Parsing duration (in seconds)
-        dur = sum(int(x) * 60 ** i for i, x in enumerate(reversed(duration.split(":"))))
-        
-        # Sending the audio to the user
-        await m.edit("📤 **Uploading...**")
-        await message.reply_audio(
-            audio_file,
-            thumb=thumb_name,
-            title=title,
-            caption=f"{title}\nRequested by ➪ {message.from_user.mention}\nViews ➪ {views}\nChannel ➪ {channel_name}",
-            duration=dur
-        )
-
-        # Cleanup downloaded files
-        os.remove(audio_file)
-        os.remove(thumb_name)
-        await m.delete()
-
-    except Exception as e:
-        await m.edit("⚠️ **An error occurred!**")
-        print(f"Error: {str(e)}")
-
-# Command to search and download video
 @app.on_message(filters.command("video"))
 async def download_video(_, message: Message):
     user_id = message.from_user.id
@@ -129,21 +108,36 @@ async def download_video(_, message: Message):
         await message.reply("Please provide a video name or URL to search for.")
         return
 
-    # Searching for the video using YouTubeSearch
-    m = await message.reply("🔄 **Searching...**")
-    ydl_opts = {
-        "format": "best",  # Options to download the best quality video
-        "noplaylist": True,  # Don't download playlists
-        "quiet": True,
-        "logtostderr": False,
-        "cookiefile": COOKIES_FILE,  # Path to your cookies.txt file
-    }
+    # Sending quality selection buttons
+    await send_video_quality_buttons(message, query)
+
+@app.on_callback_query(filters.regex(r"^(song|video)_(.+)_(low|medium|high|144p|240p|360p|480p|720p|1080p)$"))
+async def callback_query_handler(client, query):
+    type, query_text, quality = query.data.split("_")
+    
+    if type == "song":
+        ydl_opts = {
+            "format": SONG_QUALITY_OPTIONS[quality],  # Options to download audio in selected quality
+            "noplaylist": True,  # Don't download playlists
+            "quiet": True,
+            "logtostderr": False,
+            "cookiefile": COOKIES_FILE,  # Path to your cookies.txt file
+        }
+    else:
+        ydl_opts = {
+            "format": f"bestvideo[height<={VIDEO_QUALITY_OPTIONS[quality]}]+bestaudio/best[height<={VIDEO_QUALITY_OPTIONS[quality]}]",  # Options to download video in selected quality
+            "noplaylist": True,  # Don't download playlists
+            "quiet": True,
+            "logtostderr": False,
+            "cookiefile": COOKIES_FILE,  # Path to your cookies.txt file
+        }
 
     try:
-        # Search for the video
-        results = YoutubeSearch(query, max_results=1).to_dict()
+        # Searching for the song or video using YouTubeSearch
+        m = await query.message.reply("🔄 **Searching...**")
+        results = YoutubeSearch(query_text, max_results=1).to_dict()
         if not results:
-            await m.edit("**⚠️ No results found. Please make sure you typed the correct video name.**")
+            await m.edit("**⚠️ No results found. Please make sure you typed the correct name.**")
             return
 
         link = f"https://youtube.com{results[0]['url_suffix']}"
@@ -158,31 +152,39 @@ async def download_video(_, message: Message):
         views = results[0]["views"]
         channel_name = results[0]["channel"]
 
-        # Now, download the video using yt_dlp
+        # Now, download the audio or video using yt_dlp
         await m.edit("📥 **Downloading...**")
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(link, download=False)
-            video_file = ydl.prepare_filename(info_dict)
+            file = ydl.prepare_filename(info_dict)
             ydl.download([link])
 
         # Parsing duration (in seconds)
         dur = sum(int(x) * 60 ** i for i, x in enumerate(reversed(duration.split(":"))))
         
-        # Sending the video to the user
+        # Sending the audio or video to the user
         await m.edit("📤 **Uploading...**")
-        await message.reply_video(
-            video_file,
-            thumb=thumb_name,
-            caption=f"{title}\nRequested by ➪ {message.from_user.mention}\nViews ➪ {views}\nChannel ➪ {channel_name}",
-            duration=dur
-        )
+        if type == "song":
+            await query.message.reply_audio(
+                file,
+                thumb=thumb_name,
+                title=title,
+                caption=f"{title}\nRequested by ➪ {query.from_user.mention}\nViews ➪ {views}\nChannel ➪ {channel_name}",
+                duration=dur
+            )
+        else:
+            await query.message.reply_video(
+                file,
+                thumb=thumb_name,
+                caption=f"{title}\nRequested by ➪ {query.from_user.mention}\nViews ➪ {views}\nChannel ➪ {channel_name}",
+                duration=dur
+            )
 
         # Cleanup downloaded files
-        os.remove(video_file)
+        os.remove(file)
         os.remove(thumb_name)
         await m.delete()
 
     except Exception as e:
         await m.edit("⚠️ **An error occurred!**")
         print(f"Error: {str(e)}")
-
