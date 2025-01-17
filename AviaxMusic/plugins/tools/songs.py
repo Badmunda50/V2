@@ -15,7 +15,7 @@ from yt_dlp import YoutubeDL
 from youtube_search import YoutubeSearch
 from youtubesearchpython import SearchVideos
 
-COOKIE_PATH = "/cookies/cookies.txt"
+COOKIE_PATH = "cookies/cookies.txt"
 
 def get_text(message: Message) -> [None, str]:
     text_to_return = message.text
