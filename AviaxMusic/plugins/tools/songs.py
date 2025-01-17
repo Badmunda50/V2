@@ -23,7 +23,8 @@ COOKIES_FILE = 'cookies/example.txt'
 SONG_QUALITY_OPTIONS = {
     'low': 'worstaudio',
     'medium': 'bestaudio[ext=m4a]',
-    'high': 'bestaudio'
+    'high': 'bestaudio',
+    'ultra_high': 'bestaudio[ext=flac]'
 }
 
 # Quality options for videos
@@ -42,7 +43,8 @@ async def send_quality_buttons(message: Message, query: str, type: str, thumbnai
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton(f"Low Quality", callback_data=f"{type}_{query}_low"), 
          InlineKeyboardButton(f"Medium Quality", callback_data=f"{type}_{query}_medium"), 
-         InlineKeyboardButton(f"High Quality", callback_data=f"{type}_{query}_high")]
+         InlineKeyboardButton(f"High Quality", callback_data=f"{type}_{query}_high")],
+        [InlineKeyboardButton(f"Ultra High Quality", callback_data=f"{type}_{query}_ultra_high")]
     ])
     await message.reply_photo(photo=thumbnail, caption="Select quality:", reply_markup=keyboard)
 
@@ -131,7 +133,7 @@ async def download_video(_, message: Message):
     # Sending quality selection buttons
     await send_video_quality_buttons(message, query, thumbnail)
 
-@app.on_callback_query(filters.regex(r"^(song|video)_(.+)_(low|medium|high|144p|240p|360p|480p|720p|1080p|1440p|2160p)$"))
+@app.on_callback_query(filters.regex(r"^(song|video)_(.+)_(low|medium|high|ultra_high|144p|240p|360p|480p|720p|1080p|1440p|2160p)$"))
 async def callback_query_handler(client, query):
     type, query_text, quality = query.data.split("_")
     
