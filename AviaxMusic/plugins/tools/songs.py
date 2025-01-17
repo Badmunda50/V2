@@ -34,26 +34,30 @@ VIDEO_QUALITY_OPTIONS = {
     '480p': '480',
     '720p': '720',
     '1080p': '1080',
+    '1440p': '1440',
+    '2160p': '2160',
 }
 
-async def send_quality_buttons(message: Message, query: str, type: str):
+async def send_quality_buttons(message: Message, query: str, type: str, thumbnail: str):
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton(f"Low Quality", callback_data=f"{type}_{query}_low"), 
          InlineKeyboardButton(f"Medium Quality", callback_data=f"{type}_{query}_medium"), 
          InlineKeyboardButton(f"High Quality", callback_data=f"{type}_{query}_high")]
     ])
-    await message.reply("Select quality:", reply_markup=keyboard)
+    await message.reply_photo(photo=thumbnail, caption="Select quality:", reply_markup=keyboard)
 
-async def send_video_quality_buttons(message: Message, query: str):
+async def send_video_quality_buttons(message: Message, query: str, thumbnail: str):
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton(f"144p", callback_data=f"video_{query}_144p"), 
          InlineKeyboardButton(f"240p", callback_data=f"video_{query}_240p"),
          InlineKeyboardButton(f"360p", callback_data=f"video_{query}_360p")],
         [InlineKeyboardButton(f"480p", callback_data=f"video_{query}_480p"), 
          InlineKeyboardButton(f"720p", callback_data=f"video_{query}_720p"),
-         InlineKeyboardButton(f"1080p", callback_data=f"video_{query}_1080p")]
+         InlineKeyboardButton(f"1080p", callback_data=f"video_{query}_1080p")],
+        [InlineKeyboardButton(f"1440p", callback_data=f"video_{query}_1440p"), 
+         InlineKeyboardButton(f"2160p", callback_data=f"video_{query}_2160p")]
     ])
-    await message.reply("Select quality:", reply_markup=keyboard)
+    await message.reply_photo(photo=thumbnail, caption="Select quality:", reply_markup=keyboard)
 
 @app.on_message(filters.command("song"))
 async def download_song(_, message: Message):
@@ -80,8 +84,16 @@ async def download_song(_, message: Message):
         await message.reply("Please provide a song name or URL to search for.")
         return
 
+    # Searching for the song using YouTubeSearch
+    results = YoutubeSearch(query, max_results=1).to_dict()
+    if not results:
+        await message.reply("⚠️ No results found. Please make sure you typed the correct name.")
+        return
+
+    thumbnail = results[0]["thumbnails"][0]
+    
     # Sending quality selection buttons
-    await send_quality_buttons(message, query, 'song')
+    await send_quality_buttons(message, query, 'song', thumbnail)
 
 @app.on_message(filters.command("video"))
 async def download_video(_, message: Message):
@@ -108,10 +120,18 @@ async def download_video(_, message: Message):
         await message.reply("Please provide a video name or URL to search for.")
         return
 
-    # Sending quality selection buttons
-    await send_video_quality_buttons(message, query)
+    # Searching for the video using YouTubeSearch
+    results = YoutubeSearch(query, max_results=1).to_dict()
+    if not results:
+        await message.reply("⚠️ No results found. Please make sure you typed the correct name.")
+        return
 
-@app.on_callback_query(filters.regex(r"^(song|video)_(.+)_(low|medium|high|144p|240p|360p|480p|720p|1080p)$"))
+    thumbnail = results[0]["thumbnails"][0]
+    
+    # Sending quality selection buttons
+    await send_video_quality_buttons(message, query, thumbnail)
+
+@app.on_callback_query(filters.regex(r"^(song|video)_(.+)_(low|medium|high|144p|240p|360p|480p|720p|1080p|1440p|2160p)$"))
 async def callback_query_handler(client, query):
     type, query_text, quality = query.data.split("_")
     
