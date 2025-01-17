@@ -1,244 +1,188 @@
-import asyncio
-import math
-import io
 import os
-import time
-import requests
-import wget
+import asyncio
 import yt_dlp
-from AviaxMusic import app
-from urllib.parse import urlparse
-from pyrogram import filters
+from time import time
+from pyrogram import Client, filters
 from pyrogram.types import Message
-from yt_dlp import YoutubeDL
 from youtube_search import YoutubeSearch
-from youtubesearchpython import SearchVideos
+import requests
+from AviaxMusic import app
 
-COOKIE_PATH = "cookies/cookies.txt"
+# Define a dictionary to track the last message timestamp for each user
+user_last_message_time = {}
+user_command_count = {}
 
-def get_text(message: Message) -> [None, str]:
-    text_to_return = message.text
-    if message.text is None:
-        return None
-    if " " in text_to_return:
-        try:
-            return message.text.split(None, 1)[1]
-        except IndexError:
-            return None
-    else:
-        return None
+# Define the threshold for command spamming (e.g., 2 commands within 5 seconds)
+SPAM_THRESHOLD = 2
+SPAM_WINDOW_SECONDS = 5
 
-async def progress(current, total, message, start, type_of_ps, file_name=None):
-    now = time.time()
-    diff = now - start
-    if round(diff % 10.00) == 0 or current == total:
-        percentage = current * 100 / total
-        speed = current / diff
-        elapsed_time = round(diff) * 1000
-        if elapsed_time == 0:
+# Path to the cookies file (make sure you have the cookies.txt file in the same directory or provide the full path)
+COOKIES_FILE = 'cookies/cookies.txt'
+
+# Command to search and download song
+@app.on_message(filters.command("song"))
+async def download_song(_, message: Message):
+    user_id = message.from_user.id
+    current_time = time()
+    
+    # Spam protection: Prevent multiple commands within a short time
+    last_message_time = user_last_message_time.get(user_id, 0)
+    if current_time - last_message_time < SPAM_WINDOW_SECONDS:
+        user_last_message_time[user_id] = current_time
+        user_command_count[user_id] = user_command_count.get(user_id, 0) + 1
+        if user_command_count[user_id] > SPAM_THRESHOLD:
+            hu = await message.reply_text(f"**{message.from_user.mention} ᴘʟᴇᴀsᴇ ᴅᴏɴᴛ ᴅᴏ sᴘᴀᴍ, ᴀɴᴅ ᴛʀʏ ᴀɢᴀɪɴ ᴀғᴛᴇʀ 5 sᴇᴄ**")
+            await asyncio.sleep(3)
+            await hu.delete()
             return
-        time_to_completion = round((total - current) / speed) * 1000
-        estimated_total_time = elapsed_time + time_to_completion
-        progress_str = "{0}{1} {2}%\n".format(
-            "".join(["🔴" for i in range(math.floor(percentage / 10))]),
-            "".join(["🔘" for i in range(10 - math.floor(percentage / 10))]),
-            round(percentage, 2),
-        )
-        tmp = progress_str + "{0} of {1}\nETA: {2}".format(
-            humanbytes(current), humanbytes(total), time_formatter(estimated_total_time)
-        )
-        if file_name:
-            try:
-                await message.edit(
-                    "{}\n**File Name:** `{}`\n{}".format(type_of_ps, file_name, tmp)
-                )
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-            except MessageNotModified:
-                pass
-        else:
-            try:
-                await message.edit("{}\n{}".format(type_of_ps, tmp))
-            except FloodWait as e:
-                await asyncio.sleep(e.x)
-            except MessageNotModified:
-                pass
-
-def get_file_extension_from_url(url):
-    url_path = urlparse(url).path
-    basename = os.path.basename(url_path)
-    return basename.split(".")[-1]
-
-def download_youtube_audio(url: str):
-    global is_downloading
-    with yt_dlp.YoutubeDL(
-        {
-            "format": "bestaudio",
-            "writethumbnail": True,
-            "quiet": True,
-            "cookiefile": COOKIE_PATH,
-            "cookies_from_browser": ("chrome", ),  # Added to handle cookies error
-        }
-    ) as ydl:
-        info_dict = ydl.extract_info(url, download=False)
-        if int(float(info_dict["duration"])) > 180:
-            is_downloading = False
-            return []
-        ydl.process_info(info_dict)
-        audio_file = ydl.prepare_filename(info_dict)
-        basename = audio_file.rsplit(".", 1)[-2]
-        if info_dict["ext"] == "webm":
-            audio_file_opus = basename + ".opus"
-            ffmpeg.input(audio_file).output(
-                audio_file_opus, codec="copy", loglevel="error"
-            ).overwrite_output().run()
-            os.remove(audio_file)
-            audio_file = audio_file_opus
-        thumbnail_url = info_dict["thumbnail"]
-        thumbnail_file = (
-            basename + "." + get_file_extension_from_url(thumbnail_url)
-        )
-        title = info_dict["title"]
-        performer = info_dict["uploader"]
-        duration = int(float(info_dict["duration"]))
-    return [title, performer, duration, audio_file, thumbnail_file]
-
-@app.on_message(filters.command(["vsong", "video"]))
-async def ytmusic(client, message: Message):
-    urlissed = get_text(message)
-    pablo = await client.send_message(
-        message.chat.id, f"`ɢᴇᴛᴛɪɴɢ {urlissed}  ꜰʀᴏᴍ ʏᴏᴜᴛᴜʙᴇ ꜱᴇʀᴠᴇʀꜱ. ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ ʙᴀʙʏ🥀.`"
-    )
-    if not urlissed:
-        await pablo.edit("ɪɴᴠᴀʟɪᴅ ᴄᴏᴍᴍᴀɴᴅ ꜱʏɴᴛᴀx, ᴘʟᴇᴀꜱᴇ ᴄʜᴇᴄᴋ ʜᴇʟᴘ ᴍᴇɴᴜ ᴛᴏ ᴋɴᴏᴡ ᴍᴏʀᴇ ʙᴀʙʏ🥀!")
+    else:
+        user_command_count[user_id] = 1
+        user_last_message_time[user_id] = current_time
+    
+    # Extract query from the message
+    query = " ".join(message.command[1:])
+    if not query:
+        await message.reply("Please provide a song name or URL to search for.")
         return
-    search = SearchVideos(f"{urlissed}", offset=1, mode="dict", max_results=1)
-    mi = search.result()
-    mio = mi["search_result"]
-    mo = mio[0]["link"]
-    thum = mio[0]["title"]
-    fridayz = mio[0]["id"]
-    thums = mio[0]["channel"]
-    kekme = f"https://img.youtube.com/vi/{fridayz}/hqdefault.jpg"
-    await asyncio.sleep(0.6)
-    url = mo
-    sedlyf = wget.download(kekme)
-    opts = {
-        "format": "best",
-        "addmetadata": True,
-        "key": "FFmpegMetadata",
-        "prefer_ffmpeg": True,
-        "geo_bypass": True,
-        "nocheckcertificate": True,
-        "postprocessors": [{"key": "FFmpegVideoConvertor", "preferedformat": "mp4"}],
-        "outtmpl": "%(id)s.mp4",
-        "logtostderr": False,
-        "quiet": True,
-        "cookiefile": COOKIE_PATH,
-        "cookies_from_browser": ("chrome", ),  # Added to handle cookies error
-    }
-    try:
-        with YoutubeDL(opts) as ytdl:
-            infoo = ytdl.extract_info(url, False)
-            duration = round(infoo["duration"] / 60)
-            ytdl_data = ytdl.extract_info(url, download=True)
-    except Exception as e:
-        await pablo.edit(f"**ꜰᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ** \n**ᴇʀʀᴏʀ :** `{str(e)}` ʙᴀʙʏ🥀")
-        return
-    c_time = time.time()
-    file_stark = f"{ytdl_data['id']}.mp4"
-    capy = f"**Video Name ➠** [{thum}]({mo}) \n**Requested For :** `{urlissed}` \n**Channel :** `{thums}` "
-    await client.send_video(
-        message.chat.id,
-        video=open(file_stark, "rb"),
-        duration=int(ytdl_data["duration"]),
-        file_name=str(ytdl_data["title"]),
-        thumb=sedlyf,
-        caption=capy,
-        supports_streaming=True,
-        progress=progress,
-        progress_args=(
-            pablo,
-            c_time,
-            f"`ᴜᴘʟᴏᴀᴅɪɴɢ {urlissed} ꜱᴏɴɢ ꜰʀᴏᴍ ʏᴏᴜᴛᴜʙᴇ ᴍᴜꜱɪᴄ ʙᴀʙʏ🥀!`",
-            file_stark,
-        ),
-    )
-    await pablo.delete()
-    for files in (sedlyf, file_stark):
-        if files and os.path.exists(files):
-            os.remove(files)
 
-@app.on_message(filters.command(["music", "song"]))
-async def ytmusic(client, message: Message):
-    urlissed = get_text(message)
-    if not urlissed:
-        await client.send_message(
-            message.chat.id,
-            "ɪɴᴠᴀʟɪᴅ ᴄᴏᴍᴍᴀɴᴅ ꜱʏɴᴛᴀx, ᴘʟᴇᴀꜱᴇ ᴄʜᴇᴄᴋ ʜᴇʟᴘ ᴍᴇɴᴜ ᴛᴏ ᴋɴᴏᴡ ᴍᴏʀᴇ ʙᴀʙʏ🥀!",
-        )
-        return
-    pablo = await client.send_message(
-        message.chat.id, f"`ɢᴇᴛᴛɪɴɢ {urlissed} ꜰʀᴏᴍ ʏᴏᴜᴛᴜʙᴇ ꜱᴇʀᴠᴇʀꜱ. ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ ʙᴀʙʏ🥀.`"
-    )
-    search = SearchVideos(f"{urlissed}", offset=1, mode="dict", max_results=1)
-    mi = search.result()
-    mio = mi["search_result"]
-    mo = mio[0]["link"]
-    mio[0]["duration"]
-    thum = mio[0]["title"]
-    fridayz = mio[0]["id"]
-    thums = mio[0]["channel"]
-    kekme = f"https://img.youtube.com/vi/{fridayz}/hqdefault.jpg"
-    await asyncio.sleep(0.6)
-    sedlyf = wget.download(kekme)
-    opts = {
-        "format": "bestaudio",
-        "addmetadata": True,
-        "key": "FFmpegMetadata",
-        "writethumbnail": True,
-        "prefer_ffmpeg": True,
-        "geo_bypass": True,
-        "nocheckcertificate": True,
-        "postprocessors": [
-            {
-                "key": "FFmpegExtractAudio",
-                "preferredcodec": "mp3",
-                "preferredquality": "720",
-            }
-        ],
-        "outtmpl": "%(id)s.mp3",
+    # Searching for the song using YouTubeSearch
+    m = await message.reply("🔄 **Searching...**")
+    ydl_opts = {
+        "format": "bestaudio[ext=m4a]",  # Options to download audio in m4a format
+        "noplaylist": True,  # Don't download playlists
         "quiet": True,
         "logtostderr": False,
-        "cookiefile": COOKIE_PATH,
-        "cookies_from_browser": ("chrome", ),  # Added to handle cookies error
+        "cookiefile": COOKIES_FILE,  # Path to your cookies.txt file
     }
+
     try:
-        with YoutubeDL(opts) as ytdl:
-            ytdl_data = ytdl.extract_info(mo, download=True)
+        # Search for the song
+        results = YoutubeSearch(query, max_results=1).to_dict()
+        if not results:
+            await m.edit("**⚠️ No results found. Please make sure you typed the correct song name.**")
+            return
+
+        link = f"https://youtube.com{results[0]['url_suffix']}"
+        title = results[0]["title"]
+        thumbnail = results[0]["thumbnails"][0]
+        thumb_name = f"{title}.jpg"
+        
+        # Download thumbnail
+        thumb = requests.get(thumbnail, allow_redirects=True)
+        open(thumb_name, "wb").write(thumb.content)
+        duration = results[0]["duration"]
+        views = results[0]["views"]
+        channel_name = results[0]["channel"]
+
+        # Now, download the audio using yt_dlp
+        await m.edit("📥 **Downloading...**")
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info_dict = ydl.extract_info(link, download=False)
+            audio_file = ydl.prepare_filename(info_dict)
+            ydl.download([link])
+
+        # Parsing duration (in seconds)
+        dur = sum(int(x) * 60 ** i for i, x in enumerate(reversed(duration.split(":"))))
+        
+        # Sending the audio to the user
+        await m.edit("📤 **Uploading...**")
+        await message.reply_audio(
+            audio_file,
+            thumb=thumb_name,
+            title=title,
+            caption=f"{title}\nRequested by ➪ {message.from_user.mention}\nViews ➪ {views}\nChannel ➪ {channel_name}",
+            duration=dur
+        )
+
+        # Cleanup downloaded files
+        os.remove(audio_file)
+        os.remove(thumb_name)
+        await m.delete()
+
     except Exception as e:
-        await pablo.edit(f"**ꜰᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ** \n**ᴇʀʀᴏʀ :** `{str(e)}` ʙᴀʙʏ🥀")
+        await m.edit("⚠️ **An error occurred!**")
+        print(f"Error: {str(e)}")
+
+# Command to search and download video
+@app.on_message(filters.command("video"))
+async def download_video(_, message: Message):
+    user_id = message.from_user.id
+    current_time = time()
+    
+    # Spam protection: Prevent multiple commands within a short time
+    last_message_time = user_last_message_time.get(user_id, 0)
+    if current_time - last_message_time < SPAM_WINDOW_SECONDS:
+        user_last_message_time[user_id] = current_time
+        user_command_count[user_id] = user_command_count.get(user_id, 0) + 1
+        if user_command_count[user_id] > SPAM_THRESHOLD:
+            hu = await message.reply_text(f"**{message.from_user.mention} ᴘʟᴇᴀsᴇ ᴅᴏɴᴛ ᴅᴏ sᴘᴀᴍ, ᴀɴᴅ ᴛʀʏ ᴀɢᴀɪɴ ᴀғᴛᴇʀ 5 sᴇᴄ**")
+            await asyncio.sleep(3)
+            await hu.delete()
+            return
+    else:
+        user_command_count[user_id] = 1
+        user_last_message_time[user_id] = current_time
+    
+    # Extract query from the message
+    query = " ".join(message.command[1:])
+    if not query:
+        await message.reply("Please provide a video name or URL to search for.")
         return
-    c_time = time.time()
-    capy = f"**Song Name :** [{thum}]({mo}) \n**Requested For :** `{urlissed}` \n**Channel :** `{thums}` "
-    file_stark = f"{ytdl_data['id']}.mp3"
-    await client.send_audio(
-        message.chat.id,
-        audio=open(file_stark, "rb"),
-        duration=int(ytdl_data["duration"]),
-        title=str(ytdl_data["title"]),
-        performer=str(ytdl_data["uploader"]),
-        thumb=sedlyf,
-        caption=capy,
-        progress=progress,
-        progress_args=(
-            pablo,
-            c_time,
-            f"`ᴜᴘʟᴏᴅɪɴɢ {urlissed} ꜱᴏɴɢ ꜰʀᴏᴍ ʏᴏᴜᴛᴜʙᴇ ᴍᴜꜱɪᴄ ʙᴀʙʏ🥀!`",
-            file_stark,
-        ),
-    )
-    await pablo.delete()
-    for files in (sedlyf, file_stark):
-        if files and os.path.exists(files):
-            os.remove(files)
+
+    # Searching for the video using YouTubeSearch
+    m = await message.reply("🔄 **Searching...**")
+    ydl_opts = {
+        "format": "best",  # Options to download the best quality video
+        "noplaylist": True,  # Don't download playlists
+        "quiet": True,
+        "logtostderr": False,
+        "cookiefile": COOKIES_FILE,  # Path to your cookies.txt file
+    }
+
+    try:
+        # Search for the video
+        results = YoutubeSearch(query, max_results=1).to_dict()
+        if not results:
+            await m.edit("**⚠️ No results found. Please make sure you typed the correct video name.**")
+            return
+
+        link = f"https://youtube.com{results[0]['url_suffix']}"
+        title = results[0]["title"]
+        thumbnail = results[0]["thumbnails"][0]
+        thumb_name = f"{title}.jpg"
+        
+        # Download thumbnail
+        thumb = requests.get(thumbnail, allow_redirects=True)
+        open(thumb_name, "wb").write(thumb.content)
+        duration = results[0]["duration"]
+        views = results[0]["views"]
+        channel_name = results[0]["channel"]
+
+        # Now, download the video using yt_dlp
+        await m.edit("📥 **Downloading...**")
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info_dict = ydl.extract_info(link, download=False)
+            video_file = ydl.prepare_filename(info_dict)
+            ydl.download([link])
+
+        # Parsing duration (in seconds)
+        dur = sum(int(x) * 60 ** i for i, x in enumerate(reversed(duration.split(":"))))
+        
+        # Sending the video to the user
+        await m.edit("📤 **Uploading...**")
+        await message.reply_video(
+            video_file,
+            thumb=thumb_name,
+            caption=f"{title}\nRequested by ➪ {message.from_user.mention}\nViews ➪ {views}\nChannel ➪ {channel_name}",
+            duration=dur
+        )
+
+        # Cleanup downloaded files
+        os.remove(video_file)
+        os.remove(thumb_name)
+        await m.delete()
+
+    except Exception as e:
+        await m.edit("⚠️ **An error occurred!**")
+        print(f"Error: {str(e)}")
+
