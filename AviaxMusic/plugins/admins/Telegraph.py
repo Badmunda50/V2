@@ -1,51 +1,172 @@
-from telegraph import upload_file
+import os
 from pyrogram import filters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from AviaxMusic import app
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-import asyncio
-from pyrogram.types import InputMediaPhoto
+import requests
 
-BUTTON = InlineKeyboardMarkup(
-    [
-        [
-            
-        InlineKeyboardButton(text=" ᴄʟᴏsᴇ ", callback_data="close"),
-    ],
-    ]
-)
 
-@app.on_message(filters.command(["tgm", "tl", "telegraph"]))
-async def ul(_, message):
-    reply = message.reply_to_message
-    cutex = message.from_user.mention
+def upload_file(file_path):
+    url = "https://catbox.moe/user/api.php"
+    data = {"reqtype": "fileupload", "json": "true"}
+    files = {"fileToUpload": open(file_path, "rb")}
+    response = requests.post(url, data=data, files=files)
+
+    if response.status_code == 200:
+        return True, response.text.strip()
+    else:
+        return False, f"ᴇʀʀᴏʀ: {response.status_code} - {response.text}"
+
+
+@app.on_message(filters.command(["tgm"]))
+async def get_link_group(client, message):
+    if not message.reply_to_message:
+        return await message.reply_text(
+            "Pʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇᴅɪᴀ ᴛᴏ ᴜᴘʟᴏᴀᴅ ᴏɴ Tᴇʟᴇɢʀᴀᴘʜ"
+        )
+
+    media = message.reply_to_message
+    file_size = 0
+    if media.photo:
+        file_size = media.photo.file_size
+    elif media.video:
+        file_size = media.video.file_size
+    elif media.document:
+        file_size = media.document.file_size
+
+    if file_size > 200 * 1024 * 1024:
+        return await message.reply_text("Pʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴍᴇᴅɪᴀ ғɪʟᴇ ᴜɴᴅᴇʀ 200MB.")
+
     try:
-        if reply.media:
-            up = await message.reply_sticker("CAACAgIAAyEFAASE2HvHAAIRSGZn34jADGCDeBSq701i8aepnjA_AAL_RQACDXG5SKHDB6er4uX9HgQ")
-            await asyncio.sleep(0.3)
-            await up.delete()
-            i = await message.reply_text("uploading...")
-            path = await reply.download()
-            fk = upload_file(path)
-            for x in fk:
-                url = "https://telegra.ph" + x
-            await i.edit_text(f"Hey {cutex}\n\nHere is your link:\n`{url}`\nclick to copy 👆", reply_markup=BUTTON)
-        if not reply:
-            await message.reply("Please reply with a media under 5 MB.")
-    except Exception as e:
-        await message.reply("Please reply with a media under 5 MB.")
+        text = await message.reply("❍ ʜᴏʟᴅ ᴏɴ ʙᴀʙʏ....♡")
 
-###Hello
+        async def progress(current, total):
+            try:
+                await text.edit_text(f"📥 Dᴏᴡɴʟᴏᴀᴅɪɴɢ... {current * 100 / total:.1f}%")
+            except Exception:
+                pass
+
+        try:
+            local_path = await media.download(progress=progress)
+            await text.edit_text("📤 Uᴘʟᴏᴀᴅɪɴɢ ᴛᴏ ᴛᴇʟᴇɢʀᴀᴘʜ...")
+
+            success, upload_path = upload_file(local_path)
+
+            if success:
+                await text.edit_text(
+                    f"🌐 | [👉ʏᴏᴜʀ ʟɪɴᴋ ᴛᴀᴘ ʜᴇʀᴇ👈]({upload_path})",
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    " ᴄʀᴇᴀᴛᴇ ʙʏ sʏsᴛᴜᴍ-ᴍᴜsɪᴄ ᴛᴀᴘ ᴛᴏ sᴇᴇ ",
+                                    url=upload_path,
+                                )
+                            ]
+                        ]
+                    ),
+                )
+            else:
+                await text.edit_text(
+                    f"ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ ᴡʜɪʟᴇ ᴜᴘʟᴏᴀᴅɪɴɢ ʏᴏᴜʀ ғɪʟᴇ\n{upload_path}"
+                )
+
+            try:
+                os.remove(local_path)
+            except Exception:
+                pass
+
+        except Exception as e:
+            await text.edit_text(f"❌ Fɪʟᴇ ᴜᴘʟᴏᴀᴅ ғᴀɪʟᴇᴅ\n\n<i>Rᴇᴀsᴏɴ: {e}</i>")
+            try:
+                os.remove(local_path)
+            except Exception:
+                pass
+            return
+    except Exception:
+        pass
+        
+import os
+from pyrogram import filters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from AviaxMusic import app
+import requests
 
 
-@app.on_message(filters.command(["graph" , "grf"]))
-def ul(_, message):
-    reply = message.reply_to_message
-    if reply.media:
-        i = message.reply("ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ...")
-        path = reply.download()
-        fk = upload_file(path)
-        for x in fk:
-            url = "https://graph.org" + x
+def upload_file(file_path):
+    url = "https://catbox.moe/user/api.php"
+    data = {"reqtype": "fileupload", "json": "true"}
+    files = {"fileToUpload": open(file_path, "rb")}
+    response = requests.post(url, data=data, files=files)
 
-        i.edit(f'ʜᴇʀᴇ ɪs ʏᴏᴜʀ ʟɪɴᴋ 🔗 {url}')
+    if response.status_code == 200:
+        return True, response.text.strip()
+    else:
+        return False, f"ᴇʀʀᴏʀ: {response.status_code} - {response.text}"
 
+
+@app.on_message(filters.command(["tm", "telegraph"]))
+async def get_link_group(client, message):
+    if not message.reply_to_message:
+        return await message.reply_text(
+            "Pʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇᴅɪᴀ ᴛᴏ ᴜᴘʟᴏᴀᴅ ᴏɴ Tᴇʟᴇɢʀᴀᴘʜ"
+        )
+
+    media = message.reply_to_message
+    file_size = 0
+    if media.photo:
+        file_size = media.photo.file_size
+    elif media.video:
+        file_size = media.video.file_size
+    elif media.document:
+        file_size = media.document.file_size
+
+    if file_size > 200 * 1024 * 1024:
+        return await message.reply_text("Pʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴍᴇᴅɪᴀ ғɪʟᴇ ᴜɴᴅᴇʀ 200MB.")
+
+    try:
+        text = await message.reply("❍ ʜᴏʟᴅ ᴏɴ ʙᴀʙʏ....♡")
+        async def progress(current, total):
+            try:
+                await text.edit_text(f"📥 Dᴏᴡɴʟᴏᴀᴅɪɴɢ... {current * 100 / total:.1f}%")
+            except Exception:
+                pass
+
+        try:
+            local_path = await media.download(progress=progress)
+            await text.edit_text("📤 Uᴘʟᴏᴀᴅɪɴɢ ᴛᴏ ᴛᴇʟᴇɢʀᴀᴘʜ...")
+
+            success, upload_path = upload_file(local_path)
+
+            if success:
+                await text.edit_text(
+                    f"🌐 | [👉ʏᴏᴜʀ ʟɪɴᴋ ᴛᴀᴘ ʜᴇʀᴇ👈]({upload_path})",
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    " ᴄʀᴇᴀᴛᴇ ʙʏ sʏsᴛᴜᴍ-ᴍᴜsɪᴄ ᴛᴀᴘ ᴛᴏ sᴇᴇ ",
+                                    url=upload_path,
+                                )
+                            ]
+                        ]
+                    ),
+                )
+            else:
+                await text.edit_text(
+                    f"ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ ᴡʜɪʟᴇ ᴜᴘʟᴏᴀᴅɪɴɢ ʏᴏᴜʀ ғɪʟᴇ\n{upload_path}"
+                )
+
+            try:
+                os.remove(local_path)
+            except Exception:
+                pass
+
+        except Exception as e:
+            await text.edit_text(f"❌ Fɪʟᴇ ᴜᴘʟᴏᴀᴅ ғᴀɪʟᴇᴅ\n\n<i>Rᴇᴀsᴏɴ: {e}</i>")
+            try:
+                os.remove(local_path)
+            except Exception:
+                pass
+            return
+    except Exception:
+        pass
