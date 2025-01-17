@@ -10,7 +10,6 @@ from AviaxMusic import app
 from urllib.parse import urlparse
 from pyrogram import filters
 from pyrogram.types import Message
-from tswift import Song
 from yt_dlp import YoutubeDL
 from youtube_search import YoutubeSearch
 from youtubesearchpython import SearchVideos
@@ -65,45 +64,10 @@ async def progress(current, total, message, start, type_of_ps, file_name=None):
             except MessageNotModified:
                 pass
 
-@app.on_message(filters.command(["lyrics"]))
-async def lyrics_func(answers, text):
-    song = await arq.lyrics(text)
-    if not song.ok:
-        answers.append(
-            InlineQueryResultArticle(
-                title="Error",
-                description=song.result,
-                input_message_content=InputTextMessageContent(
-                    song.result
-                ),
-            )
-        )
-        return answers
-    lyrics = song.result
-    song = lyrics.splitlines()
-    song_name = song[0]
-    artist = song[1]
-    if len(lyrics) > 4095:
-        lyrics = await hastebin(lyrics)
-        lyrics = f"**LYRICS_TOO_LONG:** [URL]({lyrics})"
-
-    msg = f"**__{lyrics}__**"
-
-    answers.append(
-        InlineQueryResultArticle(
-            title=song_name,
-            description=artist,
-            input_message_content=InputTextMessageContent(msg),
-        )
-    )
-    return answers
-
-
 def get_file_extension_from_url(url):
     url_path = urlparse(url).path
     basename = os.path.basename(url_path)
     return basename.split(".")[-1]
-
 
 def download_youtube_audio(url: str):
     global is_downloading
@@ -113,6 +77,7 @@ def download_youtube_audio(url: str):
             "writethumbnail": True,
             "quiet": True,
             "cookiefile": COOKIE_PATH,
+            "cookies_from_browser": ("chrome", ),  # Added to handle cookies error
         }
     ) as ydl:
         info_dict = ydl.extract_info(url, download=False)
@@ -138,18 +103,15 @@ def download_youtube_audio(url: str):
         duration = int(float(info_dict["duration"]))
     return [title, performer, duration, audio_file, thumbnail_file]
 
-
 @app.on_message(filters.command(["vsong", "video"]))
 async def ytmusic(client, message: Message):
     urlissed = get_text(message)
-
     pablo = await client.send_message(
         message.chat.id, f"`ɢᴇᴛᴛɪɴɢ {urlissed}  ꜰʀᴏᴍ ʏᴏᴜᴛᴜʙᴇ ꜱᴇʀᴠᴇʀꜱ. ᴘʟᴇᴀꜱᴇ ᴡᴀɪᴛ ʙᴀʙʏ🥀.`"
     )
     if not urlissed:
         await pablo.edit("ɪɴᴠᴀʟɪᴅ ᴄᴏᴍᴍᴀɴᴅ ꜱʏɴᴛᴀx, ᴘʟᴇᴀꜱᴇ ᴄʜᴇᴄᴋ ʜᴇʟᴘ ᴍᴇɴᴜ ᴛᴏ ᴋɴᴏᴡ ᴍᴏʀᴇ ʙᴀʙʏ🥀!")
         return
-
     search = SearchVideos(f"{urlissed}", offset=1, mode="dict", max_results=1)
     mi = search.result()
     mio = mi["search_result"]
@@ -173,13 +135,13 @@ async def ytmusic(client, message: Message):
         "logtostderr": False,
         "quiet": True,
         "cookiefile": COOKIE_PATH,
+        "cookies_from_browser": ("chrome", ),  # Added to handle cookies error
     }
     try:
         with YoutubeDL(opts) as ytdl:
             infoo = ytdl.extract_info(url, False)
             duration = round(infoo["duration"] / 60)
             ytdl_data = ytdl.extract_info(url, download=True)
-
     except Exception as e:
         await pablo.edit(f"**ꜰᴀɪʟᴇᴅ ᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ** \n**ᴇʀʀᴏʀ :** `{str(e)}` ʙᴀʙʏ🥀")
         return
@@ -206,7 +168,6 @@ async def ytmusic(client, message: Message):
     for files in (sedlyf, file_stark):
         if files and os.path.exists(files):
             os.remove(files)
-
 
 @app.on_message(filters.command(["music", "song"]))
 async def ytmusic(client, message: Message):
@@ -250,6 +211,7 @@ async def ytmusic(client, message: Message):
         "quiet": True,
         "logtostderr": False,
         "cookiefile": COOKIE_PATH,
+        "cookies_from_browser": ("chrome", ),  # Added to handle cookies error
     }
     try:
         with YoutubeDL(opts) as ytdl:
