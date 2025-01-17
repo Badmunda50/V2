@@ -38,11 +38,9 @@ VIDEO_QUALITY_OPTIONS = {
     '2160p': '2160',
 }
 
-async def send_quality_buttons(message: Message, query: str, type: str, thumbnail: str):
+async def send_quality_buttons(message: Message, query: str, type: str, thumbnail: str, size: str):
     keyboard = InlineKeyboardMarkup([
-        [InlineKeyboardButton(f"Low Quality", callback_data=f"{type}_{query}_low"), 
-         InlineKeyboardButton(f"Medium Quality", callback_data=f"{type}_{query}_medium"), 
-         InlineKeyboardButton(f"High Quality", callback_data=f"{type}_{query}_high")]
+        [InlineKeyboardButton(f"{size} MB", callback_data=f"{type}_{query}_low")]
     ])
     await message.reply_photo(photo=thumbnail, caption="Select quality:", reply_markup=keyboard)
 
@@ -92,8 +90,20 @@ async def download_song(_, message: Message):
 
     thumbnail = results[0]["thumbnails"][0]
     
-    # Sending quality selection buttons
-    await send_quality_buttons(message, query, 'song', thumbnail)
+    # Calculate the size of the song
+    ydl_opts = {
+        "format": SONG_QUALITY_OPTIONS['low'],  # Options to download audio in low quality
+        "noplaylist": True,  # Don't download playlists
+        "quiet": True,
+        "logtostderr": False,
+        "cookiefile": COOKIES_FILE,  # Path to your cookies.txt file
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info_dict = ydl.extract_info(f"https://youtube.com{results[0]['url_suffix']}", download=False)
+        size = info_dict['filesize'] / (1024 * 1024)  # Convert bytes to MB
+
+    # Sending quality selection buttons with size
+    await send_quality_buttons(message, query, 'song', thumbnail, f"{size:.2f}")
 
 @app.on_message(filters.command("video"))
 async def download_video(_, message: Message):
@@ -131,25 +141,30 @@ async def download_video(_, message: Message):
     # Sending quality selection buttons
     await send_video_quality_buttons(message, query, thumbnail)
 
-@app.on_callback_query(filters.regex(r"^(song|video)_(.+)_(low|medium|high|144p|240p|360p|480p|720p|1080p|1440p|2160p)$"))
+@app.on_callback_query(filters.regex(r"^(song|video)_(.+)_(low|144p|240p|360p|480p|720p|1080p|1440p|2160p)$"))
 async def callback_query_handler(client, query):
     type, query_text, quality = query.data.split("_")
     
     if type == "song":
         ydl_opts = {
-            "format": SONG_QUALITY_OPTIONS[quality],  # Options to download audio in selected quality
-            "noplaylist": True,  # Don't download playlists
+            "format": "bestaudio/best",
+            "postprocessors": [{
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": "192",
+            }],
+            "noplaylist": True,
             "quiet": True,
             "logtostderr": False,
-            "cookiefile": COOKIES_FILE,  # Path to your cookies.txt file
+            "cookiefile": COOKIES_FILE,
         }
     else:
         ydl_opts = {
-            "format": f"bestvideo[ext=mp4][height<={VIDEO_QUALITY_OPTIONS[quality]}]+bestaudio/best[ext=mp4][height<={VIDEO_QUALITY_OPTIONS[quality]}]",  # Options to download video in selected quality
-            "noplaylist": True,  # Don't download playlists
+            "format": f"bestvideo[ext=mp4][height<={VIDEO_QUALITY_OPTIONS[quality]}]+bestaudio/best[ext=mp4][height<={VIDEO_QUALITY_OPTIONS[quality]}]",
+            "noplaylist": True,
             "quiet": True,
             "logtostderr": False,
-            "cookiefile": COOKIES_FILE,  # Path to your cookies.txt file
+            "cookiefile": COOKIES_FILE,
         }
 
     try:
