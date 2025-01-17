@@ -13,6 +13,7 @@ from pyrogram.types import Message
 from tswift import Song
 from yt_dlp import YoutubeDL
 from youtube_search import YoutubeSearch
+from AviaxMusic.utils.filters_func import get_text
 from youtubesearchpython import SearchVideos
 
 COOKIE_PATH = "/cookies/cookies.txt"
