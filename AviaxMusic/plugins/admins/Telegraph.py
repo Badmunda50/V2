@@ -37,28 +37,28 @@ async def get_link_group(client, message):
         return await message.reply_text("Pʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴍᴇᴅɪᴀ ғɪʟᴇ ᴜɴᴅᴇʀ 200MB.")
 
     try:
-        text = await message.reply("❍ ʜᴏʟᴅ ᴏɴ ʙᴀʙʏ....♡")
+        await message.reply_sticker("CAACAgUAAx0CeFC7pwABAWZbZ4noEUQbvpGd_r8M3NXJqZ2Fz30AAksGAAInF9FXvt_AF2vndqseBA")
 
         async def progress(current, total):
             try:
-                await text.edit_text(f"📥 Dᴏᴡɴʟᴏᴀᴅɪɴɢ... {current * 100 / total:.1f}%")
+                await message.reply_sticker("CAACAgUAAx0CeFC7pwABAWZbZ4noEUQbvpGd_r8M3NXJqZ2Fz30AAksGAAInF9FXvt_AF2vndqseBA")
             except Exception:
                 pass
 
         try:
             local_path = await media.download(progress=progress)
-            await text.edit_text("📤 Uᴘʟᴏᴀᴅɪɴɢ ᴛᴏ ᴛᴇʟᴇɢʀᴀᴘʜ...")
+            await message.reply_sticker("CAACAgUAAx0CeFC7pwABAWZiZ4noaXa5fDf8Jh_iHZMvR3gX3acAAtwEAAKyutlXmLbVduyZE6UeBA")
 
             success, upload_path = upload_file(local_path)
 
             if success:
-                await text.edit_text(
+                await message.reply_text(
                     f"🌐 | [👉ʏᴏᴜʀ ʟɪɴᴋ ᴛᴀᴘ ʜᴇʀᴇ👈]({upload_path})",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
                                 InlineKeyboardButton(
-                                    " ᴄʀᴇᴀᴛᴇ ʙʏ sʏsᴛᴜᴍ-ᴍᴜsɪᴄ ᴛᴀᴘ ᴛᴏ sᴇᴇ ",
+                                    " ᴛᴀᴘ ᴛᴏ sᴇᴇ ",
                                     url=upload_path,
                                 )
                             ]
@@ -66,7 +66,7 @@ async def get_link_group(client, message):
                     ),
                 )
             else:
-                await text.edit_text(
+                await message.reply_text(
                     f"ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ ᴡʜɪʟᴇ ᴜᴘʟᴏᴀᴅɪɴɢ ʏᴏᴜʀ ғɪʟᴇ\n{upload_path}"
                 )
 
@@ -76,7 +76,7 @@ async def get_link_group(client, message):
                 pass
 
         except Exception as e:
-            await text.edit_text(f"❌ Fɪʟᴇ ᴜᴘʟᴏᴀᴅ ғᴀɪʟᴇᴅ\n\n<i>Rᴇᴀsᴏɴ: {e}</i>")
+            await message.reply_text(f"❌ Fɪʟᴇ ᴜᴘʟᴏᴀᴅ ғᴀɪʟᴇᴅ\n\n<i>Rᴇᴀsᴏɴ: {e}</i>")
             try:
                 os.remove(local_path)
             except Exception:
@@ -84,7 +84,12 @@ async def get_link_group(client, message):
             return
     except Exception:
         pass
-        
+
+
+
+
+
+
 import os
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -124,27 +129,28 @@ async def get_link_group(client, message):
         return await message.reply_text("Pʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴍᴇᴅɪᴀ ғɪʟᴇ ᴜɴᴅᴇʀ 200MB.")
 
     try:
-        text = await message.reply("❍ ʜᴏʟᴅ ᴏɴ ʙᴀʙʏ....♡")
+        await message.reply_sticker("CAACAgUAAx0CeFC7pwABAWZbZ4noEUQbvpGd_r8M3NXJqZ2Fz30AAksGAAInF9FXvt_AF2vndqseBA")
+
         async def progress(current, total):
             try:
-                await text.edit_text(f"📥 Dᴏᴡɴʟᴏᴀᴅɪɴɢ... {current * 100 / total:.1f}%")
+                await message.reply_sticker("CAACAgUAAx0CeFC7pwABAWZbZ4noEUQbvpGd_r8M3NXJqZ2Fz30AAksGAAInF9FXvt_AF2vndqseBA")
             except Exception:
                 pass
 
         try:
             local_path = await media.download(progress=progress)
-            await text.edit_text("📤 Uᴘʟᴏᴀᴅɪɴɢ ᴛᴏ ᴛᴇʟᴇɢʀᴀᴘʜ...")
+            await message.reply_sticker("CAACAgUAAx0CeFC7pwABAWZiZ4noaXa5fDf8Jh_iHZMvR3gX3acAAtwEAAKyutlXmLbVduyZE6UeBA")
 
             success, upload_path = upload_file(local_path)
 
             if success:
-                await text.edit_text(
+                await message.reply_text(
                     f"🌐 | [👉ʏᴏᴜʀ ʟɪɴᴋ ᴛᴀᴘ ʜᴇʀᴇ👈]({upload_path})",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
                                 InlineKeyboardButton(
-                                    " ᴄʀᴇᴀᴛᴇ ʙʏ sʏsᴛᴜᴍ-ᴍᴜsɪᴄ ᴛᴀᴘ ᴛᴏ sᴇᴇ ",
+                                    " ᴛᴀᴘ ᴛᴏ sᴇᴇ ",
                                     url=upload_path,
                                 )
                             ]
@@ -152,7 +158,7 @@ async def get_link_group(client, message):
                     ),
                 )
             else:
-                await text.edit_text(
+                await message.reply_text(
                     f"ᴀɴ ᴇʀʀᴏʀ ᴏᴄᴄᴜʀʀᴇᴅ ᴡʜɪʟᴇ ᴜᴘʟᴏᴀᴅɪɴɢ ʏᴏᴜʀ ғɪʟᴇ\n{upload_path}"
                 )
 
@@ -162,7 +168,7 @@ async def get_link_group(client, message):
                 pass
 
         except Exception as e:
-            await text.edit_text(f"❌ Fɪʟᴇ ᴜᴘʟᴏᴀᴅ ғᴀɪʟᴇᴅ\n\n<i>Rᴇᴀsᴏɴ: {e}</i>")
+            await message.reply_text(f"❌ Fɪʟᴇ ᴜᴘʟᴏᴀᴅ ғᴀɪʟᴇᴅ\n\n<i>Rᴇᴀsᴏɴ: {e}</i>")
             try:
                 os.remove(local_path)
             except Exception:
