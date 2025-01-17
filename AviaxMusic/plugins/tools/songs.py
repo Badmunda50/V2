@@ -83,6 +83,9 @@ async def download_song(_, message: Message):
         await message.reply("Please provide a song name or URL to search for.")
         return
 
+    # Delete the command message
+    await message.delete()
+
     # Searching for the song using YouTubeSearch
     results = YoutubeSearch(query, max_results=1).to_dict()
     if not results:
@@ -133,6 +136,9 @@ async def download_video(_, message: Message):
     if not query:
         await message.reply("Please provide a video name or URL to search for.")
         return
+
+    # Delete the command message
+    await message.delete()
 
     # Searching for the video using YouTubeSearch
     results = YoutubeSearch(query, max_results=1).to_dict()
