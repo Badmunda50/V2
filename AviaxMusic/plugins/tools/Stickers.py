@@ -33,9 +33,7 @@ SUPPORTED_TYPES = ["jpeg", "png", "webp"]
 STICKER_DIMENSIONS = (512, 512)
 
 
-async def get_sticker_set_by_name(
-    client: Client, name: str
-) -> raw.base.messages.StickerSet:
+async def get_sticker_set_by_name(client: Client, name: str) -> raw.base.messages.StickerSet:
     try:
         return await client.invoke(
             raw.functions.messages.GetStickerSet(
@@ -43,7 +41,8 @@ async def get_sticker_set_by_name(
                 hash=0,
             )
         )
-    except errors.exceptions.not_acceptable_406.StickersetInvalid:
+    except errors.exceptions.bad_request_400.StickersetInvalid:
+        print(f"Stickerset '{name}' is invalid.")
         return None
 
 
