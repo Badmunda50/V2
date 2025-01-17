@@ -147,7 +147,7 @@ async def callback_query_handler(client, query):
         }
     else:
         ydl_opts = {
-            "format": f"bestvideo[height<={VIDEO_QUALITY_OPTIONS[quality]}]+bestaudio/best[height<={VIDEO_QUALITY_OPTIONS[quality]}]",  # Options to download video in selected quality
+            "format": f"bestvideo[ext=mp4][height<={VIDEO_QUALITY_OPTIONS[quality]}]+bestaudio/best[ext=mp4][height<={VIDEO_QUALITY_OPTIONS[quality]}]",  # Options to download video in selected quality
             "noplaylist": True,  # Don't download playlists
             "quiet": True,
             "logtostderr": False,
