@@ -33,7 +33,7 @@ async def feature_callback(client: app, callback_query: CallbackQuery):
         [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
     ]
     await callback_query.message.edit_text(
-        f"<b>**Wᴇʟᴄᴏᴍᴇ ᴛᴏ** {app.mention}\n\n**Exᴘʟᴏʀᴇ ᴀ ᴡɪᴅᴇ ʀᴀɴɢᴇ ᴏғ ғᴇᴀᴛᴜʀᴇs ᴅᴇsɪɢɴᴇᴅ ᴛᴏ ᴇɴʜᴀɴᴄᴇ ʏᴏᴜʀ ᴍᴜsɪᴄ ᴇxᴘᴇʀɪᴇɴᴄᴇ**</b>",
+        f"<b>**Wᴇʟᴄᴏᴍᴇ ᴛᴏ** {app.mention}\n\n**Exᴘʟᴏʀᴇ ᴀ ᴡɪᴅᴇ ʀᴀɴɢᴇ ᴏғ ғᴇᴀᴛᴜʀᴇs ᴅᴇsɪɢɴᴇᴅ ᴛᴏ ᴇɴʜᴀɴᴄᴇ ʏᴏᴜʀ ᴍᴜsɪ[...]
         reply_markup=InlineKeyboardMarkup(keyboard),
     )
 
@@ -126,39 +126,6 @@ async def music_helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_14, reply_markup=keyboard)
     elif cb == "ms15":
         await CallbackQuery.edit_message_text(helpers.HELP_15, reply_markup=keyboard)
-
-@app.on_callback_query(filters.regex("management"))
-async def management_callback(client: app, callback_query: CallbackQuery):
-    keyboard = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(text="Option 1", callback_data="management_callback hb1"),
-                InlineKeyboardButton(text="Option 2", callback_data="management_callback hb2")
-            ],
-            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"gotohelp")],
-        ]
-    )
-
-    new_text = "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ᴏᴘᴛɪᴏɴs...</b>"
-    if callback_query.message.text != new_text:
-        await callback_query.message.edit(
-            new_text, reply_markup=keyboard
-        )
-
-@app.on_callback_query(filters.regex("management_callback") & ~BANNED_USERS)
-@languageCB
-async def management_helper_cb(client, CallbackQuery, _):
-
-    callback_data = CallbackQuery.data.strip()
-
-    cb = callback_data.split(None, 1)[1]
-
-    keyboard = back_to_music(_)
-
-    if cb == "hb1":
-        await CallbackQuery.edit_message_text(helpers.HELP_1, reply_markup=keyboard)
-    elif cb == "hb2":
-        await CallbackQuery.edit_message_text(helpers.HELP_2, reply_markup=keyboard)
 
 @app.on_callback_query(filters.regex("ai"))
 async def ai_callback(client: app, callback_query: CallbackQuery):
@@ -386,4 +353,15 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_23, reply_markup=keyboardtwo)
     elif cb == "hb24":
         await CallbackQuery.edit_message_text(helpers.HELP_24, reply_markup=keyboardtwo)
-    
+    elif cb == "management":
+        keyboard = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(text="Option 1", callback_data="help_callback hb1"),
+                    InlineKeyboardButton(text="Option 2", callback_data="help_callback hb2")
+                ],
+                [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"gotohelp")],
+            ]
+        )
+        new_text = "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ᴏᴘᴛɪᴏɴs...</b>"
+        await CallbackQuery.edit_message_text(new_text, reply_markup=keyboard)
