@@ -43,7 +43,7 @@ async def send_quality_buttons(message: Message, query: str, type: str, thumbnai
         [InlineKeyboardButton(f"{size} MB", callback_data=f"{type}_{query}_{index}")]
         for index, size in enumerate(sizes)
     ])
-    await message.reply_photo(photo=thumbnail, caption="Select quality:", reply_markup=keyboard)
+    await message.reply_photo(photo=thumbnail, caption="ꜱᴇʟᴇᴄᴛ Qᴜᴀʟɪᴛʏ ᴍᴘ3:", reply_markup=keyboard)
 
 async def send_video_quality_buttons(message: Message, query: str, thumbnail: str):
     keyboard = InlineKeyboardMarkup([
@@ -56,7 +56,7 @@ async def send_video_quality_buttons(message: Message, query: str, thumbnail: st
         [InlineKeyboardButton(f"1440p", callback_data=f"video_{query}_1440p"), 
          InlineKeyboardButton(f"2160p", callback_data=f"video_{query}_2160p")]
     ])
-    await message.reply_photo(photo=thumbnail, caption="Select quality:", reply_markup=keyboard)
+    await message.reply_photo(photo=thumbnail, caption="ꜱᴇʟᴇᴄᴛ Qᴜᴀʟɪᴛʏ ᴍᴘ4:", reply_markup=keyboard)
 
 @app.on_message(filters.command("song"))
 async def download_song(_, message: Message):
