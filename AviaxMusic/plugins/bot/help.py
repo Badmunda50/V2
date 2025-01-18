@@ -16,6 +16,105 @@ from AviaxMusic.utils.inline.eg import *
 
 HELP_COMMAND = get_command("HELP_COMMAND")
 
+@app.on_callback_query(filters.regex("gotohelp") & ~BANNED_USERS)
+async def feature_callback(client: app, callback_query: CallbackQuery):
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                text="💫 ᴀᴅᴅ ᴍᴇ ᴍᴏʀᴇ ❤️",
+                url=f"https://t.me/{app.username}?startgroup=true",
+            ),
+        ],
+        [
+            InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
+            InlineKeyboardButton(text="🤖 ᴍᴀɴᴇɢᴇᴍᴇɴᴛ 🤖", callback_data="settings_back_helper"),
+        ],
+        [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
+    ]
+    await callback_query.message.edit_text(
+        f"<b>**Wᴇʟᴄᴏᴍᴇ ᴛᴏ** {app.mention}\n\n**Exᴘʟᴏʀᴇ ᴀ ᴡɪᴅᴇ ʀᴀɴɢᴇ ᴏғ ғᴇᴀᴛᴜʀᴇs ᴅᴇsɪɢɴᴇᴅ ᴛᴏ ᴇɴʜᴀɴᴄᴇ ʏᴏᴜʀ ᴍᴜsɪᴄ ᴇxᴘᴇʀɪᴇɴᴄᴇ. Tᴀᴘ KIDNAP ME IN YOUR NEW GROUP OR CHANNEL ᴛᴏ ɪɴᴠɪᴛᴇ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ʏᴏᴜʀ ᴏᴡɴ ɢʀᴏᴜᴘ ᴏʀ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴇɴɪᴏʏ sᴇᴀᴍʟᴇss ᴍᴜsɪᴄ ɪɴᴛᴇɢʀᴀᴛɪᴏɴ. Usᴇ ᴛʜᴇ MUSIC ʙᴜᴛᴛᴏɴ ᴛᴏ ᴀᴄᴄᴇss ᴀʟʟ ᴛʜᴇ ᴍᴜsɪᴄ-ʀᴇʟᴀᴛᴇᴅ ғᴜɴᴄᴛɪᴏɴᴀʟɪᴛɪᴇs, ғʀᴏᴍ sᴛʀᴇᴀᴍɪɴɢ ʏᴏᴜʀ ғᴀᴠᴏʀɪᴛᴇ sᴏɴɢs ᴛᴏ ᴄʀᴇᴀᴛɪɴɢ ᴘʟᴀʏʟɪsᴛs. Lᴏᴏᴋɪɴɢ ғᴏʀ ᴍᴏʀᴇ ᴏᴘᴛɪᴏɴs? Hɪᴛ ᴛʜᴇ ALL ʙᴜᴛᴛᴏɴ ᴛᴏ ᴇxᴘʟᴏʀᴇ ᴇᴠᴇʀʏᴛʜɪɴɢ ᴛʜɪs ʙᴏᴛ ᴄᴀɴ ᴏғғᴇʀ. Wʜᴇɴᴇᴠᴇʀ ʏᴏᴜ'ʀᴇ ʀᴇᴀᴅʏ, sɪᴍᴘʟʏ ᴛᴀᴘ HOME ᴛᴏ ʀᴇᴛᴜʀɴ ᴛᴏ ᴛʜᴇ ᴍᴀɪɴ ᴍᴇɴᴜ. Eɴɪᴏʏ ʏᴏᴜʀ ᴛɪᴍᴇ ᴡɪᴛʜ JBL Mᴜsɪᴄ Bᴏᴛ!**</b>",
+        reply_markup=InlineKeyboardMarkup(keyboard),
+    )
+
+@app.on_callback_query(filters.regex("music"))
+async def music_callback(client: app, callback_query: CallbackQuery):
+    keyboard = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(text="Aᴅᴍɪɴ", callback_data="music_callback hb1"),
+                InlineKeyboardButton(text="Aᴜᴛʜ", callback_data="music_callback hb2"),
+                InlineKeyboardButton(
+                    text="Bʀᴏᴀᴅᴄᴀsᴛ", callback_data="music_callback hb3"
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Bʟ-Cʜᴀᴛ", callback_data="music_callback hb4"
+                ),
+                InlineKeyboardButton(
+                    text="Bʟ-Usᴇʀ", callback_data="music_callback hb5"
+                ),
+                InlineKeyboardButton(text="C-Pʟᴀʏ", callback_data="music_callback hb6"),
+            ],
+            [
+                InlineKeyboardButton(text="G-Bᴀɴ", callback_data="music_callback hb7"),
+                InlineKeyboardButton(text="Lᴏᴏᴘ", callback_data="music_callback hb8"),
+                InlineKeyboardButton(
+                    text="Mᴀɪɴᴛᴇɴᴀɴᴄᴇ", callback_data="music_callback hb9"
+                ),
+            ],
+            [
+                InlineKeyboardButton(text="Pɪɴɢ", callback_data="music_callback hb10"),
+                InlineKeyboardButton(text="Pʟᴀʏ", callback_data="music_callback hb11"),
+                InlineKeyboardButton(
+                    text="Sʜᴜғғʟᴇ", callback_data="music_callback hb12"
+                ),
+            ],
+            [
+                InlineKeyboardButton(text="Sᴇᴇᴋ", callback_data="music_callback hb13"),
+                InlineKeyboardButton(text="Sᴏɴɢ", callback_data="music_callback hb14"),
+                InlineKeyboardButton(text="Sᴘᴇᴇᴅ", callback_data="music_callback hb15"),
+            ],
+            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"feature")],
+        ]
+    )
+
+    await callback_query.message.edit(
+        "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴍᴜꜱɪᴄ ᴏᴘᴛɪᴏɴꜱ...</b>", reply_markup=keyboard
+    )
+
+@app.on_callback_query(filters.regex("back_to_music"))
+async def feature_callback(client: app, callback_query: CallbackQuery):
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                text="💫 ᴀᴅᴅ ᴍᴇ ᴍᴏʀᴇ ❤️",
+                url=f"https://t.me/{app.username}?startgroup=true",
+            ),
+        ],
+        [
+            InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
+            InlineKeyboardButton(text="🤖 ᴍᴀɴᴇɢᴇᴍᴇɴᴛ 🤖", callback_data="settings_back_helper"),
+        ],
+        [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
+    ]
+    await callback_query.message.edit_text(
+        "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ʙᴏᴛ ꜰᴇᴀᴛᴜʀᴇꜱ...</b>", reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+
+def back_to_music(_):
+    upl = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    text=_["BACK_BUTTON"],
+                    callback_data=f"music",
+                ),
+            ]
+        ]
+    )
+    return upl
+
 # first help page
 @app.on_message(filters.command(HELP_COMMAND) & filters.private & ~BANNED_USERS)
 @app.on_callback_query(
@@ -48,9 +147,8 @@ async def helper_private(
             caption=_["help_1"].format(user),
             reply_markup=keyboard,
       )
+
 # second help page
-
-
 @app.on_callback_query(filters.regex("secondhelppanel") & ~BANNED_USERS)
 @languageCB
 async def second_help_panel(client, callback_query: CallbackQuery, _):
@@ -59,7 +157,6 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except:
         pass    
     try:
-        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = second_panel(_, True)  
             user = callback_query.from_user.mention
@@ -70,17 +167,15 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-# third help pannel
-
+# third help panel
 @app.on_callback_query(filters.regex("thirdhelppanel") & ~BANNED_USERS)
 @languageCB
-async def second_help_panel(client, callback_query: CallbackQuery, _):
+async def third_help_panel(client, callback_query: CallbackQuery, _):
     try:
         await callback_query.answer()
     except:
         pass    
     try:
-        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = third_panel(_, True)  
             user = callback_query.from_user.mention
@@ -91,18 +186,15 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-
-# four help pannel
-
+# fourth help panel
 @app.on_callback_query(filters.regex("fourthhelppanel") & ~BANNED_USERS)
 @languageCB
-async def second_help_panel(client, callback_query: CallbackQuery, _):
+async def fourth_help_panel(client, callback_query: CallbackQuery, _):
     try:
         await callback_query.answer()
     except:
         pass    
     try:
-        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = fourth_panel(_, True)  
             user = callback_query.from_user.mention
@@ -113,8 +205,6 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-
-
 @app.on_message(filters.command(HELP_COMMAND) & filters.group & ~BANNED_USERS)
 @languageCB
 async def help_com_group(client, message: Message, _):
@@ -123,7 +213,6 @@ async def help_com_group(client, message: Message, _):
                               caption=_["help_2"],
                               reply_markup=keyboard
                              )
-
 
 @app.on_callback_query(filters.regex("help_callback") & ~BANNED_USERS)
 @languageCB
@@ -258,5 +347,3 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_59, reply_markup=keyboardfour)
     elif cb == "hb60":
         await CallbackQuery.edit_message_text(helpers.HELP_60, reply_markup=keyboardfour)
-    
-
