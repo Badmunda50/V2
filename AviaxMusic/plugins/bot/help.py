@@ -16,183 +16,6 @@ from AviaxMusic.utils.inline.eg import *
 
 HELP_COMMAND = get_command("HELP_COMMAND")
 
-@app.on_callback_query(filters.regex("gotohelp") & ~BANNED_USERS)
-async def feature_callback(client: app, callback_query: CallbackQuery):
-    keyboard = [
-        [
-            InlineKeyboardButton(
-                text="💫 ᴀᴅᴅ ᴍᴇ ᴍᴏʀᴇ ❤️",
-                url=f"https://t.me/{app.username}?startgroup=true",
-            ),
-        ],
-        [
-            InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
-            InlineKeyboardButton(text="🤖 ᴍᴀɴᴀɢᴇᴍᴇɴᴛ 🤖", callback_data="management"),
-            InlineKeyboardButton(text="🤖 ᴀɪ 🤖", callback_data="ai"),
-        ],
-        [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
-    ]
-    await callback_query.message.edit_text(
-        f"<b>**Wᴇʟᴄᴏᴍᴇ ᴛᴏ** {app.mention}\n\n**Exᴘʟᴏʀᴇ ᴀ ᴡɪᴅᴇ ʀᴀɴɢᴇ ᴏғ ғᴇᴀᴛᴜʀᴇs ᴅᴇsɪɢɴᴇᴅ ᴛᴏ ᴇɴʜᴀɴᴄᴇ ʏᴏᴜʀ ᴍᴜsɪᴄ ᴇxᴘᴇʀɪᴇɴᴄᴇ.**</b>",
-        reply_markup=InlineKeyboardMarkup(keyboard),
-    )
-
-@app.on_callback_query(filters.regex("music"))
-async def music_callback(client: app, callback_query: CallbackQuery):
-    keyboard = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(text="Aᴅᴍɪɴ", callback_data="music_callback ms1"),
-                InlineKeyboardButton(text="Aᴜᴛʜ", callback_data="music_callback ms2"),
-                InlineKeyboardButton(
-                    text="Bʀᴏᴀᴅᴄᴀsᴛ", callback_data="music_callback ms3"
-                ),
-            ],
-            [
-                InlineKeyboardButton(
-                    text="Bʟ-Cʜᴀᴛ", callback_data="music_callback ms4"
-                ),
-                InlineKeyboardButton(
-                    text="Bʟ-Usᴇʀ", callback_data="music_callback ms5"
-                ),
-                InlineKeyboardButton(text="C-Pʟᴀʏ", callback_data="music_callback ms6"),
-            ],
-            [
-                InlineKeyboardButton(text="G-Bᴀɴ", callback_data="music_callback ms7"),
-                InlineKeyboardButton(text="Lᴏᴏᴘ", callback_data="music_callback ms8"),
-                InlineKeyboardButton(
-                    text="Mᴀɪɴᴛᴇɴᴀɴᴄᴇ", callback_data="music_callback ms9"
-                ),
-            ],
-            [
-                InlineKeyboardButton(text="Pɪɴɢ", callback_data="music_callback ms10"),
-                InlineKeyboardButton(text="Pʟᴀʏ", callback_data="music_callback ms11"),
-                InlineKeyboardButton(
-                    text="Sʜᴜғғʟᴇ", callback_data="music_callback ms12"
-                ),
-            ],
-            [
-                InlineKeyboardButton(text="Sᴇᴇᴋ", callback_data="music_callback ms13"),
-                InlineKeyboardButton(text="Sᴏɴɢ", callback_data="music_callback ms14"),
-                InlineKeyboardButton(text="Sᴘᴇᴇᴅ", callback_data="music_callback ms15"),
-            ],
-            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"gotohelp")],
-        ]
-    )
-
-    new_text = "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴍᴜꜱɪᴄ ᴏᴘᴛɪᴏɴꜱ...</b>"
-    if callback_query.message.text != new_text:
-        await callback_query.message.edit(
-            new_text, reply_markup=keyboard
-        )
-
-@app.on_callback_query(filters.regex("music_callback") & ~BANNED_USERS)
-@languageCB
-async def music_helper_cb(client, CallbackQuery, _):
-
-    callback_data = CallbackQuery.data.strip()
-
-    cb = callback_data.split(None, 1)[1]
-
-    keyboard = back_to_music(_)
-
-    if cb == "ms1":
-        await CallbackQuery.edit_message_text(helpers.HELP_111, reply_markup=keyboard)
-    elif cb == "ms2":
-        await CallbackQuery.edit_message_text(helpers.HELP_2, reply_markup=keyboard)
-    elif cb == "ms3":
-        await CallbackQuery.edit_message_text(helpers.HELP_3, reply_markup=keyboard)
-    elif cb == "ms4":
-        await CallbackQuery.edit_message_text(helpers.HELP_4, reply_markup=keyboard)
-    elif cb == "ms5":
-        await CallbackQuery.edit_message_text(helpers.HELP_5, reply_markup=keyboard)
-    elif cb == "ms6":
-        await CallbackQuery.edit_message_text(helpers.HELP_6, reply_markup=keyboard)
-    elif cb == "ms7":
-        await CallbackQuery.edit_message_text(helpers.HELP_7, reply_markup=keyboard)
-    elif cb == "ms8":
-        await CallbackQuery.edit_message_text(helpers.HELP_8, reply_markup=keyboard)
-    elif cb == "ms9":
-        await CallbackQuery.edit_message_text(helpers.HELP_9, reply_markup=keyboard)
-    elif cb == "ms10":
-        await CallbackQuery.edit_message_text(helpers.HELP_10, reply_markup=keyboard)
-    elif cb == "ms11":
-        await CallbackQuery.edit_message_text(helpers.HELP_11, reply_markup=keyboard)
-    elif cb == "ms12":
-        await CallbackQuery.edit_message_text(helpers.HELP_12, reply_markup=keyboard)
-    elif cb == "ms13":
-        await CallbackQuery.edit_message_text(helpers.HELP_13, reply_markup=keyboard)
-    elif cb == "ms14":
-        await CallbackQuery.edit_message_text(helpers.HELP_14, reply_markup=keyboard)
-    elif cb == "ms15":
-        await CallbackQuery.edit_message_text(helpers.HELP_15, reply_markup=keyboard)
-
-@app.on_callback_query(filters.regex("ai"))
-async def ai_callback(client: app, callback_query: CallbackQuery):
-    keyboard = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(text="Option 1", callback_data="ai_callback ai1"),
-                InlineKeyboardButton(text="Option 2", callback_data="ai_callback ai2")
-            ],
-            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"gotohelp")],
-        ]
-    )
-
-    new_text = "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴀɪ ᴏᴘᴛɪᴏɴs...</b>"
-    if callback_query.message.text != new_text:
-        await callback_query.message.edit(
-            new_text, reply_markup=keyboard
-        )
-
-@app.on_callback_query(filters.regex("ai_callback") & ~BANNED_USERS)
-@languageCB
-async def ai_helper_cb(client, CallbackQuery, _):
-
-    callback_data = CallbackQuery.data.strip()
-
-    cb = callback_data.split(None, 1)[1]
-
-    keyboard = back_to_music(_)
-
-    if cb == "ai1":
-        await CallbackQuery.edit_message_text(helpers.HELP_1, reply_markup=keyboard)
-    elif cb == "ai2":
-        await CallbackQuery.edit_message_text(helpers.HELP_2, reply_markup=keyboard)
-
-@app.on_callback_query(filters.regex("back_to_music"))
-async def feature_callback(client: app, callback_query: CallbackQuery):
-    keyboard = [
-        [
-            InlineKeyboardButton(
-                text="💫 ᴀᴅᴅ ᴍᴇ ᴍᴏʀᴇ ❤️",
-                url=f"https://t.me/{app.username}?startgroup=true",
-            ),
-        ],
-        [
-            InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
-            InlineKeyboardButton(text="🤖 ᴍᴀɴᴀɢᴇᴍᴇɴᴛ 🤖", callback_data="management"),
-            InlineKeyboardButton(text="🤖 ᴀɪ 🤖", callback_data="ai"),
-        ],
-        [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
-    ]
-    await callback_query.message.edit_text(
-        "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ʙᴏᴛ ꜰᴇᴀᴛᴜʀᴇs...</b>", reply_markup=InlineKeyboardMarkup(keyboard)
-    )
-
-def back_to_music(_):
-    upl = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(
-                    text=_["BACK_BUTTON"],
-                    callback_data=f"music",
-                ),
-            ]
-        ]
-    )
-    return upl
-
 # first help page
 @app.on_message(filters.command(HELP_COMMAND) & filters.private & ~BANNED_USERS)
 @app.on_callback_query(
@@ -225,8 +48,9 @@ async def helper_private(
             caption=_["help_1"].format(user),
             reply_markup=keyboard,
       )
-
 # second help page
+
+
 @app.on_callback_query(filters.regex("secondhelppanel") & ~BANNED_USERS)
 @languageCB
 async def second_help_panel(client, callback_query: CallbackQuery, _):
@@ -235,6 +59,7 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except:
         pass    
     try:
+        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = second_panel(_, True)  
             user = callback_query.from_user.mention
@@ -245,15 +70,17 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-# third help panel
+# third help pannel
+
 @app.on_callback_query(filters.regex("thirdhelppanel") & ~BANNED_USERS)
 @languageCB
-async def third_help_panel(client, callback_query: CallbackQuery, _):
+async def second_help_panel(client, callback_query: CallbackQuery, _):
     try:
         await callback_query.answer()
     except:
         pass    
     try:
+        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = third_panel(_, True)  
             user = callback_query.from_user.mention
@@ -264,15 +91,18 @@ async def third_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-# fourth help panel
+
+# four help pannel
+
 @app.on_callback_query(filters.regex("fourthhelppanel") & ~BANNED_USERS)
 @languageCB
-async def fourth_help_panel(client, callback_query: CallbackQuery, _):
+async def second_help_panel(client, callback_query: CallbackQuery, _):
     try:
         await callback_query.answer()
     except:
         pass    
     try:
+        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = fourth_panel(_, True)  
             user = callback_query.from_user.mention
@@ -283,6 +113,8 @@ async def fourth_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
+
+
 @app.on_message(filters.command(HELP_COMMAND) & filters.group & ~BANNED_USERS)
 @languageCB
 async def help_com_group(client, message: Message, _):
@@ -292,7 +124,8 @@ async def help_com_group(client, message: Message, _):
                               reply_markup=keyboard
                              )
 
-@app.on_callback_query(filters.regex("management") & ~BANNED_USERS)
+
+@app.on_callback_query(filters.regex("help_callback") & ~BANNED_USERS)
 @languageCB
 async def helper_cb(client, CallbackQuery, _):
     callback_data = CallbackQuery.data.strip()
@@ -353,3 +186,76 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_23, reply_markup=keyboardtwo)
     elif cb == "hb24":
         await CallbackQuery.edit_message_text(helpers.HELP_24, reply_markup=keyboardtwo)
+    elif cb == "hb25":
+        await CallbackQuery.edit_message_text(helpers.HELP_25, reply_markup=keyboardtwo)
+    elif cb == "hb26":
+        await CallbackQuery.edit_message_text(helpers.HELP_26, reply_markup=keyboardtwo)
+    elif cb == "hb27":
+        await CallbackQuery.edit_message_text(helpers.HELP_27, reply_markup=keyboardtwo)
+    elif cb == "hb28":
+        await CallbackQuery.edit_message_text(helpers.HELP_28, reply_markup=keyboardtwo)
+    elif cb == "hb29":
+        await CallbackQuery.edit_message_text(helpers.HELP_29, reply_markup=keyboardtwo)
+    elif cb == "hb30":
+        await CallbackQuery.edit_message_text(helpers.HELP_30, reply_markup=keyboardtwo)
+    elif cb == "hb31":
+        await CallbackQuery.edit_message_text(helpers.HELP_31, reply_markup=keyboardthree)
+    elif cb == "hb32":
+        await CallbackQuery.edit_message_text(helpers.HELP_32, reply_markup=keyboardthree)
+    elif cb == "hb33":
+        await CallbackQuery.edit_message_text(helpers.HELP_33, reply_markup=keyboardthree)
+    elif cb == "hb34":
+        await CallbackQuery.edit_message_text(helpers.HELP_34, reply_markup=keyboardthree)
+    elif cb == "hb35":
+        await CallbackQuery.edit_message_text(helpers.HELP_35, reply_markup=keyboardthree)
+    elif cb == "hb36":
+        await CallbackQuery.edit_message_text(helpers.HELP_36, reply_markup=keyboardthree)
+    elif cb == "hb37":
+        await CallbackQuery.edit_message_text(helpers.HELP_37, reply_markup=keyboardthree)
+    elif cb == "hb38":
+        await CallbackQuery.edit_message_text(helpers.HELP_38, reply_markup=keyboardthree)
+    elif cb == "hb39":
+        await CallbackQuery.edit_message_text(helpers.HELP_39, reply_markup=keyboardthree)
+    elif cb == "hb40":
+        await CallbackQuery.edit_message_text(helpers.HELP_40, reply_markup=keyboardthree)
+    elif cb == "hb41":
+        await CallbackQuery.edit_message_text(helpers.HELP_41, reply_markup=keyboardthree)
+    elif cb == "hb42":
+        await CallbackQuery.edit_message_text(helpers.HELP_42, reply_markup=keyboardthree)
+    elif cb == "hb43":
+        await CallbackQuery.edit_message_text(helpers.HELP_43, reply_markup=keyboardthree)
+    elif cb == "hb44":
+        await CallbackQuery.edit_message_text(helpers.HELP_44, reply_markup=keyboardthree)
+    elif cb == "hb45":
+        await CallbackQuery.edit_message_text(helpers.HELP_45, reply_markup=keyboardthree)
+    elif cb == "hb46":
+        await CallbackQuery.edit_message_text(helpers.HELP_46, reply_markup=keyboardfour)
+    elif cb == "hb47":
+        await CallbackQuery.edit_message_text(helpers.HELP_47, reply_markup=keyboardfour)
+    elif cb == "hb48":
+        await CallbackQuery.edit_message_text(helpers.HELP_48, reply_markup=keyboardfour)
+    elif cb == "hb49":
+        await CallbackQuery.edit_message_text(helpers.HELP_49, reply_markup=keyboardfour)
+    elif cb == "hb50":
+        await CallbackQuery.edit_message_text(helpers.HELP_50, reply_markup=keyboardfour)
+    elif cb == "hb51":
+        await CallbackQuery.edit_message_text(helpers.HELP_51, reply_markup=keyboardfour)
+    elif cb == "hb52":
+        await CallbackQuery.edit_message_text(helpers.HELP_52, reply_markup=keyboardfour)
+    elif cb == "hb53":
+        await CallbackQuery.edit_message_text(helpers.HELP_53, reply_markup=keyboardfour)
+    elif cb == "hb54":
+        await CallbackQuery.edit_message_text(helpers.HELP_54, reply_markup=keyboardfour)
+    elif cb == "hb55":
+        await CallbackQuery.edit_message_text(helpers.HELP_55, reply_markup=keyboardfour)
+    elif cb == "hb56":
+        await CallbackQuery.edit_message_text(helpers.HELP_56, reply_markup=keyboardfour)
+    elif cb == "hb57":
+        await CallbackQuery.edit_message_text(helpers.HELP_57, reply_markup=keyboardfour)
+    elif cb == "hb58":
+        await CallbackQuery.edit_message_text(helpers.HELP_58, reply_markup=keyboardfour)
+    elif cb == "hb59":
+        await CallbackQuery.edit_message_text(helpers.HELP_59, reply_markup=keyboardfour)
+    elif cb == "hb60":
+        await CallbackQuery.edit_message_text(helpers.HELP_60, reply_markup=keyboardfour)
+    
