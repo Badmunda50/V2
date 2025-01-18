@@ -27,7 +27,7 @@ async def feature_callback(client: app, callback_query: CallbackQuery):
         ],
         [
             InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
-            InlineKeyboardButton(text="🤖 ᴍᴀɴᴀɢᴇᴍᴇɴᴛ 🤖", callback_data="management"),
+            InlineKeyboardButton(text="🤖 ᴍᴀɴᴀɢᴇᴍᴇɴᴛ 🤖", callback_data="help_callback"),
             InlineKeyboardButton(text="🤖 ᴀɪ 🤖", callback_data="ai"),
         ],
         [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
@@ -353,15 +353,4 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_23, reply_markup=keyboardtwo)
     elif cb == "hb24":
         await CallbackQuery.edit_message_text(helpers.HELP_24, reply_markup=keyboardtwo)
-    elif cb == "management":
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(text="Option 1", callback_data="help_callback hb1"),
-                    InlineKeyboardButton(text="Option 2", callback_data="help_callback hb2")
-                ],
-                [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"gotohelp")],
-            ]
-        )
-        new_text = "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ᴏᴘᴛɪᴏɴs...</b>"
-        await CallbackQuery.edit_message_text(new_text, reply_markup=keyboard)
+    
