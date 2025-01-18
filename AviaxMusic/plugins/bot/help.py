@@ -33,7 +33,7 @@ async def feature_callback(client: app, callback_query: CallbackQuery):
         [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
     ]
     await callback_query.message.edit_text(
-        f"<b>**Wᴇʟᴄᴏᴍᴇ ᴛᴏ** {app.mention}\n\n**Exᴘʟᴏʀᴇ ᴀ ᴡɪᴅᴇ ʀᴀɴɢᴇ ᴏғ ғᴇᴀᴛᴜʀᴇs ᴅᴇsɪɢɴᴇᴅ ᴛᴏ ᴇɴʜᴀɴᴄᴇ ʏᴏᴜʀ ᴍᴜsɪᴄ ᴇxᴘᴇʀɪᴇɴᴄᴇ**</b>",
+        f"<b>**Wᴇʟᴄᴏᴍᴇ ᴛᴏ** {app.mention}\n\n**Exᴘʟᴏʀᴇ ᴀ ᴡɪᴅᴇ ʀᴀɴɢᴇ ᴏғ ғᴇᴀᴛᴜʀᴇs ᴅᴇsɪɢɴᴇᴅ ᴛᴏ ᴇɴʜᴀɴᴄᴇ ʏᴏᴜʀ ᴍᴜsɪᴄ ᴇxᴘᴇʀɪᴇɴᴄᴇ.**</b>",
         reply_markup=InlineKeyboardMarkup(keyboard),
     )
 
@@ -292,7 +292,7 @@ async def help_com_group(client, message: Message, _):
                               reply_markup=keyboard
                              )
 
-@app.on_callback_query(filters.regex("help_callback") & ~BANNED_USERS)
+@app.on_callback_query(filters.regex("management") & ~BANNED_USERS)
 @languageCB
 async def helper_cb(client, CallbackQuery, _):
     callback_data = CallbackQuery.data.strip()
