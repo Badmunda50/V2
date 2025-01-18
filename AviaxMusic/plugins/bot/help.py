@@ -79,9 +79,11 @@ async def music_callback(client: app, callback_query: CallbackQuery):
         ]
     )
 
-    await callback_query.message.edit(
-        "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴍᴜꜱɪᴄ ᴏᴘᴛɪᴏɴꜱ...</b>", reply_markup=keyboard
-    )
+    new_text = "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴍᴜꜱɪᴄ ᴏᴘᴛɪᴏɴꜱ...</b>"
+    if callback_query.message.text != new_text:
+        await callback_query.message.edit(
+            new_text, reply_markup=keyboard
+        )
 
 @app.on_callback_query(filters.regex("music_callback") & ~BANNED_USERS)
 @languageCB
