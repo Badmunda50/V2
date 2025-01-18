@@ -97,7 +97,7 @@ async def music_helper_cb(client, CallbackQuery, _):
     keyboard = back_to_music(_)
 
     if cb == "ms1":
-        await CallbackQuery.edit_message_text(helpers.HELP_1, reply_markup=keyboard)
+        await CallbackQuery.edit_message_text(helpers.HELP_111, reply_markup=keyboard)
     elif cb == "ms2":
         await CallbackQuery.edit_message_text(helpers.HELP_2, reply_markup=keyboard)
     elif cb == "ms3":
