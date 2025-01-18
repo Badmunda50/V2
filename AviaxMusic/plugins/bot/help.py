@@ -27,12 +27,13 @@ async def feature_callback(client: app, callback_query: CallbackQuery):
         ],
         [
             InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
-            InlineKeyboardButton(text="🤖 ᴍᴀɴᴇɢᴇᴍᴇɴᴛ 🤖", callback_data="settings_back_helper"),
+            InlineKeyboardButton(text="🤖 ᴍᴀɴᴀɢᴇᴍᴇɴᴛ 🤖", callback_data="management"),
+            InlineKeyboardButton(text="🤖 ᴀɪ 🤖", callback_data="ai"),
         ],
         [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
     ]
     await callback_query.message.edit_text(
-        f"<b>**Wᴇʟᴄᴏᴍᴇ ᴛᴏ** {app.mention}\n\n**Exᴘʟᴏʀᴇ ᴀ ᴡɪᴅᴇ ʀᴀɴɢᴇ ᴏғ ғᴇᴀᴛᴜʀᴇs ᴅᴇsɪɢɴᴇᴅ ᴛᴏ ᴇɴʜᴀɴᴄᴇ ʏᴏᴜʀ ᴍᴜsɪᴄ ᴇxᴘᴇʀɪᴇɴᴄᴇ. Tᴀᴘ KIDNAP ME IN YOUR NEW GROUP OR CHANNEL ᴛᴏ ɪɴᴠɪᴛᴇ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ʏᴏᴜʀ ᴏᴡɴ ɢʀᴏᴜᴘ ᴏʀ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴇɴɪᴏʏ sᴇᴀᴍʟᴇss ᴍᴜsɪᴄ ɪɴᴛᴇɢʀᴀᴛɪᴏɴ. Usᴇ ᴛʜᴇ MUSIC ʙᴜᴛᴛᴏɴ ᴛᴏ ᴀᴄᴄᴇss ᴀʟʟ ᴛʜᴇ ᴍᴜsɪᴄ-ʀᴇʟᴀᴛᴇᴅ ғᴜɴᴄᴛɪᴏɴᴀʟɪᴛɪᴇs, ғʀᴏᴍ sᴛʀᴇᴀᴍɪɴɢ ʏᴏᴜʀ ғᴀᴠᴏʀɪᴛᴇ sᴏɴɢs ᴛᴏ ᴄʀᴇᴀᴛɪɴɢ ᴘʟᴀʏʟɪsᴛs. Lᴏᴏᴋɪɴɢ ғᴏʀ ᴍᴏʀᴇ ᴏᴘᴛɪᴏɴs? Hɪᴛ ᴛʜᴇ ALL ʙᴜᴛᴛᴏɴ ᴛᴏ ᴇxᴘʟᴏʀᴇ ᴇᴠᴇʀʏᴛʜɪɴɢ ᴛʜɪs ʙᴏᴛ ᴄᴀɴ ᴏғғᴇʀ. Wʜᴇɴᴇᴠᴇʀ ʏᴏᴜ'ʀᴇ ʀᴇᴀᴅʏ, sɪᴍᴘʟʏ ᴛᴀᴘ HOME ᴛᴏ ʀᴇᴛᴜʀɴ ᴛᴏ ᴛʜᴇ ᴍᴀɪɴ ᴍᴇɴᴜ. Eɴɪᴏʏ ʏᴏᴜʀ ᴛɪᴍᴇ ᴡɪᴛʜ JBL Mᴜsɪᴄ Bᴏᴛ!**</b>",
+        f"<b>**Wᴇʟᴄᴏᴍᴇ ᴛᴏ** {app.mention}\n\n**Exᴘʟᴏʀᴇ ᴀ ᴡɪᴅᴇ ʀᴀɴɢᴇ ᴏғ ғᴇᴀᴛᴜʀᴇs ᴅᴇsɪɢɴᴇᴅ ᴛᴏ ᴇɴʜᴀɴᴄᴇ ʏᴏᴜʀ ᴍᴜsɪᴄ ᴇxᴘᴇʀɪᴇɴᴄᴇ**</b>",
         reply_markup=InlineKeyboardMarkup(keyboard),
     )
 
@@ -41,39 +42,39 @@ async def music_callback(client: app, callback_query: CallbackQuery):
     keyboard = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton(text="Aᴅᴍɪɴ", callback_data="music_callback hb1"),
-                InlineKeyboardButton(text="Aᴜᴛʜ", callback_data="music_callback hb2"),
+                InlineKeyboardButton(text="Aᴅᴍɪɴ", callback_data="music_callback ms1"),
+                InlineKeyboardButton(text="Aᴜᴛʜ", callback_data="music_callback ms2"),
                 InlineKeyboardButton(
-                    text="Bʀᴏᴀᴅᴄᴀsᴛ", callback_data="music_callback hb3"
+                    text="Bʀᴏᴀᴅᴄᴀsᴛ", callback_data="music_callback ms3"
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text="Bʟ-Cʜᴀᴛ", callback_data="music_callback hb4"
+                    text="Bʟ-Cʜᴀᴛ", callback_data="music_callback ms4"
                 ),
                 InlineKeyboardButton(
-                    text="Bʟ-Usᴇʀ", callback_data="music_callback hb5"
+                    text="Bʟ-Usᴇʀ", callback_data="music_callback ms5"
                 ),
-                InlineKeyboardButton(text="C-Pʟᴀʏ", callback_data="music_callback hb6"),
+                InlineKeyboardButton(text="C-Pʟᴀʏ", callback_data="music_callback ms6"),
             ],
             [
-                InlineKeyboardButton(text="G-Bᴀɴ", callback_data="music_callback hb7"),
-                InlineKeyboardButton(text="Lᴏᴏᴘ", callback_data="music_callback hb8"),
+                InlineKeyboardButton(text="G-Bᴀɴ", callback_data="music_callback ms7"),
+                InlineKeyboardButton(text="Lᴏᴏᴘ", callback_data="music_callback ms8"),
                 InlineKeyboardButton(
-                    text="Mᴀɪɴᴛᴇɴᴀɴᴄᴇ", callback_data="music_callback hb9"
-                ),
-            ],
-            [
-                InlineKeyboardButton(text="Pɪɴɢ", callback_data="music_callback hb10"),
-                InlineKeyboardButton(text="Pʟᴀʏ", callback_data="music_callback hb11"),
-                InlineKeyboardButton(
-                    text="Sʜᴜғғʟᴇ", callback_data="music_callback hb12"
+                    text="Mᴀɪɴᴛᴇɴᴀɴᴄᴇ", callback_data="music_callback ms9"
                 ),
             ],
             [
-                InlineKeyboardButton(text="Sᴇᴇᴋ", callback_data="music_callback hb13"),
-                InlineKeyboardButton(text="Sᴏɴɢ", callback_data="music_callback hb14"),
-                InlineKeyboardButton(text="Sᴘᴇᴇᴅ", callback_data="music_callback hb15"),
+                InlineKeyboardButton(text="Pɪɴɢ", callback_data="music_callback ms10"),
+                InlineKeyboardButton(text="Pʟᴀʏ", callback_data="music_callback ms11"),
+                InlineKeyboardButton(
+                    text="Sʜᴜғғʟᴇ", callback_data="music_callback ms12"
+                ),
+            ],
+            [
+                InlineKeyboardButton(text="Sᴇᴇᴋ", callback_data="music_callback ms13"),
+                InlineKeyboardButton(text="Sᴏɴɢ", callback_data="music_callback ms14"),
+                InlineKeyboardButton(text="Sᴘᴇᴇᴅ", callback_data="music_callback ms15"),
             ],
             [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"feature")],
         ]
@@ -95,67 +96,102 @@ async def music_helper_cb(client, CallbackQuery, _):
 
     keyboard = back_to_music(_)
 
-    if cb == "hb1":
-
+    if cb == "ms1":
         await CallbackQuery.edit_message_text(helpers.HELP_1, reply_markup=keyboard)
-
-    elif cb == "hb2":
-
+    elif cb == "ms2":
         await CallbackQuery.edit_message_text(helpers.HELP_2, reply_markup=keyboard)
-
-    elif cb == "hb3":
-
+    elif cb == "ms3":
         await CallbackQuery.edit_message_text(helpers.HELP_3, reply_markup=keyboard)
-
-    elif cb == "hb4":
-
+    elif cb == "ms4":
         await CallbackQuery.edit_message_text(helpers.HELP_4, reply_markup=keyboard)
-
-    elif cb == "hb5":
-
+    elif cb == "ms5":
         await CallbackQuery.edit_message_text(helpers.HELP_5, reply_markup=keyboard)
-
-    elif cb == "hb6":
-
+    elif cb == "ms6":
         await CallbackQuery.edit_message_text(helpers.HELP_6, reply_markup=keyboard)
-
-    elif cb == "hb7":
-
+    elif cb == "ms7":
         await CallbackQuery.edit_message_text(helpers.HELP_7, reply_markup=keyboard)
-
-    elif cb == "hb8":
-
+    elif cb == "ms8":
         await CallbackQuery.edit_message_text(helpers.HELP_8, reply_markup=keyboard)
-
-    elif cb == "hb9":
-
+    elif cb == "ms9":
         await CallbackQuery.edit_message_text(helpers.HELP_9, reply_markup=keyboard)
-
-    elif cb == "hb10":
-
+    elif cb == "ms10":
         await CallbackQuery.edit_message_text(helpers.HELP_10, reply_markup=keyboard)
-
-    elif cb == "hb11":
-
+    elif cb == "ms11":
         await CallbackQuery.edit_message_text(helpers.HELP_11, reply_markup=keyboard)
-
-    elif cb == "hb12":
-
+    elif cb == "ms12":
         await CallbackQuery.edit_message_text(helpers.HELP_12, reply_markup=keyboard)
-
-    elif cb == "hb13":
-
+    elif cb == "ms13":
         await CallbackQuery.edit_message_text(helpers.HELP_13, reply_markup=keyboard)
-
-    elif cb == "hb14":
-
+    elif cb == "ms14":
         await CallbackQuery.edit_message_text(helpers.HELP_14, reply_markup=keyboard)
-
-    elif cb == "hb15":
-
+    elif cb == "ms15":
         await CallbackQuery.edit_message_text(helpers.HELP_15, reply_markup=keyboard)
 
+@app.on_callback_query(filters.regex("management"))
+async def management_callback(client: app, callback_query: CallbackQuery):
+    keyboard = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(text="Option 1", callback_data="management_callback hb1"),
+                InlineKeyboardButton(text="Option 2", callback_data="management_callback hb2")
+            ],
+            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"feature")],
+        ]
+    )
 
+    new_text = "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ ᴏᴘᴛɪᴏɴs...</b>"
+    if callback_query.message.text != new_text:
+        await callback_query.message.edit(
+            new_text, reply_markup=keyboard
+        )
+
+@app.on_callback_query(filters.regex("management_callback") & ~BANNED_USERS)
+@languageCB
+async def management_helper_cb(client, CallbackQuery, _):
+
+    callback_data = CallbackQuery.data.strip()
+
+    cb = callback_data.split(None, 1)[1]
+
+    keyboard = back_to_music(_)
+
+    if cb == "hb1":
+        await CallbackQuery.edit_message_text(helpers.HELP_1, reply_markup=keyboard)
+    elif cb == "hb2":
+        await CallbackQuery.edit_message_text(helpers.HELP_2, reply_markup=keyboard)
+
+@app.on_callback_query(filters.regex("ai"))
+async def ai_callback(client: app, callback_query: CallbackQuery):
+    keyboard = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(text="Option 1", callback_data="ai_callback ai1"),
+                InlineKeyboardButton(text="Option 2", callback_data="ai_callback ai2")
+            ],
+            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"feature")],
+        ]
+    )
+
+    new_text = "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴀɪ ᴏᴘᴛɪᴏɴs...</b>"
+    if callback_query.message.text != new_text:
+        await callback_query.message.edit(
+            new_text, reply_markup=keyboard
+        )
+
+@app.on_callback_query(filters.regex("ai_callback") & ~BANNED_USERS)
+@languageCB
+async def ai_helper_cb(client, CallbackQuery, _):
+
+    callback_data = CallbackQuery.data.strip()
+
+    cb = callback_data.split(None, 1)[1]
+
+    keyboard = back_to_music(_)
+
+    if cb == "ai1":
+        await CallbackQuery.edit_message_text(helpers.HELP_1, reply_markup=keyboard)
+    elif cb == "ai2":
+        await CallbackQuery.edit_message_text(helpers.HELP_2, reply_markup=keyboard)
 
 @app.on_callback_query(filters.regex("back_to_music"))
 async def feature_callback(client: app, callback_query: CallbackQuery):
@@ -168,12 +204,13 @@ async def feature_callback(client: app, callback_query: CallbackQuery):
         ],
         [
             InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
-            InlineKeyboardButton(text="🤖 ᴍᴀɴᴇɢᴇᴍᴇɴᴛ 🤖", callback_data="settings_back_helper"),
+            InlineKeyboardButton(text="🤖 ᴍᴀɴᴀɢᴇᴍᴇɴᴛ 🤖", callback_data="management"),
+            InlineKeyboardButton(text="🤖 ᴀɪ 🤖", callback_data="ai"),
         ],
         [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
     ]
     await callback_query.message.edit_text(
-        "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ʙᴏᴛ ꜰᴇᴀᴛᴜʀᴇꜱ...</b>", reply_markup=InlineKeyboardMarkup(keyboard)
+        "<b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ʙᴏᴛ ꜰᴇᴀᴛᴜʀᴇs...</b>", reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
 def back_to_music(_):
@@ -349,75 +386,4 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_23, reply_markup=keyboardtwo)
     elif cb == "hb24":
         await CallbackQuery.edit_message_text(helpers.HELP_24, reply_markup=keyboardtwo)
-    elif cb == "hb25":
-        await CallbackQuery.edit_message_text(helpers.HELP_25, reply_markup=keyboardtwo)
-    elif cb == "hb26":
-        await CallbackQuery.edit_message_text(helpers.HELP_26, reply_markup=keyboardtwo)
-    elif cb == "hb27":
-        await CallbackQuery.edit_message_text(helpers.HELP_27, reply_markup=keyboardtwo)
-    elif cb == "hb28":
-        await CallbackQuery.edit_message_text(helpers.HELP_28, reply_markup=keyboardtwo)
-    elif cb == "hb29":
-        await CallbackQuery.edit_message_text(helpers.HELP_29, reply_markup=keyboardtwo)
-    elif cb == "hb30":
-        await CallbackQuery.edit_message_text(helpers.HELP_30, reply_markup=keyboardtwo)
-    elif cb == "hb31":
-        await CallbackQuery.edit_message_text(helpers.HELP_31, reply_markup=keyboardthree)
-    elif cb == "hb32":
-        await CallbackQuery.edit_message_text(helpers.HELP_32, reply_markup=keyboardthree)
-    elif cb == "hb33":
-        await CallbackQuery.edit_message_text(helpers.HELP_33, reply_markup=keyboardthree)
-    elif cb == "hb34":
-        await CallbackQuery.edit_message_text(helpers.HELP_34, reply_markup=keyboardthree)
-    elif cb == "hb35":
-        await CallbackQuery.edit_message_text(helpers.HELP_35, reply_markup=keyboardthree)
-    elif cb == "hb36":
-        await CallbackQuery.edit_message_text(helpers.HELP_36, reply_markup=keyboardthree)
-    elif cb == "hb37":
-        await CallbackQuery.edit_message_text(helpers.HELP_37, reply_markup=keyboardthree)
-    elif cb == "hb38":
-        await CallbackQuery.edit_message_text(helpers.HELP_38, reply_markup=keyboardthree)
-    elif cb == "hb39":
-        await CallbackQuery.edit_message_text(helpers.HELP_39, reply_markup=keyboardthree)
-    elif cb == "hb40":
-        await CallbackQuery.edit_message_text(helpers.HELP_40, reply_markup=keyboardthree)
-    elif cb == "hb41":
-        await CallbackQuery.edit_message_text(helpers.HELP_41, reply_markup=keyboardthree)
-    elif cb == "hb42":
-        await CallbackQuery.edit_message_text(helpers.HELP_42, reply_markup=keyboardthree)
-    elif cb == "hb43":
-        await CallbackQuery.edit_message_text(helpers.HELP_43, reply_markup=keyboardthree)
-    elif cb == "hb44":
-        await CallbackQuery.edit_message_text(helpers.HELP_44, reply_markup=keyboardthree)
-    elif cb == "hb45":
-        await CallbackQuery.edit_message_text(helpers.HELP_45, reply_markup=keyboardthree)
-    elif cb == "hb46":
-        await CallbackQuery.edit_message_text(helpers.HELP_46, reply_markup=keyboardfour)
-    elif cb == "hb47":
-        await CallbackQuery.edit_message_text(helpers.HELP_47, reply_markup=keyboardfour)
-    elif cb == "hb48":
-        await CallbackQuery.edit_message_text(helpers.HELP_48, reply_markup=keyboardfour)
-    elif cb == "hb49":
-        await CallbackQuery.edit_message_text(helpers.HELP_49, reply_markup=keyboardfour)
-    elif cb == "hb50":
-        await CallbackQuery.edit_message_text(helpers.HELP_50, reply_markup=keyboardfour)
-    elif cb == "hb51":
-        await CallbackQuery.edit_message_text(helpers.HELP_51, reply_markup=keyboardfour)
-    elif cb == "hb52":
-        await CallbackQuery.edit_message_text(helpers.HELP_52, reply_markup=keyboardfour)
-    elif cb == "hb53":
-        await CallbackQuery.edit_message_text(helpers.HELP_53, reply_markup=keyboardfour)
-    elif cb == "hb54":
-        await CallbackQuery.edit_message_text(helpers.HELP_54, reply_markup=keyboardfour)
-    elif cb == "hb55":
-        await CallbackQuery.edit_message_text(helpers.HELP_55, reply_markup=keyboardfour)
-    elif cb == "hb56":
-        await CallbackQuery.edit_message_text(helpers.HELP_56, reply_markup=keyboardfour)
-    elif cb == "hb57":
-        await CallbackQuery.edit_message_text(helpers.HELP_57, reply_markup=keyboardfour)
-    elif cb == "hb58":
-        await CallbackQuery.edit_message_text(helpers.HELP_58, reply_markup=keyboardfour)
-    elif cb == "hb59":
-        await CallbackQuery.edit_message_text(helpers.HELP_59, reply_markup=keyboardfour)
-    elif cb == "hb60":
-        await CallbackQuery.edit_message_text(helpers.HELP_60, reply_markup=keyboardfour)
+    
