@@ -76,7 +76,7 @@ async def music_callback(client: app, callback_query: CallbackQuery):
                 InlineKeyboardButton(text="Sᴏɴɢ", callback_data="music_callback ms14"),
                 InlineKeyboardButton(text="Sᴘᴇᴇᴅ", callback_data="music_callback ms15"),
             ],
-            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"feature")],
+            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"gotohelp")],
         ]
     )
 
@@ -135,7 +135,7 @@ async def management_callback(client: app, callback_query: CallbackQuery):
                 InlineKeyboardButton(text="Option 1", callback_data="management_callback hb1"),
                 InlineKeyboardButton(text="Option 2", callback_data="management_callback hb2")
             ],
-            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"feature")],
+            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"gotohelp")],
         ]
     )
 
@@ -168,7 +168,7 @@ async def ai_callback(client: app, callback_query: CallbackQuery):
                 InlineKeyboardButton(text="Option 1", callback_data="ai_callback ai1"),
                 InlineKeyboardButton(text="Option 2", callback_data="ai_callback ai2")
             ],
-            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"feature")],
+            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"gotohelp")],
         ]
     )
 
