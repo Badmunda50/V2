@@ -2,6 +2,7 @@ import re
 from math import ceil
 from typing import Union
 
+from pyrogram.types import InputMediaPhoto
 from pyrogram import Client, filters, types
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
