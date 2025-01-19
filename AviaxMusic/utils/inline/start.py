@@ -29,7 +29,7 @@ def private_panel(OWNER: Union[bool, int] = None):
         ], 
         [
             InlineKeyboardButton(
-                text="Hᴇʟᴘ & Cᴏᴍᴍᴀɴᴅs", callback_data="gotohelp"
+                text="Hᴇʟᴘ & Cᴏᴍᴍᴀɴᴅs", callback_data="feature"
             ),
         ],
       [
