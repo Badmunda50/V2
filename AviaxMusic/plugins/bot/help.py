@@ -9,7 +9,7 @@ import config
 from config import BANNED_USERS, START_IMG_URL
 from strings import get_command, get_string
 from AviaxMusic import HELPABLE, app
-from AviaxMusic.utils.database import get_lang
+from AviaxMusic.utils.database import get_lang, is_commanddelete_on
 from AviaxMusic.utils.decorators.language import LanguageStart
 from AviaxMusic.utils.inline.help import private_help_panel
 
