@@ -95,6 +95,9 @@ def paginate_modules(page_n, module_dict, prefix, chat=None, close: bool = False
 
     return pairs
 
+def generate_dynamic_photo():
+    # Logic to generate dynamic photo URL
+    return "https://example.com/dynamic_photo.jpg"  # Replace with your logic
 
 @app.on_message(filters.command(HELP_COMMAND) & filters.private & ~BANNED_USERS)
 @app.on_callback_query(filters.regex("settings_back_helper") & ~BANNED_USERS)
@@ -126,10 +129,11 @@ async def helper_private(
         keyboard = InlineKeyboardMarkup(
             paginate_modules(0, HELPABLE, "help", close=True)
         )
-        if START_IMG_URL:
+        dynamic_photo_url = generate_dynamic_photo()
+        if dynamic_photo_url:
 
             await update.reply_photo(
-                photo=START_IMG_URL,
+                photo=dynamic_photo_url,
                 caption=_["help_1"],
                 reply_markup=keyboard,
             )
@@ -182,6 +186,7 @@ async def help_button(client, query):
                         text="↪️ ʙᴀᴄᴋ", callback_data=f"help_back({prev_page_num})"
                     ),
                     InlineKeyboardButton(text="🔄 ᴄʟᴏsᴇ", callback_data="close"),
+                    InlineKeyboardButton(text="🏠 ʜᴏᴍᴇ", callback_data="help_home"),
                 ],
             ]
         )
@@ -195,8 +200,8 @@ async def help_button(client, query):
     elif home_match:
         await app.send_message(
             query.from_user.id,
-            text=home_text_pm,
-            reply_markup=InlineKeyboardMarkup(out),
+            text=top_text,
+            reply_markup=InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help")),
         )
         await query.message.delete()
 
@@ -421,6 +426,14 @@ def back_to_music(_):
                 InlineKeyboardButton(
                     text=_["BACK_BUTTON"],
                     callback_data=f"music",
+                ),
+                InlineKeyboardButton(
+                    text=_["HOME_BUTTON"],
+                    callback_data=f"help_home",
+                ),
+                InlineKeyboardButton(
+                    text=_["NEXT_BUTTON"],
+                    callback_data=f"music_next",
                 ),
             ]
         ]
