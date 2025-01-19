@@ -1,19 +1,28 @@
+import re
 from math import ceil
 from typing import Union
-from pyrogram import filters, types
-from pyrogram.types import InlineKeyboardMarkup, Message, CallbackQuery
-from config import START_IMG_URL, BANNED_USERS
-from strings import get_command, get_string, helpers
-from AviaxMusic import app, HELPABLE
-from AviaxMusic.utils.decorators.language import languageCB
-from AviaxMusic.utils.database import get_lang
-from AviaxMusic.utils.inline.eg import first_panel
 
+from pyrogram import Client, filters, types
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+
+import config
+from config import BANNED_USERS, START_IMG_URL
+from strings import get_command, get_string
+from AviaxMusic import HELPABLE, app
+from AviaxMusic.utils.database import get_lang
+from AviaxMusic.utils.decorators.language import LanguageStart
+from AviaxMusic.utils.inline.help import private_help_panel
+
+### Command
 HELP_COMMAND = get_command("HELP_COMMAND")
-COLUMN_SIZE = 4  # number of button height
+
+COLUMN_SIZE = 4  # number of  button height
 NUM_COLUMNS = 3  # number of button width
 
-class EqInlineKeyboardButton(types.InlineKeyboardButton):
+donate = "https://envs.sh/Sgb.jpg"
+
+
+class EqInlineKeyboardButton(InlineKeyboardButton):
     def __eq__(self, other):
         return self.text == other.text
 
@@ -22,6 +31,7 @@ class EqInlineKeyboardButton(types.InlineKeyboardButton):
 
     def __gt__(self, other):
         return self.text > other.text
+
 
 def paginate_modules(page_n, module_dict, prefix, chat=None, close: bool = False):
     if not chat:
@@ -50,6 +60,7 @@ def paginate_modules(page_n, module_dict, prefix, chat=None, close: bool = False
         )
 
     pairs = [modules[i : i + NUM_COLUMNS] for i in range(0, len(modules), NUM_COLUMNS)]
+
     max_num_pages = ceil(len(pairs) / COLUMN_SIZE) if len(pairs) > 0 else 1
     modulo_page = page_n % max_num_pages
 
@@ -84,6 +95,7 @@ def paginate_modules(page_n, module_dict, prefix, chat=None, close: bool = False
         )
 
     return pairs
+
 
 @app.on_message(filters.command(HELP_COMMAND) & filters.private & ~BANNED_USERS)
 @app.on_callback_query(filters.regex("settings_back_helper") & ~BANNED_USERS)
@@ -130,99 +142,117 @@ async def helper_private(
                 reply_markup=keyboard,
             )
 
+
 @app.on_message(filters.command(HELP_COMMAND) & filters.group & ~BANNED_USERS)
-async def help_com_group(client, message: Message):
-    keyboard = first_panel()
-    await message.reply_text("Here is the help information for the group.", reply_markup=InlineKeyboardMarkup(keyboard))
+@LanguageStart
+async def help_com_group(client, message: Message, _):
+    keyboard = private_help_panel(_)
+    await message.reply_text(_["help_2"], reply_markup=InlineKeyboardMarkup(keyboard))
 
-@app.on_callback_query(filters.regex("feature"))
-async def feature_callback(client, callback_query: CallbackQuery):
-    keyboard = [
-        [
-            types.InlineKeyboardButton(
-                text="💫 ᴀᴅᴅ ᴍᴇ ᴍᴏʀᴇ ❤️",
-                url=f"https://t.me/{app.username}?startgroup=true",
-            ),
-        ],
-        [
-            types.InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
-            types.InlineKeyboardButton(text="🤖 ᴍᴀɴᴇɢᴇᴍᴇɴᴛ 🤖", callback_data="settings_back_helper"),
-        ],
-        [types.InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
-    ]
-    await callback_query.message.edit_text(
-        "Explore a wide range of features designed to enhance your music experience.",
-        reply_markup=InlineKeyboardMarkup(keyboard),
-    )
 
-@app.on_callback_query(filters.regex("music"))
-async def music_callback(client, callback_query: CallbackQuery):
-    new_text = "Here are the music options..."
-    keyboard = InlineKeyboardMarkup(
-        [
-            [
-                types.InlineKeyboardButton(text="Aᴅᴍɪɴ", callback_data="music_callback hb1"),
-                types.InlineKeyboardButton(text="Aᴜᴛʜ", callback_data="music_callback hb2"),
-                types.InlineKeyboardButton(
-                    text="Bʀᴏᴀᴅᴄᴀsᴛ", callback_data="music_callback hb3"
-                ),
-            ],
-            [
-                types.InlineKeyboardButton(
-                    text="Bʟ-Cʜᴀᴛ", callback_data="music_callback hb4"
-                ),
-                types.InlineKeyboardButton(
-                    text="Bʟ-Usᴇʀ", callback_data="music_callback hb5"
-                ),
-                types.InlineKeyboardButton(text="C-Pʟᴀʏ", callback_data="music_callback hb6"),
-            ],
-            [
-                types.InlineKeyboardButton(text="G-Bᴀɴ", callback_data="music_callback hb7"),
-                types.InlineKeyboardButton(text="Lᴏᴏᴘ", callback_data="music_callback hb8"),
-                types.InlineKeyboardButton(
-                    text="Mᴀɪɴᴛᴇɴᴀɴᴄᴇ", callback_data="music_callback hb9"
-                ),
-            ],
-            [
-                types.InlineKeyboardButton(text="Pɪɴɢ", callback_data="music_callback hb10"),
-                types.InlineKeyboardButton(text="Pʟᴀʏ", callback_data="music_callback hb11"),
-                types.InlineKeyboardButton(
-                    text="Sʜᴜғғʟᴇ", callback_data="music_callback hb12"
-                ),
-            ],
-            [
-                types.InlineKeyboardButton(text="Sᴇᴇᴋ", callback_data="music_callback hb13"),
-                types.InlineKeyboardButton(text="Sᴏɴɢ", callback_data="music_callback hb14"),
-                types.InlineKeyboardButton(text="Sᴘᴇᴇᴅ", callback_data="music_callback hb15"),
-            ],
-            [types.InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"feature")],
-        ]
-    )
+async def help_parser(name, keyboard=None):
+    if not keyboard:
+        keyboard = InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
+    return keyboard
 
-    if callback_query.message.text != new_text:
-        await callback_query.message.edit(
-            new_text,
-            reply_markup=keyboard
+
+@app.on_callback_query(filters.regex(r"help_(.*?)"))
+async def help_button(client, query):
+    home_match = re.match(r"help_home\((.+?)\)", query.data)
+    mod_match = re.match(r"help_module\((.+?),(.+?)\)", query.data)
+    prev_match = re.match(r"help_prev\((.+?)\)", query.data)
+    next_match = re.match(r"help_next\((.+?)\)", query.data)
+    back_match = re.match(r"help_back\((\d+)\)", query.data)
+    create_match = re.match(r"help_create", query.data)
+    language = await get_lang(query.message.chat.id)
+    _ = get_string(language)
+    top_text = _["help_1"]
+
+    if mod_match:
+        module = mod_match.group(1)
+        prev_page_num = int(mod_match.group(2))
+        text = (
+            f"<b><u>Hᴇʀᴇ Is Tʜᴇ Hᴇʟᴘ Fᴏʀ {HELPABLE[module].__MODULE__}:</u></b>\n"
+            + HELPABLE[module].__HELP__
         )
-@app.on_callback_query(filters.regex("back_to_music"))
-async def feature_callback(client, callback_query: CallbackQuery):
-    keyboard = [
-        [
-            types.InlineKeyboardButton(
-                text="💫 ᴀᴅᴅ ᴍᴇ ᴍᴏʀᴇ ❤️",
-                url=f"https://t.me/{app.username}?startgroup=true",
+
+        key = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        text="↪️ ʙᴀᴄᴋ", callback_data=f"help_back({prev_page_num})"
+                    ),
+                    InlineKeyboardButton(text="🔄 ᴄʟᴏsᴇ", callback_data="close"),
+                ],
+            ]
+        )
+
+        await query.message.edit(
+            text=text,
+            reply_markup=key,
+            disable_web_page_preview=True,
+        )
+
+    elif home_match:
+        await app.send_message(
+            query.from_user.id,
+            text=home_text_pm,
+            reply_markup=InlineKeyboardMarkup(out),
+        )
+        await query.message.delete()
+
+    elif prev_match:
+        curr_page = int(prev_match.group(1))
+        await query.message.edit(
+            text=top_text,
+            reply_markup=InlineKeyboardMarkup(
+                paginate_modules(curr_page, HELPABLE, "help")
             ),
-        ],
-        [
-            types.InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
-            types.InlineKeyboardButton(text="🤖 ᴍᴀɴᴇɢᴇᴍᴇɴᴛ 🤖", callback_data="settings_back_helper"),
-        ],
-        [types.InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
-    ]
-    await callback_query.message.edit_text(
-        "Here are the bot features...",
-        reply_markup=InlineKeyboardMarkup(keyboard)
-    )
+            disable_web_page_preview=True,
+        )
+
+    elif next_match:
+        next_page = int(next_match.group(1))
+        await query.message.edit(
+            text=top_text,
+            reply_markup=InlineKeyboardMarkup(
+                paginate_modules(next_page, HELPABLE, "help")
+            ),
+            disable_web_page_preview=True,
+        )
+
+    elif back_match:
+        prev_page_num = int(back_match.group(1))
+        await query.message.edit(
+            text=top_text,
+            reply_markup=InlineKeyboardMarkup(
+                paginate_modules(prev_page_num, HELPABLE, "help")
+            ),
+            disable_web_page_preview=True,
+        )
+
+    elif create_match:
+        keyboard = InlineKeyboardMarkup(paginate_modules(0, HELPABLE, "help"))
+
+        await query.message.edit(
+            text=top_text,
+            reply_markup=keyboard,
+            disable_web_page_preview=True,
+        )
+
+    await client.answer_callback_query(query.id)
+
+
+# ===================================
+
+from pyrogram import Client, filters
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+
+from config import BANNED_USERS
+from strings import helpers
+from AviaxMusic import app
+from AviaxMusic.utils.decorators.language import languageCB
+
 
 @app.on_callback_query(filters.regex("music_callback") & ~BANNED_USERS)
 @languageCB
@@ -293,3 +323,129 @@ async def music_helper_cb(client, CallbackQuery, _):
     elif cb == "hb15":
 
         await CallbackQuery.edit_message_text(helpers.HELP_15, reply_markup=keyboard)
+
+
+@app.on_callback_query(filters.regex("developer"))
+async def about_callback(client: Client, callback_query: CallbackQuery):
+    buttons = [
+        [
+            InlineKeyboardButton(text="🤡 ᴏᴡɴᴇʀ 🤡", user_id=config.OWNER_ID[0]),
+            InlineKeyboardButton(
+                text="📍sᴜᴅᴏᴇʀs📍", url=f"https://t.me/{app.username}?start=sudo"
+            ),
+        ],
+        [
+            InlineKeyboardButton(text="🔗 ɪɴsᴛᴀ 🔗", url=f"instagram.com/lll_bad_munda_lll"),
+            InlineKeyboardButton(text="🔞18+🔞", url=f"https://t.me/UDNA_SP_BKP/25"),
+        ],
+        [
+            InlineKeyboardButton(text="🔙 Back", callback_data="about")
+        ],  # Use a default label for the back button
+    ]
+    await callback_query.message.edit_text(
+        "<blockquote>ʀᴇᴛᴜʀɴɪɴɢ ᴛᴏ ᴀʙᴏᴜᴛ ᴏᴘᴛɪᴏɴꜱ...<blockquote>", reply_markup=InlineKeyboardMarkup(buttons)
+    )
+
+
+@app.on_callback_query(filters.regex("feature"))
+async def feature_callback(client: Client, callback_query: CallbackQuery):
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                text="💫 ᴀᴅᴅ ᴍᴇ ᴍᴏʀᴇ ❤️",
+                url=f"https://t.me/{app.username}?startgroup=true",
+            ),
+        ],
+        [
+            InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
+            InlineKeyboardButton(text="🤖 ᴍᴀɴᴇɢᴇᴍᴇɴᴛ 🤖", callback_data="settings_back_helper"),
+        ],
+        [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
+    ]
+    await callback_query.message.edit_text(
+        f"<blockquote><b>**Wᴇʟᴄᴏᴍᴇ ᴛᴏ** {app.mention}\n\n**Exᴘʟᴏʀᴇ ᴀ ᴡɪᴅᴇ ʀᴀɴɢᴇ ᴏғ ғᴇᴀᴛᴜʀᴇs ᴅᴇsɪɢɴᴇᴅ ᴛᴏ ᴇɴʜᴀɴᴄᴇ ʏᴏᴜʀ ᴍᴜsɪᴄ ᴇxᴘᴇʀɪᴇɴᴄᴇ. Tᴀᴘ KIDNAP ME IN YOUR NEW GROUP OR CHANNEL ᴛᴏ ɪɴᴠɪᴛᴇ ᴛʜᴇ ʙᴏᴛ ᴛᴏ ʏᴏᴜʀ ᴏᴡɴ ɢʀᴏᴜᴘ ᴏʀ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴇɴɪᴏʏ sᴇᴀᴍʟᴇss ᴍᴜsɪᴄ ɪɴᴛᴇɢʀᴀᴛɪᴏɴ. Usᴇ ᴛʜᴇ MUSIC ʙᴜᴛᴛᴏɴ ᴛᴏ ᴀᴄᴄᴇss ᴀʟʟ ᴛʜᴇ ᴍᴜsɪᴄ-ʀᴇʟᴀᴛᴇᴅ ғᴜɴᴄᴛɪᴏɴᴀʟɪᴛɪᴇs, ғʀᴏᴍ sᴛʀᴇᴀᴍɪɴɢ ʏᴏᴜʀ ғᴀᴠᴏʀɪᴛᴇ sᴏɴɢs ᴛᴏ ᴄʀᴇᴀᴛɪɴɢ ᴘʟᴀʏʟɪsᴛs. Lᴏᴏᴋɪɴɢ ғᴏʀ ᴍᴏʀᴇ ᴏᴘᴛɪᴏɴs? Hɪᴛ ᴛʜᴇ ALL ʙᴜᴛᴛᴏɴ ᴛᴏ ᴇxᴘʟᴏʀᴇ ᴇᴠᴇʀʏᴛʜɪɴɢ ᴛʜɪs ʙᴏᴛ ᴄᴀɴ ᴏғғᴇʀ. Wʜᴇɴᴇᴠᴇʀ ʏᴏᴜ'ʀᴇ ʀᴇᴀᴅʏ, sɪᴍᴘʟʏ ᴛᴀᴘ HOME ᴛᴏ ʀᴇᴛᴜʀɴ ᴛᴏ ᴛʜᴇ ᴍᴀɪɴ ᴍᴇɴᴜ. Eɴɪᴏʏ ʏᴏᴜʀ ᴛɪᴍᴇ ᴡɪᴛʜ JBL Mᴜsɪᴄ Bᴏᴛ!**<blockquote><b>",
+        reply_markup=InlineKeyboardMarkup(keyboard),
+    )
+
+
+@app.on_callback_query(filters.regex("music"))
+async def music_callback(client: Client, callback_query: CallbackQuery):
+    keyboard = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(text="Aᴅᴍɪɴ", callback_data="music_callback hb1"),
+                InlineKeyboardButton(text="Aᴜᴛʜ", callback_data="music_callback hb2"),
+                InlineKeyboardButton(
+                    text="Bʀᴏᴀᴅᴄᴀsᴛ", callback_data="music_callback hb3"
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Bʟ-Cʜᴀᴛ", callback_data="music_callback hb4"
+                ),
+                InlineKeyboardButton(
+                    text="Bʟ-Usᴇʀ", callback_data="music_callback hb5"
+                ),
+                InlineKeyboardButton(text="C-Pʟᴀʏ", callback_data="music_callback hb6"),
+            ],
+            [
+                InlineKeyboardButton(text="G-Bᴀɴ", callback_data="music_callback hb7"),
+                InlineKeyboardButton(text="Lᴏᴏᴘ", callback_data="music_callback hb8"),
+                InlineKeyboardButton(
+                    text="Mᴀɪɴᴛᴇɴᴀɴᴄᴇ", callback_data="music_callback hb9"
+                ),
+            ],
+            [
+                InlineKeyboardButton(text="Pɪɴɢ", callback_data="music_callback hb10"),
+                InlineKeyboardButton(text="Pʟᴀʏ", callback_data="music_callback hb11"),
+                InlineKeyboardButton(
+                    text="Sʜᴜғғʟᴇ", callback_data="music_callback hb12"
+                ),
+            ],
+            [
+                InlineKeyboardButton(text="Sᴇᴇᴋ", callback_data="music_callback hb13"),
+                InlineKeyboardButton(text="Sᴏɴɢ", callback_data="music_callback hb14"),
+                InlineKeyboardButton(text="Sᴘᴇᴇᴅ", callback_data="music_callback hb15"),
+            ],
+            [InlineKeyboardButton(text="✯ ʙᴀᴄᴋ ✯", callback_data=f"feature")],
+        ]
+    )
+
+    await callback_query.message.edit(
+        "<blockquote><b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ᴍᴜꜱɪᴄ ᴏᴘᴛɪᴏɴꜱ...<blockquote><b>", reply_markup=keyboard
+    )
+
+
+@app.on_callback_query(filters.regex("back_to_music"))
+async def feature_callback(client: Client, callback_query: CallbackQuery):
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                text="💫 ᴀᴅᴅ ᴍᴇ ᴍᴏʀᴇ ❤️",
+                url=f"https://t.me/{app.username}?startgroup=true",
+            ),
+        ],
+        [
+            InlineKeyboardButton(text="🎧 ᴍᴜsɪᴄ 🎧", callback_data="music"),
+            InlineKeyboardButton(text="🤖 ᴍᴀɴᴇɢᴇᴍᴇɴᴛ 🤖", callback_data="settings_back_helper"),
+        ],
+        [InlineKeyboardButton(text="✯ ʜᴏᴍᴇ ✯", callback_data="go_to_start")],
+    ]
+    await callback_query.message.edit_text(
+        "<blockquote><b>ʜᴇʀᴇ ᴀʀᴇ ᴛʜᴇ ʙᴏᴛ ꜰᴇᴀᴛᴜʀᴇꜱ...<blockquote><b>", reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+
+
+def back_to_music(_):
+    upl = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    text=_["BACK_BUTTON"],
+                    callback_data=f"music",
+                ),
+            ]
+        ]
+    )
+    return upl
+
