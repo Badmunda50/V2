@@ -157,6 +157,7 @@ async def feature_callback(client, callback_query: CallbackQuery):
 
 @app.on_callback_query(filters.regex("music"))
 async def music_callback(client, callback_query: CallbackQuery):
+    new_text = "Here are the music options..."
     keyboard = InlineKeyboardMarkup(
         [
             [
@@ -198,11 +199,11 @@ async def music_callback(client, callback_query: CallbackQuery):
         ]
     )
 
-    await callback_query.message.edit(
-        "Here are the music options...",
-        reply_markup=keyboard
-    )
-
+    if callback_query.message.text != new_text:
+        await callback_query.message.edit(
+            new_text,
+            reply_markup=keyboard
+        )
 @app.on_callback_query(filters.regex("back_to_music"))
 async def feature_callback(client, callback_query: CallbackQuery):
     keyboard = [
