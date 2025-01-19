@@ -20,8 +20,6 @@ HELP_COMMAND = get_command("HELP_COMMAND")
 COLUMN_SIZE = 4  # number of  button height
 NUM_COLUMNS = 3  # number of button width
 
-donate = "https://envs.sh/Sgb.jpg"
-
 
 class EqInlineKeyboardButton(InlineKeyboardButton):
     def __eq__(self, other):
