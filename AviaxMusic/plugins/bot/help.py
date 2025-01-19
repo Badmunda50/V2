@@ -95,9 +95,6 @@ def paginate_modules(page_n, module_dict, prefix, chat=None, close: bool = False
 
     return pairs
 
-def generate_dynamic_photo():
-    # Logic to generate dynamic photo URL
-    return "https://example.com/dynamic_photo.jpg"  # Replace with your logic
 
 @app.on_message(filters.command(HELP_COMMAND) & filters.private & ~BANNED_USERS)
 @app.on_callback_query(filters.regex("settings_back_helper") & ~BANNED_USERS)
@@ -129,11 +126,10 @@ async def helper_private(
         keyboard = InlineKeyboardMarkup(
             paginate_modules(0, HELPABLE, "help", close=True)
         )
-        dynamic_photo_url = generate_dynamic_photo()
-        if dynamic_photo_url:
+        if START_IMG_URL:
 
             await update.reply_photo(
-                photo=dynamic_photo_url,
+                photo=START_IMG_URL,
                 caption=_["help_1"],
                 reply_markup=keyboard,
             )
