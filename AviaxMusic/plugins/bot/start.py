@@ -38,6 +38,7 @@ from AviaxMusic.utils.decorators.language import LanguageStart
 from AviaxMusic.utils.formatters import get_readable_time
 
 from AviaxMusic.utils.inline import private_panel, start_panel as start_pannel
+from .help import paginate_modules
 
 loop = asyncio.get_running_loop()
 
