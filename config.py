@@ -218,6 +218,7 @@ BOT_TOKEN = getenv("BOT_TOKEN", "7436017266:AAG_AeXHXYKSn5XgQjQlJH0p39taHjNPt-A"
 
 # ________________________________________________________________________________#
 # Database to save your chats and stats... Get MongoDB:-  https://telegra.ph/How-To-get-Mongodb-URI-04-06
+DB_NAME = "badDB"
 MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://bikash:bikash@bikash.3jkvhp7.mongodb.net/?retryWrites=true&w=majority")
 
 
