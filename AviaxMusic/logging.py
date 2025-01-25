@@ -1,5 +1,7 @@
+import time
 import config 
 import logging
+from motor.motor_asyncio import AsyncIOMotorClient as MongoCli
 
 
 logging.basicConfig(
