@@ -171,6 +171,9 @@ async def today_rankings(_, message):
     else:
         await message.reply_text("ɴᴏ ᴅᴀᴛᴀ ᴀᴠᴀɪʟᴀʙʟᴇ ꜰᴏʀ ᴛᴏᴅᴀʏ.")
 
+    # Delete the command message
+    await message.delete()
+
 @app.on_callback_query(filters.regex(r"^today$"))
 async def on_today_callback(_, callback_query):
     chat_id = str(callback_query.message.chat.id)
