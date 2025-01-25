@@ -1,6 +1,7 @@
 import time
 import config 
 import logging
+from pymongo import MongoClient
 from motor.motor_asyncio import AsyncIOMotorClient as MongoCli
 
 
