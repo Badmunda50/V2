@@ -1,4 +1,6 @@
+import config 
 import logging
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -11,6 +13,11 @@ logging.basicConfig(
 )
 
 LOGGERR = logging.getLogger(__name__)
+boot = time.time()
+mongodb = MongoCli(config.MONGO_DB_URI)
+db = mongodb.Anonymous
+mongo = MongoClient(config.MONGO_DB_URI)
+OWNER = config.OWNER_ID
 logging.getLogger("httpx").setLevel(logging.ERROR)
 logging.getLogger("pyrogram").setLevel(logging.ERROR)
 logging.getLogger("pytgcalls").setLevel(logging.ERROR)
