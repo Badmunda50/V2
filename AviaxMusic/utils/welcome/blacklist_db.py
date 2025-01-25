@@ -4,6 +4,13 @@ from time import time
 from AviaxMusic import LOGGER
 from AviaxMusic.utils.welcome import MongoDB
 
+
+import logging
+
+# Setting up the logger
+LOGGER = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
 INSERTION_LOCK = RLock()
 
 
