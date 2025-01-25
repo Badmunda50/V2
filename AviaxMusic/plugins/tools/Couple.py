@@ -106,7 +106,7 @@ async def couples(app, message):
     xy = ["Zero1", "Zero2", "Zero3"]
     x = random.choice(xy)
 
-    img = Image.open(f"assets/c/{x}.png")
+    img = Image.open(f"assets/C/{x}.png")
 
     img1 = img1.resize((680, 680))
     img2 = img2.resize((680, 680))
