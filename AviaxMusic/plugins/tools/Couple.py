@@ -95,11 +95,11 @@ async def couples(app, message):
     try:
         p1 = await app.download_media(photo1.big_file_id, file_name="pfp.png")
     except Exception:
-        p1 = "assets/c/coupless.png"
+        p1 = "assets/C/coupless.png"
     try:
         p2 = await app.download_media(photo2.big_file_id, file_name="pfp1.png")
     except Exception:
-        p2 = "assets/c/coupless.png"
+        p2 = "assets/C/coupless.png"
 
     img1 = Image.open(f"{p1}")
     img2 = Image.open(f"{p2}")
@@ -184,18 +184,18 @@ async def regeneratecouples(client: Client, cb: CallbackQuery):
     try:
         p1 = await app.download_media(photo1.big_file_id, file_name="pfp.png")
     except Exception:
-        p1 = "assets/c/coupless.png"
+        p1 = "assets/C/coupless.png"
     try:
         p2 = await app.download_media(photo2.big_file_id, file_name="pfp1.png")
     except Exception:
-        p2 = "assets/c/coupless.png"
+        p2 = "assets/C/coupless.png"
 
     img1 = Image.open(p1)
     img2 = Image.open(p2)
     xy = ["Zero1", "Zero2", "Zero3"]
     x = random.choice(xy)
 
-    img = Image.open(f"assets/c/{x}.png")
+    img = Image.open(f"assets/C/{x}.png")
 
     img1 = img1.resize((680, 680))
     img2 = img2.resize((680, 680))
