@@ -216,6 +216,8 @@ BOT_TOKEN = getenv("BOT_TOKEN", "7436017266:AAG_AeXHXYKSn5XgQjQlJH0p39taHjNPt-A"
 TIME_ZONE = "Asia/Kolkata"
 # ________________________________________________________________________________#
 
+# Bot id
+BOT_ID = int(getenv("BOT_ID", "7436017266"))
 
 # ________________________________________________________________________________#
 # Database to save your chats and stats... Get MongoDB:-  https://telegra.ph/How-To-get-Mongodb-URI-04-06
