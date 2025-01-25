@@ -15,7 +15,6 @@ pillow==9.5.0
 psutil
 py-tgcalls==0.9.7
 pykeyboard
-git+https://github.com/SHIVANIxBOTZ/pyrogram@dev
 python-dotenv
 pyyaml
 requests
@@ -28,3 +27,4 @@ yt-dlp
 youtube-search
 youtube-search-python
 nekos.py
+git+https://github.com/KurimuzonAkuma/pyrogram@dev
