@@ -67,7 +67,7 @@ async def select_couples(chat_id: int):
     return couple
 
 @app.on_message(
-    filters.command(["couples", "couple"], prefixes=["/", "!", "%", ",", "", ".", "@", "#"])
+    filters.command(["couples", "couple", "shipping"], prefixes=["/", "!", "%", ",", "", ".", "@", "#"])
 )
 async def couples(app, message):
     cid = message.chat.id
