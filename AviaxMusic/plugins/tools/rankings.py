@@ -174,6 +174,7 @@ async def today_rankings(_, message):
     # Delete the command message
     await message.delete()
 
+
 @app.on_callback_query(filters.regex(r"^today$"))
 async def on_today_callback(_, callback_query):
     chat_id = str(callback_query.message.chat.id)
@@ -187,7 +188,7 @@ async def on_today_callback(_, callback_query):
             usernames_data = await fetch_usernames(app, sorted_users_data)
             graph_buffer = generate_graph([(u[0], u[1]) for u in usernames_data], "📊 Today's Leaderboard")
             text_leaderboard = "\n".join(
-                [f"[{name}](tg://user?id={user_id}): {count}" for name, count, user_id in usernames_data]
+                [f"[{name}](tg://user?id={user_id}): {count}" for name, first_name, count, user_id in usernames_data]
             )
             buttons = InlineKeyboardMarkup(
                 [[
@@ -201,14 +202,13 @@ async def on_today_callback(_, callback_query):
                     InlineKeyboardButton("ɢʀᴏᴜᴘ ᴏᴠᴇʀᴀʟʟ", callback_data="group_overall")
                 ]]
             )
-        await callback_query.message.edit_media(
-            media=InputMediaPhoto(media=graph_buffer, caption=f"**📈 ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ ᴛᴏᴅᴀʏ**\n\n{text_leaderboard}"),
-            reply_markup=buttons
-        )
+            await callback_query.message.edit_media(
+                media=InputMediaPhoto(media=graph_buffer, caption=f"**📈 ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ ᴛᴏᴅᴀʏ**\n\n{text_leaderboard}"),
+                reply_markup=buttons
+            )
     else:
         await callback_query.message.edit_text("ɴᴏ ᴅᴀᴛᴀ ᴀᴠᴀɪʟᴀʙʟᴇ ꜰᴏʀ ᴀʟʟ ɢʀᴏᴜᴘꜱ.")
-           
-           
+
 @app.on_callback_query(filters.regex(r"^weekly$"))
 async def on_weekly_callback(_, callback_query):
     chat_id = str(callback_query.message.chat.id)
@@ -223,7 +223,7 @@ async def on_weekly_callback(_, callback_query):
             usernames_data = await fetch_usernames(app, sorted_users_data)
             graph_buffer = generate_graph([(u[0], u[1]) for u in usernames_data], "📊 ᴡᴇᴇᴋʟʏ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
             text_leaderboard = "\n".join(
-                [f"[{name}](tg://user?id={user_id}): {count}" for name, count, user_id in usernames_data]
+                [f"[{name}](tg://user?id={user_id}): {count}" for name, first_name, count, user_id in usernames_data]
             )
             buttons = InlineKeyboardMarkup(
                 [[
@@ -245,7 +245,7 @@ async def on_weekly_callback(_, callback_query):
             await callback_query.message.edit_text("ɴᴏ ᴅᴀᴛᴀ ᴀᴠᴀɪʟᴀʙʟᴇ ꜰᴏʀ ᴛʜɪꜱ ᴡᴇᴇᴋ.")
     else:
         await callback_query.message.edit_text("ɴᴏ ᴅᴀᴛᴀ ᴀᴠᴀɪʟᴀʙʟᴇ ꜰᴏʀ ᴛʜɪꜱ ᴡᴇᴇᴋ.")
-        
+
 @app.on_callback_query(filters.regex(r"^overall$"))
 async def on_overall_callback(_, callback_query):
     chat_id = str(callback_query.message.chat.id)
@@ -259,7 +259,7 @@ async def on_overall_callback(_, callback_query):
             usernames_data = await fetch_usernames(app, sorted_users_data)
             graph_buffer = generate_graph([(u[0], u[1]) for u in usernames_data], "📊 ᴏᴠᴇʀᴀʟʟ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
             text_leaderboard = "\n".join(
-                [f"[{name}](tg://user?id={user_id}): {count}" for name, count, user_id in usernames_data]
+                [f"[{name}](tg://user?id={user_id}): {count}" for name, first_name, count, user_id in usernames_data]
             )
             buttons = InlineKeyboardMarkup(
                 [[
@@ -272,14 +272,14 @@ async def on_overall_callback(_, callback_query):
                 [
                     InlineKeyboardButton("ɢʀᴏᴜᴘ ᴏᴠᴇʀᴀʟʟ", callback_data="group_overall")
                 ]]
-        )
-        await callback_query.message.edit_media(
-            media=InputMediaPhoto(media=graph_buffer, caption=f"**📈 ᴛᴏᴘ ɢʀᴏᴜᴘꜱ ᴏᴠᴇʀᴀʟʟ**\n\n{text_leaderboard}"),
-            reply_markup=buttons
-        )
+            )
+            await callback_query.message.edit_media(
+                media=InputMediaPhoto(media=graph_buffer, caption=f"**📈 ᴛᴏᴘ ɢʀᴏᴜᴘꜱ ᴏᴠᴇʀᴀʟʟ**\n\n{text_leaderboard}"),
+                reply_markup=buttons
+            )
     else:
         await callback_query.message.edit_text("ɴᴏ ᴅᴀᴛᴀ ᴀᴠᴀɪʟᴀʙʟᴇ ꜰᴏʀ ᴀʟʟ ɢʀᴏᴜᴘꜱ.")
-        
+
 @app.on_callback_query(filters.regex(r"^group_overall$"))
 async def on_group_overall_callback(_, callback_query):
     groups_data = group_collection.find().sort("total_messages", -1).limit(5)
