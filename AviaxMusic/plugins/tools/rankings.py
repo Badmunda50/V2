@@ -224,7 +224,7 @@ async def on_weekly_callback(_, callback_query):
             valid_usernames_data = [(u[0], u[1], u[2]) for u in usernames_data if len(u) == 4]
             graph_buffer = generate_graph(valid_usernames_data, "📊 ᴡᴇᴇᴋʟʏ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
             text_leaderboard = "\n".join(
-                [f"[{name}](tg://user?id={user_id}): {count}" for name, first_name, count, user_id in valid_usernames_data]
+                [f"[{name}](tg://user?id={user_id}): {count}" for name, count, user_id in valid_usernames_data]
             )
             buttons = InlineKeyboardMarkup(
                 [[
