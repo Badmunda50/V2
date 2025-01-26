@@ -221,9 +221,10 @@ async def on_weekly_callback(_, callback_query):
 
         if sorted_users_data:
             usernames_data = await fetch_usernames(app, sorted_users_data)
-            graph_buffer = generate_graph([(u[0], u[1]) for u in usernames_data], "📊 ᴡᴇᴇᴋʟʏ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
+            valid_usernames_data = [(u[0], u[1], u[2]) for u in usernames_data if len(u) == 4]
+            graph_buffer = generate_graph(valid_usernames_data, "📊 ᴡᴇᴇᴋʟʏ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
             text_leaderboard = "\n".join(
-                [f"[{name}](tg://user?id={user_id}): {count}" for name, first_name, count, user_id in usernames_data]
+                [f"[{name}](tg://user?id={user_id}): {count}" for name, first_name, count, user_id in valid_usernames_data]
             )
             buttons = InlineKeyboardMarkup(
                 [[
