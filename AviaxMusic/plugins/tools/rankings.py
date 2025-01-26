@@ -36,8 +36,8 @@ def update_group_total(chat_id):
 
 def generate_graph(data, title):
     """Generates a graph based on the given data."""
-    usernames = [d[0] for d in data]
-    messages = [d[2] for d in data]
+    usernames = [d[0] for d in data if len(d) > 2]
+    messages = [d[2] for d in data if len(d) > 2]
     plt.figure(figsize=(10, 6))
     plt.barh(usernames, messages, color="#FF1493")
     plt.xlabel("Messages", color="white")
