@@ -34,10 +34,10 @@ def update_group_total(chat_id):
 
 def generate_graph(data, title):
     """Generates a graph based on the given data."""
-    usernames = [d[0] for d in data]
+    user_ids = [d[0] for d in data]
     messages = [d[1] for d in data]
     plt.figure(figsize=(10, 6))
-    plt.barh(usernames, messages, color="#FF1493")
+    plt.barh(user_ids, messages, color="#FF1493")
     plt.xlabel("Messages", color="white")
     plt.ylabel("Users", color="white")
     plt.title(title, color="white")
@@ -143,7 +143,7 @@ async def today_rankings(_, message):
 
         if sorted_users_data:
             usernames_data = await fetch_usernames(app, sorted_users_data)
-            graph_buffer = generate_graph(usernames_data, "📊 Today's Leaderboard")
+            graph_buffer = generate_graph([(u[3], u[2]) for u in usernames_data], "📊 Today's Leaderboard")
             text_leaderboard = "\n".join(
                 [f"[{first_name}](tg://user?id={user_id}): {count}" for username, first_name, count, user_id in usernames_data]
             )
@@ -183,9 +183,9 @@ async def on_today_callback(_, callback_query):
 
         if sorted_users_data:
             usernames_data = await fetch_usernames(app, sorted_users_data)
-            graph_buffer = generate_graph([(u[0], u[1]) for u in usernames_data], "📊 Today's Leaderboard")
+            graph_buffer = generate_graph([(u[3], u[2]) for u in usernames_data], "📊 Today's Leaderboard")
             text_leaderboard = "\n".join(
-                [f"[{name}](tg://user?id={user_id}): {count}" for name, first_name, count, user_id in usernames_data]
+                [f"[{first_name}](tg://user?id={user_id}): {count}" for username, first_name, count, user_id in usernames_data]
             )
             buttons = InlineKeyboardMarkup(
                 [[
@@ -218,10 +218,9 @@ async def on_weekly_callback(_, callback_query):
 
         if sorted_users_data:
             usernames_data = await fetch_usernames(app, sorted_users_data)
-            valid_usernames_data = [(u[0], u[1], u[2]) for u in usernames_data if len(u) == 4]
-            graph_buffer = generate_graph(valid_usernames_data, "📊 ᴡᴇᴇᴋʟʏ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
+            graph_buffer = generate_graph([(u[3], u[2]) for u in usernames_data], "📊 ᴡᴇᴇᴋʟʏ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
             text_leaderboard = "\n".join(
-                [f"[{name}](tg://user?id={user_id}): {count}" for name, count, user_id in valid_usernames_data]
+                [f"[{first_name}](tg://user?id={user_id}): {count}" for username, first_name, count, user_id in usernames_data]
             )
             buttons = InlineKeyboardMarkup(
                 [[
@@ -255,10 +254,9 @@ async def on_overall_callback(_, callback_query):
 
         if sorted_users_data:
             usernames_data = await fetch_usernames(app, sorted_users_data)
-            valid_usernames_data = [(u[0], u[1], u[2]) for u in usernames_data if len(u) == 4]
-            graph_buffer = generate_graph(valid_usernames_data, "📊 ᴏᴠᴇʀᴀʟʟ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
+            graph_buffer = generate_graph([(u[3], u[2]) for u in usernames_data], "📊 ᴏᴠᴇʀᴀʟʟ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
             text_leaderboard = "\n".join(
-                [f"[{name}](tg://user?id={user_id}): {count}" for name, count, user_id in valid_usernames_data]
+                [f"[{first_name}](tg://user?id={user_id}): {count}" for username, first_name, count, user_id in usernames_data]
             )
             buttons = InlineKeyboardMarkup(
                 [[
@@ -295,7 +293,7 @@ async def on_group_overall_callback(_, callback_query):
         sorted_groups.append((group_name, group["total_messages"]))
 
     if sorted_groups:
-        graph_buffer = generate_graph(sorted_groups, "📊 ᴀʟʟ ɢʀᴏᴜᴘꜱ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
+        graph_buffer = generate_graph([(group_name, count) for group_name, count in sorted_groups], "📊 ᴀʟʟ ɢʀᴏᴜᴘꜱ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ")
         text_leaderboard = "\n".join(
             [f"{group}: {count}" for group, count in sorted_groups]
         )
@@ -312,7 +310,7 @@ async def on_group_overall_callback(_, callback_query):
             ]]
         )
         await callback_query.message.edit_media(
-            media=InputMediaPhoto(media=graph_buffer, caption=f"**📈 ᴛᴏᴘ ɢʀᴏᴜᴘꜱ ᴏᴠᴇʀᴀʟʟ**\n\n{text_leaderboard}"),
+            media=InputMediaPhoto(media=graph_buffer, caption=f"**📈 ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ ᴀʟʟ ɢʀᴏᴜᴘꜱ**\n\n{text_leaderboard}"),
             reply_markup=buttons
         )
     else:
