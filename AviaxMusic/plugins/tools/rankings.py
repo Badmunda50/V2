@@ -69,10 +69,12 @@ async def fetch_usernames(app, users_data):
 user_message_counts = {}
 user_block_times = {}
 today_date = datetime.date.today()
+start_of_week = today_date - datetime.timedelta(days=today_date.weekday())
 
 @app.on_message(filters.group & ~filters.bot, group=6)
 async def group_watcher(_, message):
     global today_date
+    global start_of_week
 
     chat_id = str(message.chat.id)
     user_id = str(message.from_user.id)
@@ -82,6 +84,11 @@ async def group_watcher(_, message):
     if datetime.date.today() != today_date:
         today_date = datetime.date.today()
         today_collection.delete_many({})
+
+    # Reset weekly data if the week has changed
+    if today_date >= start_of_week + datetime.timedelta(days=7):
+        start_of_week = today_date - datetime.timedelta(days=today_date.weekday())
+        weekly_collection.delete_many({})
 
     # Initialize message count and block time for the user
     if user_id not in user_message_counts:
@@ -135,6 +142,7 @@ async def group_watcher(_, message):
 
     # Update group total
     update_group_total(chat_id)
+
 
 # ------------------- Rankings ----------------------
 
