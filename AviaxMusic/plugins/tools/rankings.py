@@ -68,12 +68,20 @@ async def fetch_usernames(app, users_data):
 # ------------------- Watcher -----------------------
 user_message_counts = {}
 user_block_times = {}
+today_date = datetime.date.today()
 
 @app.on_message(filters.group & ~filters.bot, group=6)
 async def group_watcher(_, message):
+    global today_date
+
     chat_id = str(message.chat.id)
     user_id = str(message.from_user.id)
     current_time = time.time()
+
+    # Reset today's data if the date has changed
+    if datetime.date.today() != today_date:
+        today_date = datetime.date.today()
+        today_collection.delete_many({})
 
     # Initialize message count and block time for the user
     if user_id not in user_message_counts:
