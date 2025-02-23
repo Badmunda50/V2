@@ -19,6 +19,7 @@ pykeyboard
 python-dotenv
 pyyaml
 pytz
+pydub
 requests
 speedtest-cli
 spotipy
