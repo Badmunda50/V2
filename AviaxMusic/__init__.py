@@ -21,8 +21,8 @@ heroku()
 
 app = Aviax()
 Bad = Bad()
-application = application()
 userbot = Userbot()
+application = 
 
 from .platforms import *
 
