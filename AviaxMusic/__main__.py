@@ -1,5 +1,6 @@
 import asyncio
 import importlib
+import nest_asyncio  
 
 from pyrogram import idle
 from telegram.ext import Application
@@ -13,6 +14,7 @@ from AviaxMusic.misc import sudo
 from AviaxMusic.plugins import ALL_MODULES
 from AviaxMusic.utils.database import get_banned_users, get_gbanned
 from config import BANNED_USERS
+nest_asyncio.apply() 
 
 async def init():
     if (
@@ -63,8 +65,9 @@ async def init():
     await Bad.disconnect()
     await application.shutdown()  # Call shutdown method on the instance
     await userbot.stop()
+    await application.initialize()  # Added initialization
+    await application.run_polling()  # Added run_polling
     LOGGER("AviaxMusic").info("Stopping Aviax Music Bot...")
 
 if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(init())
-    
