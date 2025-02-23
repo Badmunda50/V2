@@ -2,7 +2,6 @@ import asyncio
 import importlib
 
 from pyrogram import idle
-from telegram.ext import Application
 from pytgcalls.exceptions import NoActiveGroupCall
 from telethon import TelegramClient
 
