@@ -1,5 +1,3 @@
-
-
 from pyrogram import Client as PyrogramClient, errors
 from pyrogram.enums import ChatMemberStatus, ParseMode
 from telethon import TelegramClient
@@ -97,6 +95,28 @@ class Bad(TelegramClient):
         await super().stop()
 
 
-application = Application.builder().token(config.BOT_TOKEN).build()
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    bot = context.bot
+    me = await bot.get_me()
+    bot.id = me.id
+    bot.name = me.first_name + " " + (me.last_name or "")
+    bot.username = me.username
+    bot.mention = f"@{bot.username}"
+    
+    try:
+        await bot.send_message(
+            chat_id=config.LOG_GROUP_ID,
+            text=f"» {bot.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ3 :\n\nɪᴅ : {bot.id}\nɴᴀᴍᴇ : {bot.name}\nᴜsᴇʀɴᴀᴍᴇ : @{bot.username}"
+        )
+        LOGGER(__name__).info(f"Message sent successfully to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
+    except Exception as ex:
+        LOGGER(__name__).error(
+            f"Bot has failed to access the log group/channel.\n  Reason : {type(ex).__name__}.\nException: {ex}"
+        )
+        exit()
+
+application = ApplicationBuilder().token(config.BOT_TOKEN).build()
 
 plugins = dict(root="AviaxMusic.plugins")
