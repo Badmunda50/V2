@@ -5,6 +5,8 @@ uvloop.install()
 from pyrogram import Client as PyrogramClient, errors
 from pyrogram.enums import ChatMemberStatus, ParseMode
 from telethon import TelegramClient
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 import config
 from ..logging import LOGGER
@@ -74,7 +76,7 @@ class Bad(TelegramClient):
         await super().start(bot_token=config.BOT_TOKEN)
         me = await self.get_me()
         self.id = me.id
-        self.name = me.first_name + " " + (me.last_name or "")
+        self.name is me.first_name + " " + (me.last_name or "")
         self.username = me.username
         self.mention = f"@{self.username}"
 
@@ -94,3 +96,15 @@ class Bad(TelegramClient):
 
     async def stop(self):
         await super().stop()
+
+
+class TelegramBot:
+    def __init__(self):
+        self.application = ApplicationBuilder().token(config.BOT_TOKEN).build()
+
+    async def start(self):
+        pass
+
+    async def stop(self):
+        await self.application.stop()
+        
