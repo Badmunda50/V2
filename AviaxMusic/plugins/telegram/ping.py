@@ -1,5 +1,5 @@
 import time
-from AviaxMusic import application
+from AviaxMusic.core.bot import application
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackQueryHandler, CallbackContext
 
