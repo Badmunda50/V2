@@ -2,7 +2,7 @@ import config
 import pytz
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from AviaxMusic.core.bot import Aviax, Bad, application
+from AviaxMusic.core.bot import Aviax, Bad
 from AviaxMusic.core.dir import dirr
 from AviaxMusic.core.git import git
 from AviaxMusic.core.userbot import Userbot
