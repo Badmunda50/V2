@@ -43,6 +43,7 @@ async def init():
     LOGGER("AviaxMusic.plugins").info("Successfully Imported All Modules ")
     await Aviax.start()
     await Bad.start()
+    await TelegramBot.start()
     await userbot.start()   
     try:
         await Aviax.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
@@ -59,6 +60,7 @@ async def init():
     await idle()
     await app.stop()
     await Bad.disconnect()
+    await TelegramBot.shutdown()
     await userbot.stop()
     LOGGER("AviaxMusic").info("Stopping Aviax Music Bot...")
 
