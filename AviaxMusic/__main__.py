@@ -6,9 +6,8 @@ from pyrogram import idle
 from pytgcalls.exceptions import NoActiveGroupCall
 
 import config
-from AviaxMusic import LOGGER, HELPABLE, app, userbot, Bad
+from AviaxMusic import LOGGER, HELPABLE, app, userbot, Bad, application
 from AviaxMusic.core.call import Aviax
-from AviaxMusic.core.bot import application
 from AviaxMusic.misc import sudo
 from AviaxMusic.plugins import ALL_MODULES
 from AviaxMusic.utils.database import get_banned_users, get_gbanned
