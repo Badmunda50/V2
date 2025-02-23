@@ -6,6 +6,7 @@ from pyrogram import Client as PyrogramClient, errors
 from pyrogram.enums import ChatMemberStatus, ParseMode
 from telethon import TelegramClient
 from telegram import Update
+from telegram.ext import Application
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 import config
