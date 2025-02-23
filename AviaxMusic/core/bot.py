@@ -129,3 +129,6 @@ class TelegramBot:
     async def stop(self):
         await self.application.stop()
         await self.application.shutdown()
+
+    def add_handler(self, handler):
+        self.application.add_handler(handler)
