@@ -6,7 +6,7 @@ from pytgcalls.exceptions import NoActiveGroupCall
 from telethon import TelegramClient
 
 import config
-from AviaxMusic import LOGGER, HELPABLE, app, userbot, Bad, TelegramBot
+from AviaxMusic import LOGGER, HELPABLE, app, userbot, Bad, sukh
 from AviaxMusic.core.call import Aviax
 from AviaxMusic.misc import sudo
 from AviaxMusic.plugins import ALL_MODULES
@@ -43,8 +43,8 @@ async def init():
     LOGGER("AviaxMusic.plugins").info("Successfully Imported All Modules ")
     await Aviax.start()
     await Bad.start()
-    telegram_bot = TelegramBot()  # Create an instance of TelegramBot
-    await telegram_bot.start()  # Call start method on the instance
+    sukh = sukh()  # Create an instance of TelegramBot
+    await sukh.start()  # Call start method on the instance
     await userbot.start()   
     try:
         await Aviax.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
@@ -61,7 +61,7 @@ async def init():
     await idle()
     await app.stop()
     await Bad.disconnect()
-    await telegram_bot.shutdown()  # Call shutdown method on the instance
+    await sukh.shutdown()  # Call shutdown method on the instance
     await userbot.stop()
     LOGGER("AviaxMusic").info("Stopping Aviax Music Bot...")
 
