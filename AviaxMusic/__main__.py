@@ -13,8 +13,6 @@ from AviaxMusic.plugins import ALL_MODULES
 from AviaxMusic.utils.database import get_banned_users, get_gbanned
 from config import BANNED_USERS
 
-# Set the event loop policy to the default asyncio policy before importing nest_asyncio
-asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
 nest_asyncio.apply()
 
 async def init():
