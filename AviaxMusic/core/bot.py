@@ -99,6 +99,6 @@ class Bad(TelegramClient):
         await super().stop()
 
 
-application = Application.builder().token(Config.BOT_TOKEN).build()
+application = Application.builder().token(config.BOT_TOKEN).build()
 
 plugins = dict(root="AviaxMusic.plugins")
