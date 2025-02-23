@@ -11,7 +11,6 @@ httpx[http2]==0.25.2
 motor
 numpy
 opencv-python
-pillow==9.5.0
 psutil
 py-tgcalls==2.1.0.dev2
 pykeyboard
