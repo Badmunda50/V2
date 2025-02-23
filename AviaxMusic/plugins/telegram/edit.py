@@ -22,5 +22,5 @@ async def handle_edited_message(update: Update, context: CallbackContext):
             print(f"Failed to delete message: {e}")
 
 # Bot Handlers
-app_instance = sukh
+app_instance = application
 app_instance.add_handler(MessageHandler(filters.ALL & filters.UpdateType.EDITED, handle_edited_message))
