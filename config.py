@@ -207,7 +207,7 @@ API_HASH = getenv("API_HASH", "d927c13beaaf5110f25c505b7c071273")
 
 # ________________________________________________________________________________#
 ## Get it from @Botfather in Telegram.
-BOT_TOKEN = getenv("BOT_TOKEN", "7436017266:AAG_AeXHXYKSn5XgQjQlJH0p39taHjNPt-A")
+BOT_TOKEN = getenv("BOT_TOKEN", "7436017266:AAH5CHku5nU54DcHCMg-By4pqwaSCoZxcQU")
 
 # ________________________________________________________________________________#
 
@@ -221,7 +221,7 @@ BOT_ID = int(getenv("BOT_ID", "7436017266"))
 
 # ________________________________________________________________________________#
 # Database to save your chats and stats... Get MongoDB:-  https://telegra.ph/How-To-get-Mongodb-URI-04-06
-DB_NAME = "badDB"
+DB_NAME = "BadDB"
 MONGO_DB_URI = getenv("MONGO_DB_URI", "mongodb+srv://bikash:bikash@bikash.3jkvhp7.mongodb.net/?retryWrites=true&w=majority")
 
 
@@ -284,10 +284,10 @@ GIT_TOKEN = getenv(
 # ________________________________________________________________________________#
 # Only  Links formats are  accepted for this Var value.
 SUPPORT_CHANNEL = getenv(
-    "SUPPORT_CHANNEL", "https://t.me/itz_Cute_Shivani"
+    "SUPPORT_CHANNEL", "https://t.me/HEROKUBIN_01"
 )  # Example:- https://t.me/Quizess_prince
 SUPPORT_GROUP = getenv(
-    "SUPPORT_GROUP", "https://t.me/itz_Cute_Shivani"
+    "SUPPORT_GROUP", "https://t.me/HEROKUBIN_01"
 )  # Example:- https://t.me/Quizess_prince
 
 # ________________________________________________________________________________#
@@ -401,7 +401,7 @@ SET_CMDS = getenv("SET_CMDS", "False")
 
 # ________________________________________________________________________________#
 # You'll need a Pyrogram String Session for these vars. Generate String from our session generator bot @YukkiStringBot
-STRING1 = getenv("STRING_SESSION", "BQGIzloAd9wWJFBFXbyp-N87o6Gf3RO_sg3Nwkpv-HJK8QgjHcKjBUj5EVMXJeL2WbyiOt01K-KDw_5_Vj2CVFwKcPaSD0C8Rwg-v4aG0G0440y-uiMA4100FLNg-ZsSEAJW6ipLx8zQQzPAZj_q6sQZPFKDZBVlVouAoEaWWcJYE6XXNEsD0qFdVuAuiSVO7IuZtmTeTpSFbM-cbwsnQDUR21JoMyoOZ3GLZBpT_Tjpm45FlF1Zx0dmx8CnEN6YVMLFdyeT55QsJknAUgBYECyXcyTo8aKqh66GH19I_O-um9epRQZhabqXWgLgSAKVw9MkwmocWEt_nOM-T6sgIFPqna8OJAAAAAFQovuQAA")
+STRING1 = getenv("STRING_SESSION", "BQGIzloAMCyjasyZK7bvQR1he7cEHjMOt7NrM8H9YxWsRSF3i1N7JUUku14aqlCwRoFbYEpq3-bBfEPIfomWuBNJsZH7IXQ0TZ1mpVaWmQfMEcWQA4cJqJ6mQAXpdEeHiyV9TDSy6IqFw8W4TJ8H6QhBCZo3biUjQ7PVngW24iVN9jpD5cnPtTEUDNSsaM1hqD1l3eExV5dARiIOdbZf9ct4Htl5x8ugfRr_SgMW8XMLlzNZi4IAn2-MAEwbc7lUCy4mYSSksV7f9yxyIfPzFGXDHy04pVQzN-YoUAo5n0Ezs8k9FfDdFkjGPFcAOfY1MHuI7TcMn5wOgP6g8IYhnGsvjCNWkgAAAAG43kPlAA")
 STRING2 = getenv("STRING_SESSION2", None)
 STRING3 = getenv("STRING_SESSION3", None)
 STRING4 = getenv("STRING_SESSION4", None)
