@@ -14,6 +14,7 @@ from AviaxMusic.plugins import ALL_MODULES
 from AviaxMusic.utils.database import get_banned_users, get_gbanned
 from config import BANNED_USERS
 
+nest_asyncio.apply()
 
 async def init():
     if (
@@ -67,4 +68,5 @@ async def init():
     LOGGER("AviaxMusic").info("Stopping Aviax Music Bot...")
 
 if __name__ == "__main__":
-    asyncio.get_event_loop().run_until_complete(init())
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(init())
