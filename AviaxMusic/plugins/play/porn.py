@@ -5,7 +5,6 @@ from AviaxMusic import app
 import pytgcalls
 import os, yt_dlp 
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-from pytgcalls.types import AudioVideoPiped
 
 keyboard = InlineKeyboardMarkup([
     [
@@ -30,7 +29,7 @@ async def vplay_callback(_, query):
         return
     
     voice_chat = pytgcalls.PyTgCalls(app)
-    await voice_chat.join_group_call(chat_id, AudioVideoPiped(video))
+    await voice_chat.join_group_call(chat_id, pytgcalls.types.input.AudioPiped(video))
 
 async def get_video_stream(link):
     ydl_opts = {
