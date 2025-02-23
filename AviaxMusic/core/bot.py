@@ -98,37 +98,6 @@ class Bad(TelegramClient):
         await super().stop()
 
 
-class application:
-    def __init__(self):
-        LOGGER(__name__).info("Starting Telegram Bot...")
-        self.application = ApplicationBuilder().token(config.BOT_TOKEN).build()
+application = Application.builder().token(Config.BOT_TOKEN).build()
 
-    async def start(self):
-        await self.application.initialize()
-        await self.application.start()
-        me = await self.application.bot.get_me()
-        self.id = me.id
-        self.name = me.first_name + " " + (me.last_name or "")
-        self.username = me.username
-        self.mention = f"@{self.username}"
-
-        try:
-            LOGGER(__name__).info(f"Attempting to send message to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
-            await self.application.bot.send_message(
-                chat_id=config.LOG_GROUP_ID,
-                text=f"» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ :\n\nɪᴅ : {self.id}\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}"
-            )
-            LOGGER(__name__).info(f"Message sent successfully to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
-        except Exception as ex:
-            LOGGER(__name__).error(
-                f"Telegram Bot has failed to access the log group/channel.\n  Reason : {type(ex).__name__}.\nException: {ex}"
-            )
-            exit()
-        LOGGER(__name__).info("Telegram Bot Started")
-
-    async def stop(self):
-        await self.application.stop()
-        await self.application.shutdown()
-
-    def add_handler(self, handler):
-        self.application.add_handler(handler)
+plugins = dict(root="AviaxMusic.plugins")
