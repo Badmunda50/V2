@@ -35,17 +35,17 @@ def private_panel(OWNER: Union[bool, int] = None):
       [
             InlineKeyboardButton(
                text="ᴅᴇᴠᴇʟᴏᴘᴇʀ", 
-               user_id=OWNER,
+               url=f"https://t.me/II_BAD_BABY_II",
                     ),
           InlineKeyboardButton(
                text="ᴏᴡɴᴇʀ", 
-               url=f"https://t.me/itzYuva",
+               url=f"https://t.me/II_BAD_BABY_II",
                     ),
       ],
           [
            InlineKeyboardButton(
                text="sᴜᴘᴘᴏʀᴛ",
-               url=f"https://t.me/Sigma_Rulez"
+               url=f"https://t.me/PBX_CHAT"
            ),
         ],
     
