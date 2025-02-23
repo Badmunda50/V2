@@ -43,7 +43,9 @@ async def init():
     LOGGER("AviaxMusic.plugins").info("Successfully Imported All Modules ")
     await Aviax.start()
     await Bad.start()
-    await sukh.start()  # Call start method on the instance
+    await sukh.run_polling()
+    await sukh.initialize()
+    await sukh.start()
     await userbot.start()   
     try:
         await Aviax.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
