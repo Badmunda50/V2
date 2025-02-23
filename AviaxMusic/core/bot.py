@@ -117,15 +117,3 @@ class TelegramBot:
             await self.application.bot.send_message(
                 chat_id=config.LOG_GROUP_ID,
                 text=f"» {self.mention} ʙᴏᴛ sᴛᴀʀᴛᴇᴅ :\n\nɪᴅ : {self.id}\nɴᴀᴍᴇ : {self.name}\nᴜsᴇʀɴᴀᴍᴇ : @{self.username}"
-            )
-            LOGGER(__name__).info(f"Message sent successfully to LOG_GROUP_ID: {config.LOG_GROUP_ID}")
-        except Exception as ex:
-            LOGGER(__name__).error(
-                f"Telegram Bot has failed to access the log group/channel.\n  Reason : {type(ex).__name__}.\nException: {ex}"
-            )
-            exit()
-        LOGGER(__name__).info("Telegram Bot Started")
-
-    async def stop(self):
-        await self.application.stop()
-        await self.application.shutdown()
