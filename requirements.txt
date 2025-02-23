@@ -13,7 +13,8 @@ motor
 numpy
 opencv-python
 psutil
-py-tgcalls==2.1.0.dev2
+py-tgcalls==2.0.6
+ntgcalls==1.2.3
 pykeyboard
 python-dotenv
 pyyaml
