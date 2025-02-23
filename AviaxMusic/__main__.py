@@ -14,7 +14,6 @@ from AviaxMusic.plugins import ALL_MODULES
 from AviaxMusic.utils.database import get_banned_users, get_gbanned
 from config import BANNED_USERS
 
-nest_asyncio.apply()
 
 async def init():
     if (
