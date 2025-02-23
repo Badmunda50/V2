@@ -44,7 +44,7 @@ async def init():
     LOGGER("AviaxMusic.plugins").info("Successfully Imported All Modules ")
     await Aviax.start()
     await Bad.start()
-    await application.run_polling()
+    await application.start()  # Corrected method call
     await application.initialize()
     await application.start()
     await userbot.start()   
