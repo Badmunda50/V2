@@ -43,7 +43,6 @@ async def init():
     LOGGER("AviaxMusic.plugins").info("Successfully Imported All Modules ")
     await Aviax.start()
     await Bad.start()
-    sukh = sukh()  # Create an instance of TelegramBot
     await sukh.start()  # Call start method on the instance
     await userbot.start()   
     try:
