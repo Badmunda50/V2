@@ -76,7 +76,7 @@ class Bad(TelegramClient):
         await super().start(bot_token=config.BOT_TOKEN)
         me = await self.get_me()
         self.id = me.id
-        self.name is me.first_name + " " + (me.last_name or "")
+        self.name = me.first_name + " " + (me.last_name or "")
         self.username = me.username
         self.mention = f"@{self.username}"
 
