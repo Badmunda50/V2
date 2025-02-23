@@ -22,6 +22,7 @@ requests
 speedtest-cli
 spotipy
 tgcrypto
+telethon
 unidecode
 uvloop
 yt-dlp
