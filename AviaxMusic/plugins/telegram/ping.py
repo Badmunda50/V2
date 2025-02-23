@@ -21,4 +21,5 @@ async def ping_callback(update: Update, context: CallbackContext) -> None:
     await query.answer("This is the bot's response time!")
     
 app_instance = application
-app_instance.add_handler(CommandHandler("pingg", ping))
+app_instance.add_handler(CommandHandler("ping", ping))  # Corrected the command name from "pingg" to "ping"
+app_instance.add_handler(CallbackQueryHandler(ping_callback, pattern="ping_response"))
