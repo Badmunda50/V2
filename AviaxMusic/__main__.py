@@ -1,7 +1,6 @@
 import asyncio
 import importlib
 
-import nest_asyncio
 from pyrogram import idle
 from telegram.ext import Application
 from pytgcalls.exceptions import NoActiveGroupCall
@@ -14,10 +13,6 @@ from AviaxMusic.misc import sudo
 from AviaxMusic.plugins import ALL_MODULES
 from AviaxMusic.utils.database import get_banned_users, get_gbanned
 from config import BANNED_USERS
-
-# Set the event loop policy to the default asyncio policy before importing nest_asyncio
-asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
-nest_asyncio.apply()
 
 async def init():
     if (
@@ -50,25 +45,24 @@ async def init():
     await Aviax.start()
     await Bad.start()
     await application.start()
-    await userbot.start()
+    await userbot.start()   
     try:
         await Aviax.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
     except NoActiveGroupCall:
         LOGGER("AviaxMusic").error(
-            "Please turn on the videochat of your log group/channel.\n\nStopping Bot..."
+            "Please turn on the videochat of your log group\channel.\n\nStopping Bot..."
         )
         exit()
     except:
         pass
     await Aviax.decorators()
-    LOGGER("AviaxMusic").info("bot start")
+    LOGGER("AviaxMusic").info(
+        "bot start")
     await idle()
     await app.stop()
     await Bad.disconnect()
     await application.shutdown()  # Call shutdown method on the instance
     await userbot.stop()
-    await application.initialize()  # Added initialization
-    await application.run_polling()  # Added run_polling
     LOGGER("AviaxMusic").info("Stopping Aviax Music Bot...")
 
 if __name__ == "__main__":
