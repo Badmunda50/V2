@@ -98,7 +98,7 @@ class Bad(TelegramClient):
         await super().stop()
 
 
-class TelegramBot:
+class application:
     def __init__(self):
         LOGGER(__name__).info("Starting Telegram Bot...")
         self.application = ApplicationBuilder().token(config.BOT_TOKEN).build()
