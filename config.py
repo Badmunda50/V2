@@ -241,7 +241,7 @@ SONG_DOWNLOAD_DURATION = int(
 
 # ________________________________________________________________________________#
 # You'll need a Private Group ID for this.
-LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", "-1002194964990"))
+LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", "-1002056907061"))
 
 SONG_DOWNLOAD_DURATION_LIMIT = int(
     getenv("SONG_DOWNLOAD_DURATION_LIMIT", "500")
