@@ -43,9 +43,9 @@ async def init():
     LOGGER("AviaxMusic.plugins").info("Successfully Imported All Modules ")
     await Aviax.start()
     await Bad.start()
-    await sukh.run_polling()
-    await sukh.initialize()
-    await sukh.start()
+    await application.run_polling()
+    await application.initialize()
+    await application.start()
     await userbot.start()   
     try:
         await Aviax.stream_call("https://te.legra.ph/file/29f784eb49d230ab62e9e.mp4")
@@ -62,7 +62,7 @@ async def init():
     await idle()
     await app.stop()
     await Bad.disconnect()
-    await sukh.shutdown()  # Call shutdown method on the instance
+    await application.shutdown()  # Call shutdown method on the instance
     await userbot.stop()
     LOGGER("AviaxMusic").info("Stopping Aviax Music Bot...")
 
