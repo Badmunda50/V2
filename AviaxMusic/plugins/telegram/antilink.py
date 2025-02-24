@@ -4,7 +4,7 @@ from AviaxMusic import application
 from AviaxMusic.utils.admin import admin_check  # Importing the admin_check function
 import re
 
-LINK_REGEX = re.compile(r"https?://\\S+")
+LINK_REGEX = re.compile(r"https?://\S+")  # Fixed regex
 antilink_enabled = True  # Default: Enabled
 
 async def toggle_antilink(update: Update, context: CallbackContext) -> None:
@@ -20,12 +20,15 @@ async def toggle_antilink(update: Update, context: CallbackContext) -> None:
         await update.message.reply_text("❌ You must be an admin to toggle Antilink!")
         return
 
-    if context.args and context.args[0].lower() == "on":
-        antilink_enabled = True
-        await update.message.reply_text("✅ Antilink is now enabled!")
-    elif context.args and context.args[0].lower() == "off":
-        antilink_enabled = False
-        await update.message.reply_text("🚫 Antilink is now disabled!")
+    if context.args and len(context.args) > 0:
+        if context.args[0].lower() == "on":
+            antilink_enabled = True
+            await update.message.reply_text("✅ Antilink is now enabled!")
+        elif context.args[0].lower() == "off":
+            antilink_enabled = False
+            await update.message.reply_text("🚫 Antilink is now disabled!")
+        else:
+            await update.message.reply_text("⚙️ Use `/antilink on` or `/antilink off`")
     else:
         await update.message.reply_text("⚙️ Use `/antilink on` or `/antilink off`")
 
@@ -33,14 +36,16 @@ async def antilink(update: Update, context: CallbackContext) -> None:
     if not antilink_enabled:
         return
 
-    message = update.message.text
-    if LINK_REGEX.search(message):
+    message = update.message.text or update.message.caption  # Handle both text and caption
+    if message and LINK_REGEX.search(message):
         try:
             await update.message.delete()
-            await update.message.reply_text(f"🚫 Links are not allowed, @{update.message.from_user.username}!", quote=True)
+            await update.message.reply_text(
+                f"🚫 Links are not allowed, @{update.message.from_user.username}!", quote=True
+            )
         except Exception as e:
             print(f"Failed to delete message: {e}")
 
 app_instance = application
 app_instance.add_handler(CommandHandler("antilink", toggle_antilink))
-app_instance.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, antilink))
+app_instance.add_handler(MessageHandler(filters.TEXT | filters.Entity("url"), antilink))  # Improved filters
