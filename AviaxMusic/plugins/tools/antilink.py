@@ -1,4 +1,5 @@
 import re
+from AviaxMusic import app
 from pyrogram import Client, filters
 from pyrogram.types import Message, ChatPermissions
 
@@ -16,7 +17,7 @@ async def is_admin(client, message: Message) -> bool:
     member = await client.get_chat_member(chat_id, user_id)
     return member.status in ["administrator", "creator"]
 
-@Client.on_message(filters.command("antilink") & filters.group)
+@app.on_message(filters.command("antilink") & filters.group)
 async def toggle_antilink(client, message: Message):
     """Enable or disable antilink in the group."""
     chat_id = message.chat.id
@@ -38,7 +39,7 @@ async def toggle_antilink(client, message: Message):
     else:
         await message.reply_text("⚙️ Use `/antilink on` or `/antilink off`")
 
-@Client.on_message(filters.text | filters.caption & filters.group)
+@app.on_message(filters.text | filters.caption & filters.group)
 async def antilink(client, message: Message):
     """Detect and delete messages containing links."""
     chat_id = message.chat.id
