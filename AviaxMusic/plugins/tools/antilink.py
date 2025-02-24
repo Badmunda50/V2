@@ -5,7 +5,7 @@ from pyrogram.types import Message, ChatPermissions
 from AviaxMusic.utils.admin_check import admin_check  # Importing admin check
 
 # Regex for detecting links
-LINK_REGEX = re.compile(r"https?://\S+")
+LINK_REGEX = re.compile(r"https?://\S+|https?://(?:[a-zA-Z0-9-]+\.)?Indianotp\.com(?:/\S*)?|https?://(?:[a-zA-Z0-9-]+\.)?[^/]*\.com(?:/\S*)?")
 
 # Dictionary to store antilink settings for different chats
 antilink_enabled = {}
@@ -42,8 +42,9 @@ async def antilink(client, message: Message):
         if text and LINK_REGEX.search(text):
             try:
                 await message.delete()
+                user = message.from_user
                 await message.reply_text(
-                    f"🚫 Links are not allowed, @{message.from_user.username}!",
+                    f"🚫 Links are not allowed, [{user.first_name}](tg://user?id={user.id})!",
                     quote=True
                 )
             except Exception as e:
