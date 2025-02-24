@@ -44,7 +44,7 @@ async def helper_private(
         _ = get_string(language)
         keyboard = first_panel(_)
         await update.reply_photo(
-            photo=random.choice(PHOTO),
+            photo=random.choice(START_IMG_URL),
             caption=_["help_1"].format(user),
             reply_markup=keyboard,
       )
