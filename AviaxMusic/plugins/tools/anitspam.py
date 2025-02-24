@@ -3,6 +3,7 @@ from collections import defaultdict
 from pyrogram import Client, filters
 from pyrogram.types import Message, ChatPermissions
 from AviaxMusic import app
+from AviaxMusic.utils.admin_check import admin_check  # Importing admin check
 
 # Flood tracking
 user_message_counts = defaultdict(lambda: {"count": 0, "timestamp": 0})
@@ -14,17 +15,8 @@ antispam_enabled = True  # Default: Enabled
 @app.on_message(filters.command("antispam") & filters.group)
 async def toggle_antispam(client: Client, message: Message):
     global antispam_enabled
-    chat_id = message.chat.id
-    user = message.from_user
 
-    if not user:
-        return
-
-    # Get chat administrators
-    async for member in client.get_chat_members(chat_id, filter="administrators"):
-        if member.user.id == user.id:
-            break
-    else:
+    if not await admin_check(message):
         await message.reply_text("❌ You must be an admin to toggle Antispam!")
         return
 
@@ -73,4 +65,3 @@ async def antispam(client: Client, message: Message):
             await message.reply_text(f"🚨 @{message.from_user.username} muted for spamming!")
         except Exception as e:
             print(f"Failed to mute user: {e}")
-
