@@ -1,9 +1,10 @@
 from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, filters, CallbackContext
 from AviaxMusic import application
+from AviaxMusic.utils.admin import admin_check  # Importing the admin_check function
 import re
 
-LINK_REGEX = re.compile(r"https?://\S+")
+LINK_REGEX = re.compile(r"https?://\\S+")
 antilink_enabled = True  # Default: Enabled
 
 async def toggle_antilink(update: Update, context: CallbackContext) -> None:
@@ -14,11 +15,8 @@ async def toggle_antilink(update: Update, context: CallbackContext) -> None:
     if not user or not user.id:  # Ensure we have a valid user
         return
 
-    # Get chat administrators
-    chat_admins = await context.bot.get_chat_administrators(chat_id)
-    admin_ids = [admin.user.id for admin in chat_admins]
-
-    if user.id not in admin_ids:  # Check if user is admin
+    # Use the imported admin_check function
+    if not await admin_check(update, context):
         await update.message.reply_text("❌ You must be an admin to toggle Antilink!")
         return
 
