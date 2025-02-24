@@ -1,7 +1,6 @@
 from typing import Union
 from pyrogram.types import InputMediaPhoto
-import random
-from random import choice
+import random 
 from config import SUPPORT_GROUP
 from pyrogram.enums import ChatType
 from pyrogram import filters, types
@@ -45,7 +44,7 @@ async def helper_private(
         _ = get_string(language)
         keyboard = first_panel(_)
         await update.reply_photo(
-            photo=random.choice(START_IMG_URL),
+            photo=START_IMG_URL,
             caption=_["help_1"].format(user),
             reply_markup=keyboard,
       )
