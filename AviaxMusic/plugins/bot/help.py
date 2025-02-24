@@ -1,6 +1,6 @@
 from typing import Union
 from pyrogram.types import InputMediaPhoto
-import random 
+from random import choice
 from config import SUPPORT_GROUP
 from pyrogram.enums import ChatType
 from pyrogram import filters, types
