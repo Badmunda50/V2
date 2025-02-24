@@ -48,9 +48,13 @@ async def helper_private(
             caption=_["help_1"].format(user),
             reply_markup=keyboard,
       )
+
+# start command handler to delete the /start command text
+@app.on_message(filters.command("start") & filters.private & ~BANNED_USERS)
+async def start_command_handler(client, message: Message):
+    await message.delete()
+
 # second help page
-
-
 @app.on_callback_query(filters.regex("secondhelppanel") & ~BANNED_USERS)
 @languageCB
 async def second_help_panel(client, callback_query: CallbackQuery, _):
@@ -258,4 +262,3 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_59, reply_markup=keyboardfour)
     elif cb == "hb60":
         await CallbackQuery.edit_message_text(helpers.HELP_60, reply_markup=keyboardfour)
-    
