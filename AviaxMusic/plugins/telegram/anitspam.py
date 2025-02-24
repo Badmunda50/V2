@@ -14,11 +14,15 @@ async def toggle_antispam(update: Update, context: CallbackContext) -> None:
     global antispam_enabled
     chat_id = update.message.chat_id
     user = update.message.from_user
-
+    
     if not user or not user.id:  # Ensure we have a valid user
         return
 
-    if not user.id in [777000, 1087968824]:  # Check if user is admin (replace with actual admin check)
+    # Get chat administrators
+    chat_admins = await context.bot.get_chat_administrators(chat_id)
+    admin_ids = [admin.user.id for admin in chat_admins]
+
+    if user.id not in admin_ids:  # Check if user is admin
         await update.message.reply_text("❌ You must be an admin to toggle Antispam!")
         return
 
