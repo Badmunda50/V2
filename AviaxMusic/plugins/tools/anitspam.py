@@ -10,7 +10,7 @@ user_message_counts = defaultdict(lambda: {"count": 0, "timestamp": 0})
 FLOOD_LIMIT = 5  # Messages allowed per 5 seconds
 MUTE_DURATION = 60  # Mute time in seconds
 antispam_enabled = True  # Default: Enabled
-
+antispam_mode = "delete"  # Default mode: delete
 
 @app.on_message(filters.command("antispam") & filters.group)
 async def toggle_antispam(client: Client, message: Message):
@@ -33,6 +33,23 @@ async def toggle_antispam(client: Client, message: Message):
     else:
         await message.reply_text("⚙️ Use `/antispam on` or `/antispam off`")
 
+@app.on_message(filters.command("antispammode") & filters.group)
+async def set_antispam_mode(client: Client, message: Message):
+    global antispam_mode
+
+    if not await admin_check(message):
+        await message.reply_text("❌ You must be an admin to set Antispam mode!")
+        return
+
+    if len(message.command) > 1:
+        mode = message.command[1].lower()
+        if mode in ["mute", "kick", "delete"]:
+            antispam_mode = mode
+            await message.reply_text(f"✅ Antispam mode set to {mode}!")
+        else:
+            await message.reply_text("⚙️ Use `/antispammode mute`, `/antispammode kick`, or `/antispammode delete`")
+    else:
+        await message.reply_text("⚙️ Use `/antispammode mute`, `/antispammode kick`, or `/antispammode delete`")
 
 @app.on_message(filters.text & ~filters.command & filters.group)
 async def antispam(client: Client, message: Message):
@@ -56,12 +73,18 @@ async def antispam(client: Client, message: Message):
 
     if user_message_counts[user_id]["count"] > FLOOD_LIMIT:
         try:
-            await client.restrict_chat_member(
-                chat_id,
-                user_id,
-                ChatPermissions(),
-                until_date=int(current_time + MUTE_DURATION),
-            )
-            await message.reply_text(f"🚨 @{message.from_user.username} muted for spamming!")
+            if antispam_mode == "mute":
+                await client.restrict_chat_member(
+                    chat_id,
+                    user_id,
+                    ChatPermissions(),
+                    until_date=int(current_time + MUTE_DURATION),
+                )
+                await message.reply_text(f"🚨 @{message.from_user.username} muted for spamming!")
+            elif antispam_mode == "kick":
+                await client.kick_chat_member(chat_id, user_id)
+                await message.reply_text(f"🚨 @{message.from_user.username} kicked for spamming!")
+            elif antispam_mode == "delete":
+                await message.delete()
         except Exception as e:
-            print(f"Failed to mute user: {e}")
+            print(f"Failed to perform antispam action: {e}")
