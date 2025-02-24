@@ -1,10 +1,12 @@
 from typing import Union
 from pyrogram.types import InputMediaPhoto
 import random 
-from config import SUPPORT_GROUP, START_IMG_URL, BANNED_USERS
+from config import SUPPORT_GROUP
 from pyrogram.enums import ChatType
 from pyrogram import filters, types
 from pyrogram.types import InlineKeyboardMarkup, Message, CallbackQuery
+from config import START_IMG_URL
+from config import BANNED_USERS
 from strings import get_command, get_string, helpers
 from AviaxMusic import app
 from AviaxMusic.misc import SUDOERS
@@ -34,7 +36,7 @@ async def helper_private(
         user = update.from_user.mention
         keyboard = first_panel(_, True)
         await update.edit_message_text(
-            _["help_1"].format(user), reply_markup=keyboard
+            _["help_1"].format(user),reply_markup=keyboard
         )
     else:
         user = update.from_user.mention
@@ -42,12 +44,13 @@ async def helper_private(
         _ = get_string(language)
         keyboard = first_panel(_)
         await update.reply_photo(
-            photo=random.choice(START_IMG_URL),
+            photo=START_IMG_URL,
             caption=_["help_1"].format(user),
             reply_markup=keyboard,
-        )
-
+      )
 # second help page
+
+
 @app.on_callback_query(filters.regex("secondhelppanel") & ~BANNED_USERS)
 @languageCB
 async def second_help_panel(client, callback_query: CallbackQuery, _):
@@ -56,6 +59,7 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except:
         pass    
     try:
+        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = second_panel(_, True)  
             user = callback_query.from_user.mention
@@ -66,15 +70,17 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-# third help panel
+# third help pannel
+
 @app.on_callback_query(filters.regex("thirdhelppanel") & ~BANNED_USERS)
 @languageCB
-async def third_help_panel(client, callback_query: CallbackQuery, _):
+async def second_help_panel(client, callback_query: CallbackQuery, _):
     try:
         await callback_query.answer()
     except:
         pass    
     try:
+        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = third_panel(_, True)  
             user = callback_query.from_user.mention
@@ -85,15 +91,18 @@ async def third_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-# fourth help panel
+
+# four help pannel
+
 @app.on_callback_query(filters.regex("fourthhelppanel") & ~BANNED_USERS)
 @languageCB
-async def fourth_help_panel(client, callback_query: CallbackQuery, _):
+async def second_help_panel(client, callback_query: CallbackQuery, _):
     try:
         await callback_query.answer()
     except:
         pass    
     try:
+        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = fourth_panel(_, True)  
             user = callback_query.from_user.mention
@@ -104,18 +113,18 @@ async def fourth_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-# group help command
+
+
 @app.on_message(filters.command(HELP_COMMAND) & filters.group & ~BANNED_USERS)
 @languageCB
 async def help_com_group(client, message: Message, _):
     keyboard = first_panel(_, True)
-    await message.reply_photo(
-        photo=random.choice(START_IMG_URL),
-        caption=_["help_2"],
-        reply_markup=keyboard
-    )
+    await message.reply_photo(photo=START_IMG_URL,
+                              caption=_["help_2"],
+                              reply_markup=keyboard
+                             )
 
-# callback for help
+
 @app.on_callback_query(filters.regex("help_callback") & ~BANNED_USERS)
 @languageCB
 async def helper_cb(client, CallbackQuery, _):
@@ -126,7 +135,7 @@ async def helper_cb(client, CallbackQuery, _):
     keyboardthree = third_help_back_markup(_)
     keyboardfour = fourth_help_back_markup(_)
     try:
-        await CallbackQuery.answer()
+       await CallbackQuery.answer()
     except:
         pass
     if cb == "hb1":
@@ -249,3 +258,4 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_59, reply_markup=keyboardfour)
     elif cb == "hb60":
         await CallbackQuery.edit_message_text(helpers.HELP_60, reply_markup=keyboardfour)
+    
