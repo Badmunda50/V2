@@ -3,7 +3,7 @@ from collections import defaultdict
 from pyrogram import Client, filters
 from pyrogram.types import Message, ChatPermissions
 from AviaxMusic import app
-from AviaxMusic.utils.admin_check import admin_check  # Importing admin check
+from AviaxMusic.utils.admin_check import admin_check  # Admin check import
 
 # Flood tracking
 user_message_counts = defaultdict(lambda: {"count": 0, "timestamp": 0})
@@ -51,7 +51,7 @@ async def set_antispam_mode(client: Client, message: Message):
     else:
         await message.reply_text("⚙️ Use `/antispammode mute`, `/antispammode kick`, or `/antispammode delete`")
 
-@app.on_message(filters.text & ~filters.create(filters.command) & filters.group)
+@app.on_message(filters.text & filters.group)
 async def antispam(client: Client, message: Message):
     if not antispam_enabled:
         return
@@ -60,17 +60,16 @@ async def antispam(client: Client, message: Message):
     chat_id = message.chat.id
     current_time = time.time()
 
-    if user_id in user_message_counts:
-        last_time = user_message_counts[user_id]["timestamp"]
-        if current_time - last_time <= 5:
-            user_message_counts[user_id]["count"] += 1
-        else:
-            user_message_counts[user_id]["count"] = 1
+    # Check last message time
+    last_time = user_message_counts[user_id]["timestamp"]
+    if current_time - last_time <= 5:
+        user_message_counts[user_id]["count"] += 1
     else:
         user_message_counts[user_id]["count"] = 1
 
     user_message_counts[user_id]["timestamp"] = current_time
 
+    # Apply action if limit exceeded
     if user_message_counts[user_id]["count"] > FLOOD_LIMIT:
         try:
             if antispam_mode == "mute":
@@ -86,5 +85,8 @@ async def antispam(client: Client, message: Message):
                 await message.reply_text(f"🚨 @{message.from_user.username} kicked for spamming!")
             elif antispam_mode == "delete":
                 await message.delete()
+
+            # Reset user count after action
+            user_message_counts[user_id] = {"count": 0, "timestamp": current_time}
         except Exception as e:
             print(f"Failed to perform antispam action: {e}")
