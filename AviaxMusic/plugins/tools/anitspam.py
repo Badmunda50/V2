@@ -51,7 +51,7 @@ async def set_antispam_mode(client: Client, message: Message):
     else:
         await message.reply_text("⚙️ Use `/antispammode mute`, `/antispammode kick`, or `/antispammode delete`")
 
-@app.on_message(filters.text & ~filters.command & filters.group)
+@app.on_message(filters.text & ~filters.create(filters.command) & filters.group)
 async def antispam(client: Client, message: Message):
     if not antispam_enabled:
         return
