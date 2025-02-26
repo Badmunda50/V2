@@ -47,10 +47,13 @@ async def helper_private(
             photo=START_IMG_URL,
             caption=_["help_1"].format(user),
             reply_markup=keyboard,
-      )
+        )
+        try:
+            await update.delete()
+        except:
+            pass
+
 # second help page
-
-
 @app.on_callback_query(filters.regex("secondhelppanel") & ~BANNED_USERS)
 @languageCB
 async def second_help_panel(client, callback_query: CallbackQuery, _):
@@ -59,7 +62,6 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except:
         pass    
     try:
-        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = second_panel(_, True)  
             user = callback_query.from_user.mention
@@ -70,17 +72,15 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-# third help pannel
-
+# third help panel
 @app.on_callback_query(filters.regex("thirdhelppanel") & ~BANNED_USERS)
 @languageCB
-async def second_help_panel(client, callback_query: CallbackQuery, _):
+async def third_help_panel(client, callback_query: CallbackQuery, _):
     try:
         await callback_query.answer()
     except:
         pass    
     try:
-        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = third_panel(_, True)  
             user = callback_query.from_user.mention
@@ -91,18 +91,15 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-
-# four help pannel
-
+# fourth help panel
 @app.on_callback_query(filters.regex("fourthhelppanel") & ~BANNED_USERS)
 @languageCB
-async def second_help_panel(client, callback_query: CallbackQuery, _):
+async def fourth_help_panel(client, callback_query: CallbackQuery, _):
     try:
         await callback_query.answer()
     except:
         pass    
     try:
-        
         if callback_query.message.chat.type in (ChatType.PRIVATE, ChatType.SUPERGROUP):
             buttons = fourth_panel(_, True)  
             user = callback_query.from_user.mention
@@ -113,8 +110,6 @@ async def second_help_panel(client, callback_query: CallbackQuery, _):
     except Exception as e:
         print(f"An error occurred while editing the message: {e}")
 
-
-
 @app.on_message(filters.command(HELP_COMMAND) & filters.group & ~BANNED_USERS)
 @languageCB
 async def help_com_group(client, message: Message, _):
@@ -123,7 +118,10 @@ async def help_com_group(client, message: Message, _):
                               caption=_["help_2"],
                               reply_markup=keyboard
                              )
-
+    try:
+        await message.delete()
+    except:
+        pass
 
 @app.on_callback_query(filters.regex("help_callback") & ~BANNED_USERS)
 @languageCB
@@ -258,4 +256,3 @@ async def helper_cb(client, CallbackQuery, _):
         await CallbackQuery.edit_message_text(helpers.HELP_59, reply_markup=keyboardfour)
     elif cb == "hb60":
         await CallbackQuery.edit_message_text(helpers.HELP_60, reply_markup=keyboardfour)
-    
