@@ -23,28 +23,28 @@ def private_panel(OWNER: Union[bool, int] = None):
     buttons = [
        [
             InlineKeyboardButton(
-                text="ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ",
+                text="• ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ •",
                 url=f"https://t.me/{app.username}?startgroup=s&admin=delete_messages+manage_video_chats+pin_messages+invite_users+ban_users",
             ),
         ], 
         [
             InlineKeyboardButton(
-                text="Hᴇʟᴘ & Cᴏᴍᴍᴀɴᴅs", callback_data="gotohelp"
+                text="• ʜᴇʟᴘ ᴀɴᴅ ᴄᴏᴍᴍᴀɴᴅs •", callback_data="gotohelp"
             ),
         ],
       [
             InlineKeyboardButton(
-               text="ᴅᴇᴠᴇʟᴏᴘᴇʀ", 
+               text="• ᴅᴇᴠᴇʟᴏᴘᴇʀ •", 
                url=f"https://t.me/II_BAD_BABY_II",
                     ),
           InlineKeyboardButton(
-               text="ᴏᴡɴᴇʀ", 
+               text="• ᴏᴡɴᴇʀ •", 
                url=f"https://t.me/II_BAD_BABY_II",
                     ),
       ],
           [
            InlineKeyboardButton(
-               text="sᴜᴘᴘᴏʀᴛ",
+               text="• ꜱᴜᴘᴘᴏʀᴛ •",
                url=f"https://t.me/PBX_CHAT"
            ),
         ],
