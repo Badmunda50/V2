@@ -1,54 +1,38 @@
-from pyrogram.types import InlineKeyboardButton
-
+from pyrogram import filters
+from pyrogram.types import InlineKeyboardButton, Message
 import config
+import asyncio
 from AviaxMusic import app
 
-from typing import Union
 
-
+# Start panel for inline buttons
 def start_panel(_):
     buttons = [
         [
             InlineKeyboardButton(
-                text=_["S_B_1"], url=f"https://t.me/{app.username}?startgroup=true"
+                text=_["SO_B_1"], url=f"https://t.me/{app.username}?startgroup=true"
             ),
-            InlineKeyboardButton(text=_["S_B_2"], url=config.SUPPORT_GROUP),
+            InlineKeyboardButton(text=_["S_B_2"], url=config.SUPPORT_CHAT),
         ],
     ]
     return buttons
 
 
-
-def private_panel(OWNER: Union[bool, int] = None):
+# Private panel for inline buttons
+def private_panel(_):
     buttons = [
-       [
-            InlineKeyboardButton(
-                text="ᴀᴅᴅ ᴍᴇ ᴛᴏ ʏᴏᴜʀ ɢʀᴏᴜᴘ",
-                url=f"https://t.me/{app.username}?startgroup=s&admin=delete_messages+manage_video_chats+pin_messages+invite_users+ban_users",
-            ),
-        ], 
         [
             InlineKeyboardButton(
-                text="Hᴇʟᴘ & Cᴏᴍᴍᴀɴᴅs", callback_data="gotohelp"
-            ),
+                text=_["S_B_3"],
+                url=f"https://t.me/{app.username}?startgroup=true",
+            )
         ],
-      [
-            InlineKeyboardButton(
-               text="ᴅᴇᴠᴇʟᴏᴘᴇʀ", 
-               url=f"https://t.me/II_BAD_BABY_II",
-                    ),
-          InlineKeyboardButton(
-               text="ᴏᴡɴᴇʀ", 
-               url=f"https://t.me/II_BAD_BABY_II",
-                    ),
-      ],
-          [
-           InlineKeyboardButton(
-               text="sᴜᴘᴘᴏʀᴛ",
-               url=f"https://t.me/PBX_CHAT"
-           ),
+        [InlineKeyboardButton(text=_["S_B_4"], callback_data="settings_back_helper")],
+        [
+            InlineKeyboardButton(text=_["S_B_6"], url=config.SUPPORT_CHANNEL),
+            InlineKeyboardButton(text=_["S_B_2"], url=config.SUPPORT_CHAT),
         ],
-    
-]
+        # Remove or modify this button to avoid using user_id
+        [InlineKeyboardButton(text=_["S_B_5"], url=f"https://t.me/II_BAD_BABY_II")],
+    ]
     return buttons
-    
